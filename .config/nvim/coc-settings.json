@@ -1,0 +1,75 @@
+{
+  "python.formatting.provider": "none",
+  "python.jediEnabled": false,
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.autoComplete.addBrackets": true,
+  "suggest.maxCompleteItemCount": 100,
+  "python.linting.pylintArgs": [
+    "--disable=C0111",
+    "--disable=C0103",
+    "--disable=C0304",
+    "--disable=invalid-name,missing-module-docstring,trailing-newlines"
+  ],
+  "python.linting.banditEnabled": false,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "json",
+    "html",
+    "css",
+    "javascript"
+  ],
+  "suggest.noselect": true,
+  "suggest.enablePreselect": false,
+  "suggest.preferCompleteThanJumpPlaceholder": true,
+  "suggest.completionItemKindLabels": {
+    "keyword": "\uf1de",
+    "variable": "\ue79b",
+    "value": "\uf89f",
+    "operator": "\u03a8",
+    "function": "\u0192",
+    "reference": "\ufa46",
+    "constant": "\uf8fe",
+    "method": "\uf09a",
+    "struct": "\ufb44",
+    "class": "\uf0e8",
+    "interface": "\uf417",
+    "text": "\ue612",
+    "enum": "\uf435",
+    "enumMember": "\uf02b",
+    "module": "\uf40d",
+    "color": "\ue22b",
+    "property": "\ue624",
+    "field": "\uf9be",
+    "unit": "\uf475",
+    "event": "\ufacd",
+    "file": "\uf723",
+    "folder": "\uf114",
+    "snippet": "\ue60b",
+    "typeParameter": "\uf728",
+    "default": "\uf29c"
+  },
+  "diagnostic.refreshAfterSave": true,
+  "diagnostic.refreshOnInsertMode": true,
+  "signature.triggerSignatureWait": 50,
+  "signature.preferShownAbove": true,
+  "signature.target": "float",
+  "diagnostic.virtualText": true,
+  "suggest.floatEnable": true,
+  "coc.preferences.formatOnInsertLeave": false,
+  "html.filetypes": [
+    "html",
+    "handlebars",
+    "htmldjango"
+  ],
+  "html.enable": true,
+  "html.autoClosingTags": false,
+  "diagnostic.errorSign": "",
+  "diagnostic.warningSign": "",
+  "diagnostic.messageDelay": 150,
+  "diagnostic.enableHighlightLineNumber": false
+}
+
+
+
+
+
