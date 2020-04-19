@@ -1,0 +1,16 @@
+! -- Styles - Colors
+#include "/home/milo/gruvbox/color"
+
+! -- Styles - Fonts
+#include "/home/milo/gruvbox/typeface"
+
+! -- Styles - Theme
+#include "/home/milo/gruvbox/theme"
+
+! -- Applications
+! These files map values defined above into specific app settings.
+#include "/etc/regolith/styles/st-term"
+#include "/home/milo/gruvbox/i3-wm"
+#include "/etc/regolith/styles/i3xrocks"
+#include "/etc/regolith/styles/rofi"
+#include "/etc/regolith/styles/gnome"

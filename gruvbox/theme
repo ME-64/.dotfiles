@@ -1,0 +1,10 @@
+#define gtk_theme           Arc-Dark
+#define icon_theme          Paper
+#define desktop_wallpaper   /usr/share/backgrounds/dark_boat.jpg
+#define rofi_theme          /home/milo/gruvbox/rofi.rasi
+
+#define i3wm_window_border_size         1
+#define i3wm_floatingwindow_border_size 1
+#define i3wm_gaps_inner_size            5
+#define i3wm_gaps_outer_size            0
+#define i3wm_bar_position               top
