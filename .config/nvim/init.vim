@@ -91,6 +91,8 @@ Plugin 'tpope/vim-unimpaired'                            " good toggle mappings
 Plugin 'tpope/vim-repeat'                                " let . work for plugins
 Plugin 'easymotion/vim-easymotion'                       " good navigation, sometimes
 Plugin 'gcmt/taboo.vim'                                  " rename tabs
+Plugin 'Yggdroot/indentLine'                             " show indentations
+Plugin 'lukas-reineke/indent-blankline.nvim'             " indenting blank lines
 
 Plugin 'vim-pandoc/vim-pandoc-syntax'                    " markdown syntax
 
@@ -222,7 +224,8 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
+" cancel autocomplete with escape
+inoremap <expr> <Esc> pumvisible() ? '<C-y>' : '<Esc>'
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
@@ -244,7 +247,7 @@ endif
 " nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
-" nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gd <Plug>(coc-definition)
 " nmap <silent> gy <Plug>(coc-type-definition)
 " nmap <silent> gi <Plug>(coc-implementation)
 " nmap <silent> gr <Plug>(coc-references)
@@ -256,6 +259,7 @@ function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
   else
+
     call CocAction('doHover')
   endif
 endfunction
@@ -265,6 +269,7 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
+
 
 " Formatting selected code.
 xmap <leader>f  <Plug>(coc-format-selected)
@@ -364,10 +369,23 @@ let NERDTreeIgnore = ['\.pyc$', '\.egg-info$', '__pycache__', '__pycache__','.gi
 let NERDTreeQuitOnOpen=1
 let NERDTreeHighlightCursorline = 0
 let NERDTreeShowLineNumbers=1
+let NERDTreeSortOrder=['\/$', '*']
 
 " --------------------------------------------------------
 " Easy Motion Stuff
 " -------------------------------------------------------- 
+
+" --------------------------------------------------------
+" Indent Line Stuf
+" -------------------------------------------------------- 
+let g:indent_blankline_enable=v:true
+let g:indentLine_char = '|'
+let g:indentline_LeadingSpaceEnabled=1
+
+
+
+
+
 
 " --------------------------------------------------------
 " Neovim Cursor Stuff
