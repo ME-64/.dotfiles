@@ -1,0 +1,36 @@
+// vim:ts=4:sw=4:et
+{
+    "layout": "splith",
+    "percent": 1.00,
+    "type": "con",
+    "nodes": [
+        {"layout": "splith",
+        "percent":1.00,
+        "type": "con",
+        "nodes": [
+
+
+{
+    "percent": 0.5,
+    "swallows": [
+       {
+        "instance": "^chromium$"
+       }
+    ],
+    "type": "con"
+},
+
+{
+    "percent": 0.5,
+    "swallows": [
+       {
+        "class": "^Org\\.gnome\\.Nautilus$"
+       }
+    ],
+    "type": "con"
+}
+
+        ]
+        }
+    ]
+}

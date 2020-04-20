@@ -1,0 +1,13 @@
+// vim:ts=4:sw=4:et
+{
+    "border": "pixel",
+    "name": "ELIZA - Wasn't Looking",
+    "percent": 1,
+    "swallows": [
+       {
+       "class": "^Spotify$"
+       }
+    ],
+    "type": "con"
+}
+
