@@ -107,7 +107,7 @@ filetype plugin indent on
 " THEME
 " -------------------------------------------------------- 
 "set t_Co=256              " Depends on setup for which to use
-set termguicolors        " Depends on setup for which to use
+set termguicolors          " Depends on setup for which to use
 colorscheme gruvbox
 set background=dark
 let g:gruvbox_contrast_dark="soft"

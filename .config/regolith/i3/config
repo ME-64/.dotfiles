@@ -216,6 +216,7 @@ for_window [class="Gnome-control-center"] border pixel 4
 
 for_window [class="(N|n)autilus"] border pixel 4
 
+for_window [class="(e|E)og"] border pixel 4
 
 for_window [class="wfica"] floating enable
 
@@ -405,6 +406,13 @@ for_window [class="Spotify"] move to workspace $ws5
 exec --no-startup-id i3-msg "workspace $ws8; append_layout /home/milo/.i3/work.json"
 exec --no-startup-id chromium --new-window http://myworkspace.jpmchase.com/
 exec --no-startup-id nautilus --name dls -w ~/Downloads
+
+
+
+exec --no-startup-id virtualbox
+for_window [class="VirtualBox Manager"] move to workspace $ws7
+
+
 # Start Spotify in background workspace
 # exec --no-startup-id i3-msg '$ws5; exec --no-startup-id spotify premium; $ws3'
 
