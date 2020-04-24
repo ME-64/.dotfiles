@@ -33,8 +33,8 @@ set undofile                         " Better undos
 set undolevels=10000                 " Better undos
 set undoreload=100000                " Better undos
 set fileformat=unix                  " Unix file format by default
-set fillchars=vert:│,fold:-          " Setting divider character
-set fillchars+=stlnc:-               " Setting divider character
+" set fillchars=vert:│,fold:-          " Setting divider character
+" set fillchars+=stlnc:-               " Setting divider character
 set nohlsearch                       " Enable highlight on search
 set splitbelow                       " Default split positions
 set splitright                       " Default split positions
@@ -45,11 +45,13 @@ set smarttab                         " Better indentation
 set noswapfile                       " Swaps bad
 set nobackup                         " backups bad
 set scrolloff=2                      " chars between cursor & endscreen
-set sidescroll=1                     " side scrolloff
+set sidescroll=1                     " numb of cols to scroll at a time horizontally
+set sidescrolloff=3                  " numb of cols on screen before start scroll
 set wildmenu                         " Autocomplete for cmd
 set wildmode=full                    " Autocomplete for cmd
 set autoread                         " Auto update files changed outside of vim
 set hid                              " Lets you open new files while unsaved changes
+set noshowcmd                        " don't show currently typed command
 set ignorecase                       " case insensitve search
 set smartcase                        " Unless you use uppercase
 set magic                            " Regex Magic
@@ -76,7 +78,9 @@ set wildignore+=**/.git/**           " Ignoring stuff in git
 set wildignore+=*.pyc                " Ignoring cache
 set wildignore+=**/__pycache__/**    " Ignoring cache
 set laststatus=2                     " Always show statusline
-set showcmd
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+set formatoptions+=j                 " delete comment char when join
+
 
 " --------------------------------------------------------
 " THEME
@@ -100,8 +104,10 @@ set statusline+=%1*
 set statusline+=%f
 set statusline+=\ 
 set statusline+=%m
+set statusline+=\ 
 set statusline+=%=
 set statusline+=%1*
+set statusline+=\ 
 set statusline+=%y
 set statusline+=\ 
 set statusline+=%l
@@ -132,9 +138,54 @@ nnoremap <silent> <leader>O :<C-u>call append(line(".")-1, repeat([""], v:count1
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit! 
 
 nnoremap <leader>b :ls<cr>:b<space>
+nmap Q <Nop>
 
 " --------------------------------------------------------
 " OTHER
 " -------------------------------------------------------- 
 " Return to same line from when file last opened
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+
+
+" make list-like commands more intuitive
+function! CCR()
+    let cmdline = getcmdline()
+    if cmdline =~ '\v\C^(ls|files|buffers)'
+        " like :ls but prompts for a buffer command
+        return "\<CR>:b"
+    elseif cmdline =~ '\v\C/(#|nu|num|numb|numbe|number)$'
+        " like :g//# but prompts for a command
+        return "\<CR>:"
+    elseif cmdline =~ '\v\C^(dli|il)'
+        " like :dlist or :ilist but prompts for a count for :djump or :ijump
+        return "\<CR>:" . cmdline[0] . "j  " . split(cmdline, " ")[1] . "\<S-Left>\<Left>"
+    elseif cmdline =~ '\v\C^(cli|lli)'
+        " like :clist or :llist but prompts for an error/location number
+        return "\<CR>:sil " . repeat(cmdline[0], 2) . "\<Space>"
+    elseif cmdline =~ '\C^old'
+        " like :oldfiles but prompts for an old file to edit
+        set nomore
+        return "\<CR>:sil se more|e #<"
+    elseif cmdline =~ '\C^changes'
+        " like :changes but prompts for a change to jump to
+        set nomore
+        return "\<CR>:sil se more|norm! g;\<S-Left>"
+    elseif cmdline =~ '\C^ju'
+        " like :jumps but prompts for a position to jump to
+        set nomore
+        return "\<CR>:sil se more|norm! \<C-o>\<S-Left>"
+    elseif cmdline =~ '\C^marks'
+        " like :marks but prompts for a mark to jump to
+        return "\<CR>:norm! `"
+    elseif cmdline =~ '\C^undol'
+        " like :undolist but prompts for a change to undo
+        return "\<CR>:u "
+    else
+        return "\<CR>"
+    endif
+endfunction
+cnoremap <expr> <CR> CCR()
+
+
+

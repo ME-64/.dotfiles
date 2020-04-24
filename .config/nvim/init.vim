@@ -33,8 +33,9 @@ set noswapfile                       " Swaps bad
 set nobackup                         " backups bad
 set scrolloff=2                      " chars between cursor & endscreen
 set sidescroll=1                     " side scrolloff
+set sidescrolloff=3                  " numb of cols on screen before start scroll
 set wildmenu                         " Autocomplete for cmd
-set wildmode=longest,list,full       " Autocomplete for cmd
+set wildmode=full                    " Autocomplete for cmd
 set autoread                         " Auto update files changed outside of vim
 set hid                              " Lets you open new files while unsaved changes
 set ignorecase                       " case insensitve search
@@ -50,6 +51,7 @@ set ttimeout                         " Less delay leaving insert mode
 set ttimeoutlen=400                  " Above
 set timeoutlen=400                   " Above
 set cursorline                       " Column where line is
+set ttyfast
 set incsearch                        " Incremental Searching
 set nowritebackup                    " disable
 set updatetime=100                   " quicker updating
@@ -66,7 +68,8 @@ set wildignore+=**/.git/**           " Ignoring stuff in git
 set wildignore+=*.pyc                " Ignoring cache
 set wildignore+=**/__pycache__/**    " Ignoring cache
 command! MakeTags !ctags -R .        
-
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+set formatoptions+=j                 " delete comment char when join
 
 
 " --------------------------------------------------------
@@ -93,7 +96,10 @@ Plugin 'easymotion/vim-easymotion'                       " good navigation, some
 Plugin 'gcmt/taboo.vim'                                  " rename tabs
 Plugin 'Yggdroot/indentLine'                             " show indentations
 Plugin 'lukas-reineke/indent-blankline.nvim'             " indenting blank lines
-
+Plugin 'michaeljsmith/vim-indent-object'                 " identation objects
+Plugin 'jeetsukumaran/vim-pythonsense'                   " objects for python
+Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }    " Fzf 
+Plugin 'junegunn/fzf.vim'                                " vim plugin
 Plugin 'vim-pandoc/vim-pandoc-syntax'                    " markdown syntax
 
 " Code completion
@@ -191,12 +197,11 @@ nmap <leader>g :Goyo<CR>
 " yos - spelling
 " yop - pasting!
 
-
 " --------------------------------------------------------
-" Taboo Stuff
+" Python Sense Stuff
 " -------------------------------------------------------- 
-set guioptions-=e                  " tabs look same in gui
-
+let g:is_pythonsense_supress_motion_keymaps=1
+let g:is_pythonsense_supress_location_keymaps=1
 
 " --------------------------------------------------------
 " Markdown Stuff
@@ -208,7 +213,7 @@ augroup END
 " --------------------------------------------------------
 " Auto Complete Stuff
 " -------------------------------------------------------- 
-let g:coc_global_extensions = ['coc-python', 'coc-html', 'coc-css', 'coc-vimlsp']
+let g:coc_global_extensions = ['coc-python', 'coc-html', 'coc-css', 'coc-vimlsp', 'coc-json']
 set signcolumn=yes            " always show sign column
 set shortmess+=c              " no messages in cmd
 
@@ -268,12 +273,12 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
+" nmap <leader>rn <Plug>(coc-rename)
 
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -285,8 +290,8 @@ augroup end
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+" xmap <leader>a  <Plug>(coc-codeaction-selected)
+" nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap keys for applying codeAction to the current line.
 "nmap <leader>ac  <Plug>(coc-codeaction)
@@ -295,10 +300,10 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Introduce function text object
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
+" xmap if <Plug>(coc-funcobj-i)
+" xmap af <Plug>(coc-funcobj-a)
+" omap if <Plug>(coc-funcobj-i)
+" omap af <Plug>(coc-funcobj-a)
 
 " Use <TAB> for selections ranges.
 " NOTE: Requires 'textDocument/selectionRange' support from the language server.
@@ -315,18 +320,13 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
 " Mappings using CoCList:
 " Show all diagnostics.
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
 " nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands.
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
 " nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols.
@@ -342,21 +342,6 @@ nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 " Devicons Stuff
 " -------------------------------------------------------- 
 let g:webdevicons_conceal_nerdtree_brackets=1
-
- 
-" --------------------------------------------------------
-" Vim Slime Stuff
-" -------------------------------------------------------- 
-let g:slime_target="tmux"
-let g:slime_paste_file="$HOME/.slime_paste"
-let g:slime_no_mappings=1
-let g:slime_python_ipython=1
-
-"let g:slime_target="vimterminal"
-
-xmap <leader><cr> :SlimeSend<cr>i<esc>
-nmap <leader><cr> :SlimeSend<cr>i<esc>
-nmap <leader>0 <Plug>SlimeConfig
 
 " --------------------------------------------------------
 " NERDTree Stuff 
@@ -382,18 +367,12 @@ let g:indent_blankline_enable=v:true
 let g:indentLine_char = '|'
 let g:indentline_LeadingSpaceEnabled=1
 
-
-
-
-
-
 " --------------------------------------------------------
 " Neovim Cursor Stuff
 " -------------------------------------------------------- 
 " set guicursor= 
 " set guicursor+=i:ver100
 " set guicursor+=n-v-c:block
-
 
 " --------------------------------------------------------
 "  BINDINGS 
@@ -413,8 +392,8 @@ nmap <leader>w :w!<cr>
 " Better quitting
 nmap <leader>q :q<cr>
 map <silent> <leader>e :NERDTreeToggle<CR>
-
-
+nnoremap <leader>b :ls<cr>:b<space>
+nmap Q <Nop>
 
 " --------------------------------------------------------
 " No Arrow keys!
@@ -443,7 +422,6 @@ vnoremap <Left> <Nop>
 vnoremap <Right> <Nop>
 vnoremap <Up> <Nop>
 
-
 " --------------------------------------------------------
 " Python Stuff
 " -------------------------------------------------------- 
@@ -461,7 +439,6 @@ au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
 au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 autocmd FileType python nnoremap <buffer> <leader>r :!clear; python3 %<cr>
 
-
 " --------------------------------------------------------
 " OTHER
 " -------------------------------------------------------- 
@@ -470,3 +447,42 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 syntax enable " At the end to ensure it's enabled once all themeing is done
 let g:python_highlight_all = 1
+
+" Make list-like commands more intuitive
+function! CCR()
+    let cmdline = getcmdline()
+    if cmdline =~ '\v\C^(ls|files|buffers)'
+        " like :ls but prompts for a buffer command
+        return "\<CR>:b"
+    elseif cmdline =~ '\v\C/(#|nu|num|numb|numbe|number)$'
+        " like :g//# but prompts for a command
+        return "\<CR>:"
+    elseif cmdline =~ '\v\C^(dli|il)'
+        " like :dlist or :ilist but prompts for a count for :djump or :ijump
+        return "\<CR>:" . cmdline[0] . "j  " . split(cmdline, " ")[1] . "\<S-Left>\<Left>"
+    elseif cmdline =~ '\v\C^(cli|lli)'
+        " like :clist or :llist but prompts for an error/location number
+        return "\<CR>:sil " . repeat(cmdline[0], 2) . "\<Space>"
+    elseif cmdline =~ '\C^old'
+        " like :oldfiles but prompts for an old file to edit
+        set nomore
+        return "\<CR>:sil se more|e #<"
+    elseif cmdline =~ '\C^changes'
+        " like :changes but prompts for a change to jump to
+        set nomore
+        return "\<CR>:sil se more|norm! g;\<S-Left>"
+    elseif cmdline =~ '\C^ju'
+        " like :jumps but prompts for a position to jump to
+        set nomore
+        return "\<CR>:sil se more|norm! \<C-o>\<S-Left>"
+    elseif cmdline =~ '\C^marks'
+        " like :marks but prompts for a mark to jump to
+        return "\<CR>:norm! `"
+    elseif cmdline =~ '\C^undol'
+        " like :undolist but prompts for a change to undo
+        return "\<CR>:u "
+    else
+        return "\<CR>"
+    endif
+endfunction
+cnoremap <expr> <CR> CCR()

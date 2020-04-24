@@ -123,6 +123,9 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/the
 chsh -s $(which zsh)
 
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+
 
 #### System Clipboard
 
@@ -163,3 +166,18 @@ browser.sessionstore.resume_from_crash -> false
 ------------------------
 
 sudo update-alternatives --install /usr/bin/editor editor /snap/bin/nvim 100
+
+
+
+#### Tree
+
+------------------------
+sudo apt install tree
+
+
+
+#### fzf
+
+------------------------
+sudo apt install ripgrep
+sudo apt install fzf
