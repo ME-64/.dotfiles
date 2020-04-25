@@ -51,15 +51,22 @@ set ttimeout                         " Less delay leaving insert mode
 set ttimeoutlen=400                  " Above
 set timeoutlen=400                   " Above
 set cursorline                       " Column where line is
-set ttyfast
+set ttyfast                          " fast term!
 set incsearch                        " Incremental Searching
+set inccommand=split                 " Live substitutions
 set nowritebackup                    " disable
 set updatetime=100                   " quicker updating
 set conceallevel=0                   " back to default
 set shiftround                       " round indent to multiples of shiftwidth
 set backspace=indent,eol,start       " correct backspace
 set ve=all                           " virtual editing
+set grepprg=rg\ --vimgrep            " use ripgrep for grepping
 set formatoptions-=cro               " no auto commenting
+set shortmess=atIAc                  " no startup + auto comp message
+set signcolumn=yes                   " always show sign column
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+set formatoptions+=j                 " delete comment char when join
+
 " File searching stuff
 set path=.                           " Default path
 set path+=**                         " search subfolders
@@ -67,9 +74,16 @@ set wildignore+=**/venv/**           " Ignoring stuff in virtual environment
 set wildignore+=**/.git/**           " Ignoring stuff in git
 set wildignore+=*.pyc                " Ignoring cache
 set wildignore+=**/__pycache__/**    " Ignoring cache
+set wildignore+=*.so,*.pyc,*.png,*.jpg,*.gif,*.jpeg,*.ico,*.pdf
+set wildignore+=*.wav,*.mp4,*.mp3
+set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem
+set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
+set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*
+set wildignore+=*.swp,*~,._*
+set wildignore+=_pycache_,.DS_Store,.vscode,.localized
+set wildignore+=.cache,node_modules,package-lock.json,yarn.lock,dist,.git
+set wildignore+=.vimruncmd
 command! MakeTags !ctags -R .        
-set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-set formatoptions+=j                 " delete comment char when join
 
 
 " --------------------------------------------------------
@@ -88,8 +102,8 @@ Plugin 'machakann/vim-highlightedyank'                   " Highlight text that h
 Plugin 'junegunn/goyo.vim'                               " Distraction free mode
 Plugin 'vim-python/python-syntax'                        " Python syntax highlighting
 Plugin 'jpalardy/vim-slime'                              " vim REPL support
-Plugin 'tpope/vim-fugitive'                              " git integration
 Plugin 'tpope/vim-surround'                              " easy quotes
+Plugin 'tpope/vim-fugitive'                              " git integration
 Plugin 'tpope/vim-unimpaired'                            " good toggle mappings
 Plugin 'tpope/vim-repeat'                                " let . work for plugins
 Plugin 'easymotion/vim-easymotion'                       " good navigation, sometimes
@@ -100,7 +114,7 @@ Plugin 'michaeljsmith/vim-indent-object'                 " identation objects
 Plugin 'jeetsukumaran/vim-pythonsense'                   " objects for python
 Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }    " Fzf 
 Plugin 'junegunn/fzf.vim'                                " vim plugin
-Plugin 'vim-pandoc/vim-pandoc-syntax'                    " markdown syntax
+" Plugin 'vim-pandoc/vim-pandoc-syntax'                    " markdown syntax
 
 " Code completion
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}        " code completion
@@ -149,17 +163,12 @@ endif
 " airline symbols
 let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.whitespace = 'Ξ'
-" let g:airline_left_sep = ''
-" let g:airline_left_alt_sep = ''
-" let g:airline_right_sep = ''
-" let g:airline_right_alt_sep = ''
 let g:airline_left_sep = ' '
 let g:airline_left_alt_sep = ' '
 let g:airline_right_sep = ' '
 let g:airline_right_alt_sep = ' '
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
-"let g:airline_symbols.linenr = ''
 let g:airline_symbols.linenr = ''
 let g:airline_symbols.maxlinenr = ''
 let g:airline_symbols.dirty = ''
@@ -173,6 +182,7 @@ if ! has('gui_running')
     au InsertLeave * set timeoutlen=1000
   augroup END
 endif
+
 
 " --------------------------------------------------------
 " Yank Stuff
@@ -206,16 +216,14 @@ let g:is_pythonsense_supress_location_keymaps=1
 " --------------------------------------------------------
 " Markdown Stuff
 " -------------------------------------------------------- 
-augroup pandoc_syntax
-    au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
-augroup END
+" augroup pandoc_syntax
+"     au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
+" augroup END
 
 " --------------------------------------------------------
 " Auto Complete Stuff
 " -------------------------------------------------------- 
 let g:coc_global_extensions = ['coc-python', 'coc-html', 'coc-css', 'coc-vimlsp', 'coc-json']
-set signcolumn=yes            " always show sign column
-set shortmess+=c              " no messages in cmd
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
@@ -258,7 +266,7 @@ nmap <silent> gd <Plug>(coc-definition)
 " nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+" nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -280,18 +288,13 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " xmap <leader>f  <Plug>(coc-format-selected)
 " nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-" xmap <leader>a  <Plug>(coc-codeaction-selected)
-" nmap <leader>a  <Plug>(coc-codeaction-selected)
+" augroup mygroup
+"   autocmd!
+"   " Setup formatexpr specified filetype(s).
+"   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+"   " Update signature help on jump placeholder.
+"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" augroup end
 
 " Remap keys for applying codeAction to the current line.
 " nmap <leader>ac  <Plug>(coc-codeaction)
@@ -389,20 +392,28 @@ nnoremap <silent> _ :noh<CR>
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit! 
 " Better saving
 nmap <leader>w :w!<cr> 
-" Better quitting
-nmap <leader>q :q<cr>
+" Better quitting & saving
+nmap <leader>q :wq<cr>
 map <silent> <leader>e :NERDTreeToggle<CR>
 nnoremap <leader>b :ls<cr>:b<space>
 nmap Q <Nop>
+
+noremap H g^
+noremap L g_
+
+" quick open of fzf
+noremap <leader>f :Files<CR>
+noremap Y ^y$
+
 
 " --------------------------------------------------------
 " No Arrow keys!
 " -------------------------------------------------------- 
 " Command Mode
-" cnoremap <Down> <Nop> 
+cnoremap <Down> <Nop> 
 cnoremap <Left> <Nop>
 cnoremap <Right> <Nop>
-" cnoremap <Up> <Nop>
+cnoremap <Up> <Nop>
 
 " Insert Mode
 inoremap <Down> <Nop>
