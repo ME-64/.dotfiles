@@ -181,3 +181,10 @@ sudo apt install tree
 ------------------------
 sudo apt install ripgrep
 sudo apt install fzf
+
+
+#### fd-find
+
+------------
+
+sudo apt install fd-find

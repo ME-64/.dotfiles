@@ -6,11 +6,5 @@
 **/.cache/**
 **/.oh-my-zsh/**
 **/.dotfiles/**
-**/site-packages
-**/.git
-**/node_modules
-**/.github
-**/.mozilla
-**/.cache
-**/.oh-my-zsh
-**/.dotfiles
+**/.ICAClient/**
+**/.vim/**

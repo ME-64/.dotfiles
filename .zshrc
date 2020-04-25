@@ -64,9 +64,6 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
 
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
 # Which plugins would you like to load?
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -86,37 +83,6 @@ plugins=(git
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# cd ~
-# ZSH_TMUX_AUTOSTART=true
-# ZSH_TMUX_AUTOSTART_ONCE=false
-# ZSH_TMUX_AUTOCONNECT=true
-
 # autostart tmux
 # if [ "$TMUX" = "" ]; then tmux; fi
 
@@ -125,22 +91,20 @@ KEYTIMEOUT=1
 
 export TERM=xterm-256color
 #[ -n "$TMUX" ] && export TERM=screen-256color
-# alias vim="nvim"
+
 alias vi="vim"
-export EDITOR="nvim"
+export EDITOR="vim"
 alias nv="nvim"
 alias v="vim"
 alias la="ls -A"
-# alias ls="lsd"
-# alias l='ls -l'
-# alias la='ls -a'
-# alias lla='ls -la'
-# alias lt='ls --tree'
 
 # export EDITOR="vim"
 # alias vi="vim"
 # alias v="vim"
 # export VISUAL="vim"
+
+
+alias fd="fdfind"
 
 export PATH=$PATH:/home/milo/.local/bin
 export ICAROOT=/opt/Citrix/ICAClient
@@ -148,13 +112,16 @@ export ICAROOT=/opt/Citrix/ICAClient
 
 export PROMPT_COMMAND="pwd > /tmp/whereami"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # source "$HOME/.vim/bundle/gruvbox/gruvbox_256palette.sh"
 
+
+# dotfile management
 alias config='/usr/bin/git --git-dir=/home/milo/.dotfiles/ --work-tree=/home/milo'
 
+# tree for projects
 alias tree="tree -I '__pycache__|*.pyc|.git|venv'"
 
 
@@ -162,18 +129,20 @@ alias tree="tree -I '__pycache__|*.pyc|.git|venv'"
 vman() { vim <(man $1); }
 
 
-# Faster compgen
-_fzf_compgen_dir() {
-	rg --hidden --files --null "$1" 2 > /dev/null | xargs -0 "$dirname_command" | awk '!h[$0]++'
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" . "$1"
 }
 
-_fzf_compgen_path() {
-	rg --hidden --files --null "$1"
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"
 }
+
+
 
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 export FZF_CTRL_T_COMMAND='rg --files --hidden'
+export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 
 
 function cd() {
@@ -196,4 +165,13 @@ function cd() {
     done
 }
 
+vf() (
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+)
 
+
+fif() {
+  if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
+  rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
+}

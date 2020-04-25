@@ -399,10 +399,10 @@ nmap Q <Nop>
 " No Arrow keys!
 " -------------------------------------------------------- 
 " Command Mode
-"cnoremap <Down> <Nop> 
+" cnoremap <Down> <Nop> 
 cnoremap <Left> <Nop>
 cnoremap <Right> <Nop>
-"cnoremap <Up> <Nop>
+" cnoremap <Up> <Nop>
 
 " Insert Mode
 inoremap <Down> <Nop>
