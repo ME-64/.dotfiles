@@ -66,8 +66,11 @@
   "diagnostic.errorSign": "",
   "diagnostic.warningSign": "",
   "diagnostic.messageDelay": 150,
-  "diagnostic.enableHighlightLineNumber": false
+  "diagnostic.enableHighlightLineNumber": false,
+  "css.colorDecorators.enable": false,
+  "coc.preferences.colorSupport": false
 }
+
 
 
 

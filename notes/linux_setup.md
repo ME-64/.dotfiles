@@ -188,3 +188,37 @@ sudo apt install fzf
 ------------
 
 sudo apt install fd-find
+
+
+### markdown view
+
+-----------------
+
+pip3 install grip
+
+
+
+### Go
+
+------
+
+sudo add-apt-repository ppa:longsleep/golang-backports
+sudo apt update
+sudo apt install golang-go
+
+
+### vim-plug
+
+------------
+
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+
+
+### Livedown
+
+--------------
+
+npm install -g livedown
+

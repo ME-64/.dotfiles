@@ -134,11 +134,22 @@ let mapleader = " "
 nnoremap <silent> <leader>o :<C-u>call append(line("."),   repeat([""], v:count1))<CR>
 nnoremap <silent> <leader>O :<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>
 
+nmap <leader>q :wq<cr>
+
+
 " Save files when you forgot to sudo into it
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit! 
 
 nnoremap <leader>b :ls<cr>:b<space>
 nmap Q <Nop>
+
+noremap H g^
+noremap L g_
+" quick open of fzf
+noremap <leader>f :find <space>
+noremap Y ^y$
+
+
 
 " --------------------------------------------------------
 " OTHER

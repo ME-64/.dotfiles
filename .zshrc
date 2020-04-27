@@ -140,9 +140,9 @@ _fzf_compgen_dir() {
 
 
 
-export FZF_DEFAULT_COMMAND='rg --files --hidden'
-export FZF_CTRL_T_COMMAND='rg --files --hidden'
-export FZF_ALT_C_COMMAND="fd -t d . $HOME"
+export FZF_DEFAULT_COMMAND='rg --files --hidden . $HOME'
+export FZF_CTRL_T_COMMAND='fd -t f -H . $HOME'
+export FZF_ALT_C_COMMAND="fd -t d -H . $HOME"
 
 
 function cd() {
@@ -167,9 +167,13 @@ function cd() {
 
 vf() (
   IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
-  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+  [[ -n "$files" ]] && vim "${files[@]}"
 )
 
+nvf() (
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "$files" ]] && nvim "${files[@]}"
+)
 
 fif() {
   if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
