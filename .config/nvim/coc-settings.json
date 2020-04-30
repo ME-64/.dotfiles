@@ -18,9 +18,9 @@
     "css",
     "javascript"
   ],
-  "suggest.noselect": true,
-  "suggest.enablePreselect": false,
-  "suggest.preferCompleteThanJumpPlaceholder": true,
+  "suggest.noselect": false,
+  "suggest.enablePreselect": true,
+  "suggest.preferCompleteThanJumpPlaceholder": false,
   "suggest.completionItemKindLabels": {
     "keyword": "\uf1de",
     "variable": "\ue79b",
@@ -53,6 +53,11 @@
   "signature.triggerSignatureWait": 50,
   "signature.preferShownAbove": true,
   "signature.target": "float",
+  "signature.floatMaxWidth": 20,
+  "suggest.enablePreview": true,
+  "suggest.localityBonus": false,
+  "suggest.snippetIndicator": "~",
+  "suggest.removeDuplicateItems": false,
   "diagnostic.virtualText": false,
   "suggest.floatEnable": true,
   "coc.preferences.formatOnInsertLeave": false,
@@ -67,8 +72,23 @@
   "diagnostic.warningSign": "",
   "diagnostic.messageDelay": 150,
   "diagnostic.enableHighlightLineNumber": false,
+  "diagnostic.hintSign": "",
+  "diagnostic.infoSign": "",
+  "diagnostic.signOffset": 3000,
   "css.colorDecorators.enable": false,
-  "coc.preferences.colorSupport": false
+  "coc.preferences.colorSupport": false,
+  "javascript.validate.enable": true,
+  "suggest.detailMaxLength": 20,
+  "suggest.labelMaxLength": 50,
+  "javascript.suggestionActions.enabled": false,
+  "tsserver.enable": false,
+  "eslint.enable": true,
+  "eslint.filetypes": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact"
+  ]
 }
 
 

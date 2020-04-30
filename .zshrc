@@ -106,6 +106,8 @@ alias la="ls -A"
 
 alias fd="fdfind"
 
+alias cit="/opt/Citrix/ICAClient/wfica"
+
 export PATH=$PATH:/home/milo/.local/bin
 export ICAROOT=/opt/Citrix/ICAClient
 
