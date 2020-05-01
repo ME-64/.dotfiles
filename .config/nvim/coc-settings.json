@@ -1,26 +1,19 @@
 {
-  "python.formatting.provider": "none",
-  "python.jediEnabled": false,
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": true,
-  "python.autoComplete.addBrackets": true,
-  "suggest.maxCompleteItemCount": 100,
-  "python.linting.pylintArgs": [
-    "--disable=C0111",
-    "--disable=C0103",
-    "--disable=C0304",
-    "--disable=invalid-name,missing-module-docstring,trailing-newlines"
-  ],
-  "python.linting.banditEnabled": false,
-  "coc.preferences.formatOnSaveFiletypes": [
-    "json",
-    "html",
-    "css",
-    "javascript"
-  ],
   "suggest.noselect": false,
+  "suggest.echodocSupport": true,
+  "suggest.autoTrigger": "trigger",
   "suggest.enablePreselect": true,
   "suggest.preferCompleteThanJumpPlaceholder": false,
+  "suggest.enablePreview": true,
+  "suggest.floatEnable": true,
+  "suggest.maxCompleteItemCount": 100,
+  "suggest.localityBonus": false,
+  "suggest.snippetIndicator": "~",
+  "suggest.removeDuplicateItems": false,
+  "suggest.lowPrioritySourceLimit": 3,
+  "suggest.defaultSortMethod": "length",
+  "suggest.detailMaxLength": 20,
+  "suggest.labelMaxLength": 50,
   "suggest.completionItemKindLabels": {
     "keyword": "\uf1de",
     "variable": "\ue79b",
@@ -48,26 +41,9 @@
     "typeParameter": "\uf728",
     "default": "\uf29c"
   },
+
   "diagnostic.refreshAfterSave": true,
   "diagnostic.refreshOnInsertMode": true,
-  "signature.triggerSignatureWait": 50,
-  "signature.preferShownAbove": true,
-  "signature.target": "float",
-  "signature.floatMaxWidth": 20,
-  "suggest.enablePreview": true,
-  "suggest.localityBonus": false,
-  "suggest.snippetIndicator": "~",
-  "suggest.removeDuplicateItems": false,
-  "diagnostic.virtualText": false,
-  "suggest.floatEnable": true,
-  "coc.preferences.formatOnInsertLeave": false,
-  "html.filetypes": [
-    "html",
-    "handlebars",
-    "htmldjango"
-  ],
-  "html.enable": true,
-  "html.autoClosingTags": true,
   "diagnostic.errorSign": "",
   "diagnostic.warningSign": "",
   "diagnostic.messageDelay": 150,
@@ -75,13 +51,53 @@
   "diagnostic.hintSign": "",
   "diagnostic.infoSign": "",
   "diagnostic.signOffset": 3000,
-  "css.colorDecorators.enable": false,
+  "diagnostic.virtualText": false,
+
+  "signature.enable": true,
+  "signature.preferShownAbove": true,
+  "signature.triggerSignatureWait": 50,
+  "signature.target": "float",
+  "signature.floatMaxWidth": 20,
+
+  "coc.preferences.formatOnInsertLeave": false,
+  "coc.preferences.bracketEnterImprove": true,
   "coc.preferences.colorSupport": false,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "json",
+    "html",
+    "css",
+    "javascript"
+  ],
+
+  "html.enable": true,
+  "html.autoClosingTags": true,
+  "html.filetypes": [
+    "html",
+    "handlebars",
+    "htmldjango"
+  ],
+  "vimlsp.suggest.fromVimruntime": true,
+
+  "css.colorDecorators.enable": false,
+
   "javascript.validate.enable": true,
-  "suggest.detailMaxLength": 20,
-  "suggest.labelMaxLength": 50,
   "javascript.suggestionActions.enabled": false,
+
   "tsserver.enable": false,
+
+  "python.formatting.provider": "none",
+  "python.jediEnabled": false,
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.autoComplete.addBrackets": true,
+  "python.linting.pylintArgs": [
+    "--disable=C0111",
+    "--disable=C0103",
+    "--disable=C0304",
+    "--disable=invalid-name,missing-module-docstring,trailing-newlines"
+  ],
+  "python.linting.banditEnabled": false,
+
   "eslint.enable": true,
   "eslint.filetypes": [
       "javascript",

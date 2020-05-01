@@ -8,6 +8,7 @@ set expandtab                        " Convert Tabs to spaces
 set tabstop=4                        " Default tab for files
 set softtabstop=4                    " Defualt tabs for files
 set shiftwidth=4                     " Default tabs for files
+set shiftround                       " indent multiples of width
 set breakindent                      " Wrapped lines same indent
 set breakindentopt=sbr               " Wrapping
 set showbreak=↪>\                    " character to show break
@@ -63,6 +64,7 @@ set ve=block                         " virtual editing
 set grepprg=rg\ --vimgrep            " use ripgrep for grepping
 set formatoptions+=j                 " remove comments on line join
 set formatoptions-=t                 " no auto wrap
+set formatoptions-=cro               " no auto commenting
 set shortmess=atIAcFW                " no startup + auto comp message
 set signcolumn=yes                   " always show sign column
 set list
@@ -71,6 +73,7 @@ set lazyredraw                       " don't update screen during macro
 set textwidth=100                    " 100 chars for wrapping
 set spelllang=en_gb                  " the queen's english
 set complete+=kspell                 " autocomplete from dictionary w/spell
+runtime macros/matchit.vim           " matching if elses
 
 " --------------------------------------------------------
 "  File Searching
@@ -109,54 +112,67 @@ Plug 'junegunn/fzf',  {'dir': '~/.fzf', 'do': './install --bin'}
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind']}
 Plug 'Xuyuanp/nerdtree-git-plugin', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind']}
-Plug 'mbbill/undotree', {'on': ['UndotreeToggle']}               " visualise undo history
+Plug 'mbbill/undotree', {'on': ['UndotreeToggle']}                   " visualise undo history
 
 " Colours
-Plug 'morhetz/gruvbox'                                           " Gruvbox theme
+Plug 'morhetz/gruvbox'                                               " Gruvbox theme
+Plug 'sainnhe/gruvbox-material'
 Plug 'franbach/miramare'
-Plug 'vim-airline/vim-airline'                                   " Simple Status line
-Plug 'vim-airline/vim-airline-themes'                            " Simple Status line
-Plug 'RRethy/vim-hexokinase', {'do': 'make hexokinase'}          " highlighting of colours
-Plug 'junegunn/goyo.vim', {'on': ['Goyo']}                       " Distraction free mode
-Plug 'junegunn/limelight.vim', {'on': ['Goyo']}                  " used w goyo
+Plug 'vim-airline/vim-airline'                                       " Simple Status line
+Plug 'vim-airline/vim-airline-themes'                                " Simple Status line
+Plug 'RRethy/vim-hexokinase', {'do': 'make hexokinase'}              " highlighting of colours
+Plug 'junegunn/goyo.vim', {'on': ['Goyo']}                           " Distraction free mode
+Plug 'junegunn/limelight.vim', {'on': ['Goyo']}                      " used w goyo
 Plug 'ryanoasis/vim-devicons'
 
 " tpope goodness
-Plug 'tpope/vim-surround'                                        " wow quotes
-Plug 'tpope/vim-fugitive'                                        " git integration
-Plug 'tpope/vim-repeat'                                          " let . work for plugins
-Plug 'tpope/vim-commentary'                                      " gcc to comment and uncomment things
+Plug 'tpope/vim-surround'                                            " wow quotes
+Plug 'tpope/vim-fugitive'                                            " git integration
+Plug 'tpope/vim-repeat'                                              " let . work for plugins
+Plug 'tpope/vim-commentary'                                          " gcc to comment and uncomment things
 
 " helpers
-Plug 'jiangmiao/auto-pairs'                                      " auto close brackets
-Plug 'machakann/vim-highlightedyank'                             " Highlight text that has been yanked
-Plug 'kshenoy/vim-signature'                                     " show marks in sign column
+Plug 'jiangmiao/auto-pairs'                                          " auto close brackets
+Plug 'Valloric/MatchTagAlways'                                       " html highlight tags
+Plug 'machakann/vim-highlightedyank'                                 " Highlight text that has been yanked
+Plug 'kshenoy/vim-signature'                                         " show marks in sign column
 Plug 'nathanaelkane/vim-indent-guides', {'on': ['IndentGuidesToggle']}
-Plug 'dstein64/vim-startuptime'                                  " debug startup time
+Plug 'dstein64/vim-startuptime'                                      " debug startup time
+Plug 'linluk/vim-websearch'                                          " google terms
+Plug 'AndrewRadev/undoquit.vim'                                      " <c-w>u reopen last close window
 
+" Text Objects
+Plug 'kana/vim-textobj-user'                                         " UD objects
+Plug 'reedes/vim-textobj-sentence', {'for': ['markdown']}            " clever sentence objects
+Plug 'michaeljsmith/vim-indent-object'                               " identation objects
+Plug 'mattn/vim-textobj-url'                                         " url text obj
+Plug 'glts/vim-textobj-comment'                                      " comments
+Plug 'fvictorio/vim-textobj-backticks'                               " backtick surround
 
-" Motions & navigation stuff
-Plug 'rhysd/clever-f.vim'                                        " smart f/t movement
-Plug 'michaeljsmith/vim-indent-object'                           " identation objects
-Plug 'chaoren/vim-wordmotion'                                    " improved word definiton
+" Motions & navigation
+Plug 'rhysd/clever-f.vim'                                            " smart f/t movement
+Plug 'chaoren/vim-wordmotion'                                        " improved word definiton
+Plug 'AndrewRadev/sideways.vim'                                      " move function items around
+Plug 'junegunn/vim-easy-align'                                       " horizontal align, lines
+Plug 't9md/vim-textmanip'                                            " shift text around
 
 " python stuff
-Plug 'vim-python/python-syntax', {'for': ['python']}             " Python syntax highlighting
-Plug 'jeetsukumaran/vim-pythonsense', {'for': ['python']}        " objects for python
-Plug 'Vimjas/vim-python-pep8-indent', {'for': ['python']}        " better indent for python
-Plug 'raimon49/requirements.txt.vim', {'for': ['requirements']}  " syntax highlight req.txt
+Plug 'vim-python/python-syntax', {'for': ['python']}                 " Python syntax highlighting
+Plug 'jeetsukumaran/vim-pythonsense', {'for': ['python']}            " objects for python
+Plug 'Vimjas/vim-python-pep8-indent', {'for': ['python']}            " better indent for python
+Plug 'raimon49/requirements.txt.vim', {'for': ['requirements']}      " syntax highlight req.txt
 
 " Writing
-Plug 'shime/vim-livedown', {'for': ['markdown']}                 " live preview of markdown
+Plug 'shime/vim-livedown', {'for': ['markdown']}                     " live preview of markdown
 Plug 'tpope/vim-markdown'
-Plug 'kana/vim-textobj-user'                                     " UD objects
-Plug 'reedes/vim-textobj-sentence', {'for': ['markdown']}        " clever sentence objects
-Plug 'dbmrq/vim-ditto'                                           " DRY, but for writing
-Plug 'reedes/vim-wordy'                                          " check yo profanity
+Plug 'dbmrq/vim-ditto'                                               " DRY, but for writing
+Plug 'reedes/vim-wordy'                                              " check yo profanity
+Plug 'reedes/vim-litecorrect'                                        " gentle auto correct
 
 " Language Stuff
-Plug 'neoclide/coc.nvim', {'branch': 'release'}                  " code completion
-Plug 'sheerun/vim-polyglot'                                      " for lesser used lngs
+Plug 'neoclide/coc.nvim', {'branch': 'release'}                      " code completion
+Plug 'Shougo/echodoc.vim'                                            " show function signatures
+Plug 'sheerun/vim-polyglot'                                          " for lesser used languages
 Plug 'honza/vim-snippets'
 
 call plug#end()
@@ -167,23 +183,15 @@ filetype plugin indent on
 " --------------------------------------------------------
 set termguicolors
 
-let g:gruvbox_contrast_dark="soft"
-let g:gruvbox_color_column="bg1"
-let g:gruxbox_number_column='bg2'
-let g:gruvbox_bold=1
-let g:gruvbox_invert_selection=0
-let g:gruvbox_italic=1
-let g:grubox_undercurl=1
-let g:gruvbox_italicize_comments=0
-
-let g:miramare_enable_italic=1
-let g:miramare_disable_italic_comment=1
+let g:gruvbox_material_background = 'soft'
+let g:gruvbox_material_enable_italic = 1
+let g:gruvbox_material_enable_bold = 1
 
 set background=dark
-colorscheme miramare
-let g:airline_theme='miramare'
+colorscheme gruvbox-material
+let g:airline_theme='gruvbox_material'
 " semi-transparent pop-up window
-set pumblend=3
+set pumblend=10
 " no transparency for selected autocomplete
 hi PmenuSel blend=0
 
@@ -195,14 +203,17 @@ nnoremap <SPACE> <Nop>
 
 let mapleader = " "
 " Inserting new lines without leaving normal mode
-nnoremap <silent> <leader>o :<C-u>call append(line("."),   repeat([""], v:count1))<CR>
-nnoremap <silent> <leader>O :<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>
+" nnoremap <silent> <leader>o :<C-u>call append(line("."),   repeat([""], v:count1))<CR>
+" nnoremap <silent> <leader>O :<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>
+nmap <leader>o <Plug>(textmanip-blank-below)
+nmap <leader>O <Plug>(textmanip-blank-above)
+
 " Clear highlighting with _
 " nnoremap <silent> _ :noh<CR>
 " Save files when you forgot to sudo into it
 cmap w!! w !sudo tee > /dev/null %
 " Better saving
-nmap <silent> <leader>w :w!<cr> 
+nmap <silent> <leader>w :w!<cr>
 " Better quitting & saving
 nmap <silent> <leader>q :q<cr>
 " nnoremap <leader>b :ls<cr>:b<space>
@@ -218,12 +229,10 @@ nnoremap v <C-v>
 nnoremap <c-h> 0i<BS><esc>
 nnoremap <c-l> i<cr><esc>kj$
 
-
 inoremap <M-l> <right>
 inoremap <M-k> <Up>
 inoremap <M-j> <Down>
 inoremap <M-h> <left>
-
 
 " Better navigation
 noremap <C-k> <C-u><C-u>
@@ -233,14 +242,12 @@ noremap K <c-u>
 noremap H 0
 noremap L $
 
-
 " next and previous appearance of a word
 " nnoremap <C-p> #zz
 " nnoremap <C-n> *zz
 " next and previous jump
-nnoremap <C-P> <C-o>
-nnoremap <C-N> <C-i>
-
+nnoremap <C-p> <C-o>
+nnoremap <C-n> <C-i>
 
 " Easier indentation
 noremap <Tab> >>
@@ -254,11 +261,12 @@ nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 
-
-" sensical top & bottom
+" mnemoinc top & bottom
 noremap gk gg
 noremap gj G
 
+" moving between brackets simple
+nmap 0 %
 
 " Change text without putting the text into register,
 nnoremap c "_c
@@ -298,10 +306,6 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 noremap <Up> <Nop>
 
-" textwidth in visual mode
-vnoremap <leader>fw gwi<esc>
-vnoremap <leader>fi =<esc>
-
 " Run python files easily
 autocmd FileType python nnoremap <buffer> <leader>rf :!python3 %<cr>
 
@@ -313,6 +317,8 @@ nnoremap <silent> = :bn <cr>
 nnoremap <silent> - :bp <cr>
 nnoremap <silent> _ :bd <cr>
 
+" small tweak to vim-surround. I don't use default v_S
+vmap s S
 
 " --------------------------------------------------------
 " Spelling / Writing Mode
@@ -344,6 +350,8 @@ function! WritingMode()
         nnoremap <leader>sa zg
         nnoremap <leader>sc 1z=
         nnoremap <leader>sC z=
+
+        call litecorrect#init()
         let b:writing_mode=1
         echo("Writing Mode On")
     else
@@ -354,18 +362,17 @@ function! WritingMode()
         nnoremap <leader>sc <Nop>
         nnoremap <leader>sC <Nop>
         DittoOff
-        NoWordy
+        silent NoWordy
         let b:writing_mode=0
         echo("Writing Mode Off")
     endif
 endfunction
 
 " --------------------------------------------------------
-" Find & Replace Functionality
+" Find & Replace Functionality (TODO)
 " --------------------------------------------------------
 nnoremap <C-s>r :%s/
 vnoremap <C-s>r :s/
-
 
 " --------------------------------------------------------
 "  Clever F settings
@@ -394,6 +401,7 @@ function! s:goyo_enter()
   Limelight
   setlocal signcolumn=no
   setlocal nocursorline
+  setlocal number
   autocmd InsertLeave,WinEnter * set nocursorline
   autocmd InsertEnter,WinLeave * set nocursorline
   let b:coc_suggest_disable = 1
@@ -402,6 +410,7 @@ endfunction
 function! s:goyo_leave()
   setlocal scrolloff=2
   setlocal cursorline
+  setlocal rnu
   Limelight!
   AirlineToggle
   AirlineToggle
@@ -421,8 +430,22 @@ let g:Hexokinase_highlighters=['foreground']
 " let g:Hexokinase_ftEnabled=['css', 'html', 'javascript']
 
 " --------------------------------------------------------
-" WordMotion Stuff
+" Formatting Stuff
 " --------------------------------------------------------
+"  fa -> Alignment
+"  fF -> coc.nvim format whole file
+"  fI -> coc.nvim arrange imports
+"  ff -> standard format file (TODO)
+"  fw -> wrap text accordingly
+"  fi -> indent text accordingly
+
+nnoremap <leader>fF :Format<CR>
+nnoremap <leader>fI :OR<CR>
+" textwidth in visual mode
+vnoremap <leader>fw gwi<esc>
+vnoremap <leader>fi =<esc>
+xmap <leader>fa <Plug>(EasyAlign)
+xmap <leader>fA <Plug>(LiveEasyAlign)
 
 " --------------------------------------------------------
 " UndoTree Stuff
@@ -432,7 +455,6 @@ let g:undotree_WindowLayout=4
 let g:undotree_SplitWidth=40
 let g:undotree_SetFocusWhenToggle=1
 let g:undotree_ShortIndicators=1
-
 
 " --------------------------------------------------------
 " Polyglot Stuff
@@ -459,7 +481,6 @@ nnoremap <leader>tw :setlocal wrap!<CR>
 nnoremap <leader>tl :setlocal cursorline!<CR>
 nnoremap <leader>tc :setlocal cursorcolumn!<CR>
 
-
 set colorcolumn=
 set cc=
 fun! ToggleCC()
@@ -479,6 +500,7 @@ nnoremap <silent> <leader>t\ :call ToggleCC()<CR>
 " -------------------------------------------------------- 
 let g:is_pythonsense_supress_motion_keymaps=1
 let g:is_pythonsense_supress_location_keymaps=1
+let g:python_highlight_all = 1
 
 " --------------------------------------------------------
 " Ulti Snips
@@ -491,6 +513,20 @@ let g:ultisnips_python_style='numpy'
 autocmd! FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab
 autocmd! FileType javascript nnoremap <buffer> <leader>jc ^iconsole.log(<esc>A);<esc>
 autocmd! FileType javascript vnoremap <buffer> <leader>jc diconsole.log(<esc>p`]li);<esc>
+
+" --------------------------------------------------------
+" HTML Stuff
+" -------------------------------------------------------- 
+" treat all htmldjangofiles as html (for ftplugins)
+autocmd! FileType htmldjango set filetype=html
+
+" then add back django syntax
+syn region  djangotagmarkers start="{{" end="}}"
+syn region  djangovariablemarkers start="{%" end="%}"
+command! -nargs=+ HiLink hi def link <args>
+HiLink djangotagmarkers PreProc
+HiLink djangovariablemarkers PreProc
+delcommand HiLink
 
 " --------------------------------------------------------
 " Markdown Stuff
@@ -519,8 +555,6 @@ function! SetMarkDownOptions()
     setlocal textwidth=80
     call textobj#sentence#init()
 endfunction
-
-
 
 " --------------------------------------------------------
 " Indent Line Stuff
@@ -584,13 +618,21 @@ let g:fzf_action = {
 "  \ 'ctrl-t': 'tab split',
 
 noremap <silent> <C-f>f :call fzf#vim#files('.', {'options': '--prompt "" --border "rounded"'})<CR>
-noremap <silent> <C-f>b :call fzf#vim#buffers({'options': '--prompt "" --border "rounded"'})<CR>
-
+" noremap <silent> <C-f>b :call fzf#vim#buffers({'options': '--prompt "" --border "rounded"'})<CR>
+nnoremap <C-f>b :ls<CR>:b
 noremap <C-f>m :marks<CR>:norm! `
 nnoremap <C-f>h :Helptags<CR>
 nnoremap <silent> <C-f>l :call fzf#vim#buffer_lines({'options': '--prompt "" --border "rounded"'})<CR>
 nnoremap <silent> <C-f>L :call fzf#vim#lines({'options': '--prompt "" --border "rounded"'})<CR>
-
+nnoremap <silent> <C-f>d :call fzf#run(fzf#wrap({'source': 'find * -type d'}))<CR>
+" and the hold down variant
+noremap <silent> <C-f><C-f> :call fzf#vim#files('.', {'options': '--prompt "" --border "rounded"'})<CR>
+" noremap <silent> <C-f><C-b> :call fzf#vim#buffers({'options': '--prompt "" --border "rounded"'})<CR>
+nnoremap <C-f><C-b> :ls<CR>:b
+noremap <C-f><C-m> :marks<CR>:norm! `
+nnoremap <C-f><C-h> :Helptags<CR>
+nnoremap <silent> <C-f><C-l> :call fzf#vim#buffer_lines({'options': '--prompt "" --border "rounded"'})<CR>
+nnoremap <silent> <C-f><C-d> :call fzf#run(fzf#wrap({'source': 'find * -type d'}))<CR>
 
 " --------------------------------------------------------
 " Airline Stuff
@@ -612,7 +654,6 @@ let g:airline#extensions#tabline#show_close_button = 0
 let g:airline_detect_iminsert=0
 "let g:airline#extensions#tabline#buffer_idx_mode = 1
 
-
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
@@ -632,7 +673,7 @@ let g:airline_symbols.dirty = ''
 
 " fixes slow insert mode leaving
 if ! has('gui_running')
-    set ttimeoutlen=10
+    " set ttimeoutlen=10
     augroup FastEscape
         autocmd!
         au InsertEnter * set timeoutlen=0
@@ -641,6 +682,51 @@ if ! has('gui_running')
         au InsertLeave * set notimeout
     augroup END
 endif
+
+" --------------------------------------------------------
+" text movement with ALT
+" --------------------------------------------------------
+nnoremap <silent> <M-l> :SidewaysRight<CR>
+    nnoremap <silent> <M-h> :SidewaysLeft<CR>
+xmap <M-j> <Plug>(textmanip-move-down)
+xmap <M-k> <Plug>(textmanip-move-up)
+nmap <M-j> <Plug>(textmanip-move-down)
+nmap <M-k> <Plug>(textmanip-move-up)
+
+" --------------------------------------------------------
+" Text Object mappings
+" -------------------------------------------------------- 
+" if/af - functions. ai/ii - indent, au/iu - urls, ac/ic - comments
+
+" Arguments w/ sideways
+omap <silent> aa <Plug>SidewaysArgumentTextobjA
+xmap <silent> aa <Plug>SidewaysArgumentTextobjA
+omap <silent> ia <Plug>SidewaysArgumentTextobjI
+xmap <silent> ia <Plug>SidewaysArgumentTextobjI
+
+"line text objects
+xnoremap il g_o^
+onoremap il :<C-u>normal vil<CR>
+xnoremap al $o0
+onoremap al :<C-u>normal val<CR>
+
+" entire document
+xnoremap ad <esc>vggoVG
+onoremap ad :<C-u>normal vad<CR>
+
+xnoremap ir i[
+xnoremap ar a[
+onoremap ir :normal vi[<CR>
+onoremap ar :normal va[<CR>
+
+" lots :)
+for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#' ]
+    execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'
+    execute 'onoremap i' . char . ' :normal vi' . char . '<CR>'
+    execute 'xnoremap a' . char . ' :<C-u>normal! F' . char . 'vf' . char . '<CR>'
+    execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
+endfor
+
 
 
 " --------------------------------------------------------
@@ -735,8 +821,6 @@ endif
 nmap <silent> gd <Plug>(coc-definition)
 nnoremap <silent> gD :call <SID>show_documentation()<CR>
 
-nnoremap <silent> <leader>cf :Format<CR>
-nnoremap <silent> <leader>ci :OR<CR>
 nnoremap <leader>cD :CocDisable<CR>
 nnoremap <leader>ce :CocEnable<CR>
 nmap <leader>cr <Plug>(coc-rename)
@@ -767,21 +851,34 @@ endfunction
 command! -nargs=0 Format :call CocAction('format')
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
+" --------------------------------------------------------
+" Echo Dot function signatures
+" ------------------------------------------------------- 
+let g:echodoc#enable_at_startup=1
+let g:echodoc#type="floating"
 
+" --------------------------------------------------------
+" Open Browser Stuff
+" ------------------------------------------------------- 
+let g:web_search_query="https://www.google.com/search?q="
+let g:web_search_command="firefox"
+let g:web_search_use_default_mapping="no"
+
+nmap go gx
+vmap go gx
+nnoremap <silent> gO :WebSearchCursor<CR>
+vnoremap <silent> gO :WebSearchVisual<CR>
 
 " --------------------------------------------------------
 " OTHER
 " ------------------------------------------------------- 
-
 " Return to same line from when file last opened
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 " auto source vimrc on change
-autocmd! BufWritePost $MYVIMRC nested source $MYVIMRC
-autocmd! BufWritePost $MYVIMRC AirlineToggle | AirlineToggle | AirlineRefresh
+autocmd! BufWritePost $MYVIMRC nested source $MYVIMRC | AirlineToggle | AirlineToggle | AirlineRefresh
 
 syntax enable " At the end to ensure it's enabled once all themeing is done
-let g:python_highlight_all = 1
 
 " Make list-like commands more intuitive
 function! CCR()
@@ -820,8 +917,6 @@ endfunction
 cnoremap <expr> <CR> CCR()
 
 
-
-
 " only highlight while search is in progress
 augroup vimrc-incsearch-highlight
     autocmd!
@@ -833,8 +928,11 @@ augroup END
 autocmd InsertLeave,WinEnter * set cursorline
 autocmd InsertEnter,WinLeave * set nocursorline
 
-" fix polyglot mistake on vimL
-autocmd BufRead, BufNewFile FileType vim commentstring='" %s'
+" make undoquit work for <c-w>c too
+nnoremap <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
 
+" hack to fix recent polyglot update bug
+autocmd! BufRead, BufNewFile, BufEnter FileType vim commentstring='" %s'
 
-set formatoptions-=cro               " no auto commenting
+" need to figure out what is overwriting it
+autocmd! BufEnter * set formatoptions-=cro
