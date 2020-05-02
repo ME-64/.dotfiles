@@ -70,7 +70,7 @@
   ],
 
   "html.enable": true,
-  "html.autoClosingTags": true,
+  "html.autoClosingTags": false,
   "html.filetypes": [
     "html",
     "handlebars",

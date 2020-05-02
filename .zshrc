@@ -1,7 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -46,10 +42,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -71,7 +67,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git 
   # tmux                     # tmux on startup 
-  vi-mode                  # vi-mode
+  # vi-mode                  # vi-mode
   dotenv                   # auto load .env files when cd into project
   zsh-autosuggestions     # fish like suggestions
   zsh-syntax-highlighting 
@@ -93,7 +89,8 @@ export TERM=xterm-256color
 #[ -n "$TMUX" ] && export TERM=screen-256color
 
 alias vi="vim"
-export EDITOR="vim"
+export EDITOR="nvim"
+export VISUAL="nvim"
 alias nv="nvim"
 alias v="vim"
 alias la="ls -A"
@@ -128,7 +125,7 @@ alias tree="tree -I '__pycache__|*.pyc|.git|venv'"
 
 
 # open man page in vim
-vman() { vim <(man $1); }
+vman() { nvim <(man $1); }
 
 
 _fzf_compgen_path() {

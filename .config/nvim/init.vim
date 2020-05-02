@@ -1,6 +1,6 @@
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 "  Basic
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 set clipboard=unnamedplus            " Using system clipboard
 set nocompatible                     " Not comaptible with Vi
 set number relativenumber            " Line Numbers
@@ -21,13 +21,13 @@ set fileformat=unix                  " Unix file format by default
 set fillchars=vert:│,fold:-          " Setting divider character
 set fillchars+=stlnc:-               " Setting divider character
 set noshowmode                       " Keep cmd clean
-" set noshowcmd                        " Keep cmd clean
+" set noshowcmd                      " Keep cmd clean
 set nohlsearch                       " Enable highlight on search
 set splitbelow                       " Default split positions
 set splitright                       " Default split positions
 set encoding=utf-8                   " Default encoding
 set autoindent                       " Better indentation
-" set smartindent                      " Better indentation
+" set smartindent                     " Better indentation
 set smarttab                         " Better indentation
 set noswapfile                       " Swaps bad
 set nobackup                         " backups bad
@@ -54,7 +54,7 @@ set notimeout                        " cmd's dont timeout
 set cursorline                       " Column where line is
 set ttyfast                          " fast term!
 set incsearch                        " Incremental Searching
-set inccommand=nosplit                 " Live substitutions
+set inccommand=nosplit               " Live substitutions
 set nowritebackup                    " disable
 set updatetime=100                   " quicker updating
 set conceallevel=0                   " back to default
@@ -62,7 +62,7 @@ set modeline                         " use modelines
 set backspace=indent,eol,start       " correct backspace
 set ve=block                         " virtual editing
 set grepprg=rg\ --vimgrep            " use ripgrep for grepping
-set formatoptions+=j                 " remove comments on line join
+set formatoptions+=jn                " remove comments on line join
 set formatoptions-=t                 " no auto wrap
 set formatoptions-=cro               " no auto commenting
 set shortmess=atIAcFW                " no startup + auto comp message
@@ -75,9 +75,9 @@ set spelllang=en_gb                  " the queen's english
 set complete+=kspell                 " autocomplete from dictionary w/spell
 runtime macros/matchit.vim           " matching if elses
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 "  File Searching
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 set path=.                           " Default path
 set path+=**                         " search subfolders
 set wildignore+=**/venv/**           " Ignoring stuff in virtual environment
@@ -96,9 +96,9 @@ set wildignore+=.cache,node_modules,package-lock.json,yarn.lock,dist
 set wildignore+=.vimruncmd
 command! MakeTags !ctags -R .
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 "  PLUGINS
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -133,13 +133,15 @@ Plug 'tpope/vim-commentary'                                          " gcc to co
 
 " helpers
 Plug 'jiangmiao/auto-pairs'                                          " auto close brackets
-Plug 'Valloric/MatchTagAlways'                                       " html highlight tags
 Plug 'machakann/vim-highlightedyank'                                 " Highlight text that has been yanked
 Plug 'kshenoy/vim-signature'                                         " show marks in sign column
 Plug 'nathanaelkane/vim-indent-guides', {'on': ['IndentGuidesToggle']}
 Plug 'dstein64/vim-startuptime'                                      " debug startup time
 Plug 'linluk/vim-websearch'                                          " google terms
 Plug 'AndrewRadev/undoquit.vim'                                      " <c-w>u reopen last close window
+Plug 'junegunn/vim-peekaboo'                                         " see register content
+Plug 'lfv89/vim-interestingwords'                                    " tag hl words when exploring code
+Plug 'dominikduda/vim_current_word'                                  " syntax aware hl word under cursor
 
 " Text Objects
 Plug 'kana/vim-textobj-user'                                         " UD objects
@@ -174,13 +176,17 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}                      " code comp
 Plug 'Shougo/echodoc.vim'                                            " show function signatures
 Plug 'sheerun/vim-polyglot'                                          " for lesser used languages
 Plug 'honza/vim-snippets'
+Plug 'alvan/vim-closetag'                                            " close html tags
+Plug 'Valloric/MatchTagAlways'                                       " html highlight tags
+Plug 'AndrewRadev/tagalong.vim'                                      " auto change tag (surround is manual)
+Plug 'majutsushi/tagbar'                                             " outline of file by class/function
 
 call plug#end()
 filetype plugin indent on
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " THEME
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 set termguicolors
 
 let g:gruvbox_material_background = 'soft'
@@ -195,9 +201,9 @@ set pumblend=10
 " no transparency for selected autocomplete
 hi PmenuSel blend=0
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 "  BINDINGS
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Leader remap
 nnoremap <SPACE> <Nop>
 
@@ -214,8 +220,8 @@ nmap <leader>O <Plug>(textmanip-blank-above)
 cmap w!! w !sudo tee > /dev/null %
 " Better saving
 nmap <silent> <leader>w :w!<cr>
-" Better quitting & saving
-nmap <silent> <leader>q :q<cr>
+" Better quitting
+nmap <silent> <leader>q :qall<cr>
 " nnoremap <leader>b :ls<cr>:b<space>
 nmap Q <Nop>
 
@@ -312,6 +318,9 @@ autocmd FileType python nnoremap <buffer> <leader>rf :!python3 %<cr>
 " Run nodejs easily
 autocmd FileType javascript nnoremap <buffer> <leader>rf :!node %<cr>
 
+" jump to end tag in html
+autocmd FileType html nnoremap <silent> <buffer> ) :MtaJumpToOtherTag<CR>
+
 " useful buffer switching
 nnoremap <silent> = :bn <cr>
 nnoremap <silent> - :bp <cr>
@@ -320,9 +329,12 @@ nnoremap <silent> _ :bd <cr>
 " small tweak to vim-surround. I don't use default v_S
 vmap s S
 
-" --------------------------------------------------------
+" tag bar toggle
+nmap <leader>T :TagbarToggle<CR>
+
+" ----------------------------------------------------------------------------------------------------------------
 " Spelling / Writing Mode
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " ts - toggle mode
 " sa - add to dict
 " sc - spell correction
@@ -346,21 +358,21 @@ function! WritingMode()
         setlocal spell
         if !&wildcharm | set wildcharm=<C-z> | endif
         execute 'nnoremap <leader>sw :Wordy<space>'.nr2char(&wildcharm)
-        nnoremap <leader>sd :ToggleDitto<CR>
-        nnoremap <leader>sa zg
-        nnoremap <leader>sc 1z=
-        nnoremap <leader>sC z=
+        nnoremap <buffer> <leader>sd :ToggleDitto<CR>
+        nnoremap <buffer> <leader>sa zg
+        nnoremap <buffer> <leader>sc 1z=
+        nnoremap <buffer> <leader>sC z=
 
         call litecorrect#init()
         let b:writing_mode=1
         echo("Writing Mode On")
     else
         setlocal nospell
-        nnoremap <leader>sd <Nop>
-        nnoremap <leader>sw <Nop>
-        nnoremap <leader>sa <Nop>
-        nnoremap <leader>sc <Nop>
-        nnoremap <leader>sC <Nop>
+        nnoremap <buffer> <leader>sd <Nop>
+        nnoremap <buffer> <leader>sw <Nop>
+        nnoremap <buffer> <leader>sa <Nop>
+        nnoremap <buffer> <leader>sc <Nop>
+        nnoremap <buffer> <leader>sC <Nop>
         DittoOff
         silent NoWordy
         let b:writing_mode=0
@@ -368,28 +380,28 @@ function! WritingMode()
     endif
 endfunction
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Find & Replace Functionality (TODO)
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 nnoremap <C-s>r :%s/
 vnoremap <C-s>r :s/
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 "  Clever F settings
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 let g:clever_f_across_no_line=1
 let g:clever_f_ignore_case=1
 let g:clever_f_smart_case=1
 let g:clver_f_fix_key_direction=1
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Yank Stuff
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 let g:highlightedyank_highlight_duration=5000
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Distraction Free Mode
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 let g:goyo_width="50%"
 let g:goyo_height="70%"
 let g:limelight_paragraph_span = 1
@@ -412,8 +424,6 @@ function! s:goyo_leave()
   setlocal cursorline
   setlocal rnu
   Limelight!
-  AirlineToggle
-  AirlineToggle
   AirlineRefresh
   autocmd InsertLeave,WinEnter * set cursorline
   autocmd InsertEnter,WinLeave * set nocursorline
@@ -423,47 +433,95 @@ endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Colour Highlighting
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 let g:Hexokinase_highlighters=['foreground']
 " let g:Hexokinase_ftEnabled=['css', 'html', 'javascript']
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Formatting Stuff
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 "  fa -> Alignment
 "  fF -> coc.nvim format whole file
 "  fI -> coc.nvim arrange imports
 "  ff -> standard format file (TODO)
 "  fw -> wrap text accordingly
 "  fi -> indent text accordingly
+"  ft -> remove trailing whitespace (file or range)
+"  fb -> replace multiple blank lines with one
 
+function! RemoveTrailingWhitespace()
+    for lineno in range(a:firstline, a:lastline)
+        let line = getline(lineno)
+        let cleanLine = substitute(line, '\(\s\| \)\+$', '', 'e')
+        call setline(lineno, cleanLine)
+    endfor
+endfunction
+command! -range RT  <line1>,<line2>call RemoveTrailingWhitespace()
+
+nnoremap <leader>ft m`:%RT<CR>``
+vnoremap <leader>ft m`:RT<CR>``
 nnoremap <leader>fF :Format<CR>
 nnoremap <leader>fI :OR<CR>
-" textwidth in visual mode
+
+nnoremap <leader>fw m`ggVGgwi``
+nnoremap <leader>fi m`ggVG=``
 vnoremap <leader>fw gwi<esc>
 vnoremap <leader>fi =<esc>
 xmap <leader>fa <Plug>(EasyAlign)
 xmap <leader>fA <Plug>(LiveEasyAlign)
 
-" --------------------------------------------------------
+nnoremap <leader>fb m`:silent! g/^$/,/./-j<CR>``
+vnoremap <leader>fb m`:g/^$/,/./-j<CR>``
+
+" ----------------------------------------------------------------------------------------------------------------
 " UndoTree Stuff
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 nnoremap <leader>u :UndotreeToggle<cr>
 let g:undotree_WindowLayout=4
 let g:undotree_SplitWidth=40
 let g:undotree_SetFocusWhenToggle=1
 let g:undotree_ShortIndicators=1
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Polyglot Stuff
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 let g:polyglot_disabled=['python', 'markdown', 'vim']
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
+" Neovim Terminal Configuration
+" ----------------------------------------------------------------------------------------------------------------
+" escape goes to normal mode and c-v esc sends to program (and don't break fzf)
+tnoremap <C-v><esc> <C-\><C-n>
+autocmd! TermOpen * tnoremap <buffer> <Esc> <c-\><c-n>
+autocmd! FileType fzf tunmap <buffer> <Esc>
+
+" Opening splits with terminal in all directions
+nnoremap <C-Space>h :leftabove  vnew<CR>:terminal<CR>i
+nnoremap <C-Space>l :rightbelow vnew<CR>:terminal<CR>i
+nnoremap <C-Space>k :leftabove  new<CR>:terminal<CR>i
+nnoremap <C-Space>j :rightbelow new<CR>:terminal<CR>i
+nnoremap <C-Space><CR> :terminal<CR>i
+
+" edit the currently in progress command in normal mode
+if exists(':terminal')
+  " Readline cheatsheet:
+  " ctrl-a - jump to start of line
+  " ctrl-e - jump to end of line
+  " ctrl-k - kill forwards to the end of line
+  " ctrl-u - kill backwards to the start of line
+  autocmd TermOpen * nnoremap <buffer> I I<C-a>
+  autocmd TermOpen * nnoremap <buffer> A A<C-e>
+  autocmd TermOpen * nnoremap <buffer> C A<C-k>
+  autocmd TermOpen * nnoremap <buffer> D A<C-k><C-\><C-n>
+  autocmd TermOpen * nnoremap <buffer> cc A<C-e><C-u>
+  autocmd TermOpen * nnoremap <buffer> dd A<C-e><C-u><C-\><C-n>
+endif
+
+" ----------------------------------------------------------------------------------------------------------------
 " Toggle Stuff
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " b: background
 " p: paste
 " n: linenumbers
@@ -474,6 +532,7 @@ let g:polyglot_disabled=['python', 'markdown', 'vim']
 " g: guides
 " G: Goyo
 " |: colour column
+"  : same word hghlighting
 nnoremap <leader>tb :setlocal background=<C-R>=&background == "dark" ? "light" : "dark"<CR><CR>
 nnoremap <leader>tp :setlocal invpaste paste?<CR>
 nnoremap <silent> <leader>tn :exec &nu==&rnu? "setlocal nu!" : "setlocal rnu!"<CR>
@@ -495,28 +554,30 @@ endfun
 
 nnoremap <silent> <leader>t\ :call ToggleCC()<CR>
 
-" --------------------------------------------------------
-" Python Sense Stuff
-" -------------------------------------------------------- 
-let g:is_pythonsense_supress_motion_keymaps=1
-let g:is_pythonsense_supress_location_keymaps=1
+" ----------------------------------------------------------------------------------------------------------------
+" Python
+" ----------------------------------------------------------------------------------------------------------------
+let g:is_pythonsense_suppress_object_keymaps = 1
+let g:is_pythonsense_suppress_motion_keymaps = 1
+let g:is_pythonsense_suppress_location_keymaps = 1
 let g:python_highlight_all = 1
 
-" --------------------------------------------------------
+
+" ----------------------------------------------------------------------------------------------------------------
 " Ulti Snips
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 let g:ultisnips_python_style='numpy'
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " JavaScript Snippets
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 autocmd! FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab
 autocmd! FileType javascript nnoremap <buffer> <leader>jc ^iconsole.log(<esc>A);<esc>
 autocmd! FileType javascript vnoremap <buffer> <leader>jc diconsole.log(<esc>p`]li);<esc>
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " HTML Stuff
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 " treat all htmldjangofiles as html (for ftplugins)
 autocmd! FileType htmldjango set filetype=html
 
@@ -528,9 +589,9 @@ HiLink djangotagmarkers PreProc
 HiLink djangovariablemarkers PreProc
 delcommand HiLink
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Markdown Stuff
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 " augroup pandoc_syntax
 "     au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
 " augroup END
@@ -556,9 +617,9 @@ function! SetMarkDownOptions()
     call textobj#sentence#init()
 endfunction
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Indent Line Stuff
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 let g:indent_guides_enable_on_vim_startup=0
 let g:indent_guides_auto_colors=0
 let g:indent_guides_color_change_percent=90
@@ -570,9 +631,9 @@ autocmd! VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#3c3836
 autocmd! VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3c3836
 nnoremap <silent> <Leader>tg :IndentGuidesToggle<CR>
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " fzf options
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 let g:fzf_colors =
             \ {'fg':      ['fg', 'Normal'],
             \  'bg':      ['bg', 'Normal'],
@@ -621,22 +682,24 @@ noremap <silent> <C-f>f :call fzf#vim#files('.', {'options': '--prompt "" --bord
 " noremap <silent> <C-f>b :call fzf#vim#buffers({'options': '--prompt "" --border "rounded"'})<CR>
 nnoremap <C-f>b :ls<CR>:b
 noremap <C-f>m :marks<CR>:norm! `
+noremap <C-f>o :History<CR>
 nnoremap <C-f>h :Helptags<CR>
 nnoremap <silent> <C-f>l :call fzf#vim#buffer_lines({'options': '--prompt "" --border "rounded"'})<CR>
 nnoremap <silent> <C-f>L :call fzf#vim#lines({'options': '--prompt "" --border "rounded"'})<CR>
-nnoremap <silent> <C-f>d :call fzf#run(fzf#wrap({'source': 'find * -type d'}))<CR>
+nnoremap <silent> <C-f>d :call fzf#run(fzf#wrap({'source': 'find ~/* -type d', 'sink': 'cd'}))<CR>
 " and the hold down variant
 noremap <silent> <C-f><C-f> :call fzf#vim#files('.', {'options': '--prompt "" --border "rounded"'})<CR>
 " noremap <silent> <C-f><C-b> :call fzf#vim#buffers({'options': '--prompt "" --border "rounded"'})<CR>
 nnoremap <C-f><C-b> :ls<CR>:b
 noremap <C-f><C-m> :marks<CR>:norm! `
+noremap <C-f><C-o> :History<CR>
 nnoremap <C-f><C-h> :Helptags<CR>
 nnoremap <silent> <C-f><C-l> :call fzf#vim#buffer_lines({'options': '--prompt "" --border "rounded"'})<CR>
-nnoremap <silent> <C-f><C-d> :call fzf#run(fzf#wrap({'source': 'find * -type d'}))<CR>
+nnoremap <silent> <C-f><C-d> :call fzf#run(fzf#wrap({'source': 'find ~/* -type d'}))<CR>
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Airline Stuff
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 " Automatically display open buffers when only 1 tab
 let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#tabline#left_sep=' '
@@ -653,6 +716,7 @@ let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#show_close_button = 0
 let g:airline_detect_iminsert=0
 "let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#extensions#tabline#ignore_bufadd_pat = 'defx|gundo|nerd_tree|startify|tagbar|undotree|vimfiler'
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -683,9 +747,9 @@ if ! has('gui_running')
     augroup END
 endif
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " text movement with ALT
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 nnoremap <silent> <M-l> :SidewaysRight<CR>
     nnoremap <silent> <M-h> :SidewaysLeft<CR>
 xmap <M-j> <Plug>(textmanip-move-down)
@@ -693,10 +757,23 @@ xmap <M-k> <Plug>(textmanip-move-up)
 nmap <M-j> <Plug>(textmanip-move-down)
 nmap <M-k> <Plug>(textmanip-move-up)
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Text Object mappings
-" -------------------------------------------------------- 
-" if/af - functions. ai/ii - indent, au/iu - urls, ac/ic - comments
+" ----------------------------------------------------------------------------------------------------------------
+" if/af - functions, aC/iC - class, ai/ii - indent, au/iu - urls, ac/ic - comments
+
+omap aC <Plug>(PythonsenseOuterClassTextObject)
+omap iC <Plug>(PythonsenseInnerClassTextObject)
+omap af <Plug>(PythonsenseOuterFunctionTextObject)
+omap if <Plug>(PythonsenseInnerFunctionTextObject)
+
+vmap aC <Plug>(PythonsenseOuterClassTextObject)
+vmap iC <Plug>(PythonsenseInnerClassTextObject)
+vmap af <Plug>(PythonsenseOuterFunctionTextObject)
+vmap if <Plug>(PythonsenseInnerFunctionTextObject)
+
+
+
 
 " Arguments w/ sideways
 omap <silent> aa <Plug>SidewaysArgumentTextobjA
@@ -719,7 +796,7 @@ xnoremap ar a[
 onoremap ir :normal vi[<CR>
 onoremap ar :normal va[<CR>
 
-" lots :)
+" Lots of delimiters
 for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#' ]
     execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'
     execute 'onoremap i' . char . ' :normal vi' . char . '<CR>'
@@ -729,9 +806,9 @@ endfor
 
 
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Signature Stuff (Marks)
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 let g:SignatureMap = {
             \ 'Leader'             :  "m",
             \ 'PlaceNextMark'      :  "",
@@ -756,9 +833,9 @@ let g:SignatureMap = {
             \ 'ListBufferMarkers'  :  ""
             \ }
 
-" --------------------------------------------------------
-" NERDTree Stuff 
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
+" NERDTree Stuff
+" ----------------------------------------------------------------------------------------------------------------
 nnoremap <silent> <leader>e :NERDTreeToggle<CR>
 let g:NERDTreeMinimalUI=1 " nerd tree hiding help button
 let g:NERDTreeShowHidden=1
@@ -784,9 +861,9 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown"   : "?"
     \ }
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Auto Complete Stuff
-" -------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 let g:coc_global_extensions = ['coc-python', 'coc-html', 'coc-css', 'coc-vimlsp', 'coc-json', 'coc-markdownlint', 'coc-eslint', 'coc-snippets']
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -824,7 +901,7 @@ nnoremap <silent> gD :call <SID>show_documentation()<CR>
 nnoremap <leader>cD :CocDisable<CR>
 nnoremap <leader>ce :CocEnable<CR>
 nmap <leader>cr <Plug>(coc-rename)
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " nmap <silent> gy <Plug>(coc-type-definition)
 " nmap <silent> gi <Plug>(coc-implementation)
@@ -851,15 +928,27 @@ endfunction
 command! -nargs=0 Format :call CocAction('format')
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " Echo Dot function signatures
-" ------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 let g:echodoc#enable_at_startup=1
 let g:echodoc#type="floating"
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
+" Interesting words
+" ----------------------------------------------------------------------------------------------------------------
+let g:interestingWordsDefaultMappings = 0
+let g:interestingWordsGUIColors = ['#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF']
+nnoremap <silent> <leader>hh :call InterestingWords('n')<CR>
+nnoremap <silent> <leader>hH :call UncolorAllWords()<CR>
+nnoremap <silent> <leader>hn :call WordNavigation('forward')<CR>
+nnoremap <silent> <leader>hN :call WordNavigation('backward')<CR>
+
+
+
+" ----------------------------------------------------------------------------------------------------------------
 " Open Browser Stuff
-" ------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 let g:web_search_query="https://www.google.com/search?q="
 let g:web_search_command="firefox"
 let g:web_search_use_default_mapping="no"
@@ -869,14 +958,14 @@ vmap go gx
 nnoremap <silent> gO :WebSearchCursor<CR>
 vnoremap <silent> gO :WebSearchVisual<CR>
 
-" --------------------------------------------------------
+" ----------------------------------------------------------------------------------------------------------------
 " OTHER
-" ------------------------------------------------------- 
+" ----------------------------------------------------------------------------------------------------------------
 " Return to same line from when file last opened
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 " auto source vimrc on change
-autocmd! BufWritePost $MYVIMRC nested source $MYVIMRC | AirlineToggle | AirlineToggle | AirlineRefresh
+" autocmd! BufWritePost $MYVIMRC nested source $MYVIMRC | AirlineToggle | AirlineToggle | AirlineRefresh
 
 syntax enable " At the end to ensure it's enabled once all themeing is done
 
@@ -928,6 +1017,9 @@ augroup END
 autocmd InsertLeave,WinEnter * set cursorline
 autocmd InsertEnter,WinLeave * set nocursorline
 
+" ----------------------------------------------------------------------------------------------------------------
+" Hacks :(
+" ----------------------------------------------------------------------------------------------------------------
 " make undoquit work for <c-w>c too
 nnoremap <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
 
