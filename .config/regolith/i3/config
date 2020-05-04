@@ -16,25 +16,25 @@ set $terminal_path /usr/bin/st
 
 # Color values are defined in ~/.Xresources-regolith
 # These are the labels which define each i3 workspace.
-set_from_resource $ws1  i3-wm.workspace.01.name 
-set_from_resource $ws2  i3-wm.workspace.02.name 
-set_from_resource $ws3  i3-wm.workspace.03.name 
-set_from_resource $ws4  i3-wm.workspace.04.name 
-set_from_resource $ws5  i3-wm.workspace.05.name 
-set_from_resource $ws6  i3-wm.workspace.06.name 
-set_from_resource $ws7  i3-wm.workspace.07.name 
-set_from_resource $ws8  i3-wm.workspace.08.name 
-set_from_resource $ws9  i3-wm.workspace.09.name 
-set_from_resource $ws10 i3-wm.workspace.10.name 
-set_from_resource $ws11 i3-wm.workspace.11.name 
-set_from_resource $ws12 i3-wm.workspace.12.name 
-set_from_resource $ws13 i3-wm.workspace.13.name 
-set_from_resource $ws14 i3-wm.workspace.14.name 
-set_from_resource $ws15 i3-wm.workspace.15.name 
-set_from_resource $ws16 i3-wm.workspace.16.name 
-set_from_resource $ws17 i3-wm.workspace.17.name 
-set_from_resource $ws18 i3-wm.workspace.18.name 
-set_from_resource $ws19 i3-wm.workspace.19.name 
+set_from_resource $ws1  i3-wm.workspace.01.name
+set_from_resource $ws2  i3-wm.workspace.02.name
+set_from_resource $ws3  i3-wm.workspace.03.name
+set_from_resource $ws4  i3-wm.workspace.04.name
+set_from_resource $ws5  i3-wm.workspace.05.name
+set_from_resource $ws6  i3-wm.workspace.06.name
+set_from_resource $ws7  i3-wm.workspace.07.name
+set_from_resource $ws8  i3-wm.workspace.08.name
+set_from_resource $ws9  i3-wm.workspace.09.name
+set_from_resource $ws10 i3-wm.workspace.10.name
+set_from_resource $ws11 i3-wm.workspace.11.name
+set_from_resource $ws12 i3-wm.workspace.12.name
+set_from_resource $ws13 i3-wm.workspace.13.name
+set_from_resource $ws14 i3-wm.workspace.14.name
+set_from_resource $ws15 i3-wm.workspace.15.name
+set_from_resource $ws16 i3-wm.workspace.16.name
+set_from_resource $ws17 i3-wm.workspace.17.name
+set_from_resource $ws18 i3-wm.workspace.18.name
+set_from_resource $ws19 i3-wm.workspace.19.name
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -210,6 +210,8 @@ bindsym $mod+i bar mode toggle
 # Cause Settings app to float above tiled windows
 floating_maximum_size -1 x -1
 for_window [class="Gnome-control-center"] floating enable
+for_window [title="Figure *"] floating enable
+for_window [title="Figure 1"] floating enable
 # for_window [class="Gnome-control-center"] border 4
 for_window [class="Gnome-control-center"] border pixel 4
 # for_window [class="Gnome-control-center"] float pixel 1

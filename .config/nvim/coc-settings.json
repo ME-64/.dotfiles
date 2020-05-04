@@ -2,7 +2,7 @@
   "suggest.noselect": false,
   "suggest.echodocSupport": true,
   "suggest.autoTrigger": "trigger",
-  "suggest.enablePreselect": true,
+  "suggest.enablePreselect": false,
   "suggest.preferCompleteThanJumpPlaceholder": false,
   "suggest.enablePreview": true,
   "suggest.floatEnable": true,
@@ -43,6 +43,7 @@
   },
 
   "diagnostic.refreshAfterSave": true,
+  "diagnostic.displayByAle": true,
   "diagnostic.refreshOnInsertMode": true,
   "diagnostic.errorSign": "",
   "diagnostic.warningSign": "",
