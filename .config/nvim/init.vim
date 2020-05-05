@@ -1,4 +1,7 @@
-" {{{ Basic
+" ==============================================================================
+" Basic
+" ==============================================================================
+" {{{
 set clipboard=unnamedplus            " Using system clipboard
 set nocompatible                     " Not comaptible with Vi
 set number relativenumber            " Line Numbers
@@ -12,7 +15,7 @@ set breakindentopt=sbr               " Wrapping
 set showbreak=↪>\                    " character to show break
 set nowrap                           " Disabled by default, toggled on
 set undodir=~/.vim/undodir           " Better undos
-set undofile                         " Better undos 
+set undofile                         " Better undos
 set undolevels=10000                 " Better undos
 set undoreload=100000                " Better undos
 set fileformat=unix                  " Unix file format by default
@@ -60,11 +63,10 @@ set modeline                         " use modelines
 set backspace=indent,eol,start       " correct backspace
 set ve=block                         " virtual editing
 set grepprg=rg\ --vimgrep            " use ripgrep for grepping
-set formatoptions+=jn                " remove comments on line join
 set formatoptions-=t                 " no auto wrap
 set formatoptions-=cro               " no auto commenting
 set shortmess=atIAcFW                " no startup + auto comp message
-set signcolumn=auto:4                " always show sign column
+set signcolumn=auto:4                " toggle show, upto 4 wide
 set list
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 set lazyredraw                       " don't update screen during macro
@@ -76,7 +78,10 @@ set foldmethod=indent                " simple folding
 " }}}
 
 
-"  {{{ File Searching
+" ==============================================================================
+"  File Searching
+" ==============================================================================
+" {{{
 set path=.                           " Default path
 set path+=**                         " search subfolders
 set wildignore+=**/venv/**           " Ignoring stuff in virtual environment
@@ -97,11 +102,14 @@ command! MakeTags !ctags -R .
 " }}}
 
 
-"  {{{ PLUGINS
+" ==============================================================================
+"  PLUGINS
+" ==============================================================================
+" {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  au VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin('~/.vim/plugged')
@@ -117,6 +125,7 @@ Plug 'mbbill/undotree', {'on': ['UndotreeToggle']}                   " visualise
 " Colours
 Plug 'morhetz/gruvbox'                                               " Gruvbox theme
 Plug 'sainnhe/gruvbox-material'                                      " tweaked gruvbox
+Plug 'junegunn/seoul256.vim'                                         " low contrast
 Plug 'vim-airline/vim-airline'                                       " Simple Status line
 Plug 'vim-airline/vim-airline-themes'                                " Simple Status line
 Plug 'RRethy/vim-hexokinase', {'do': 'make hexokinase'}              " highlighting of colours
@@ -151,6 +160,7 @@ Plug 'michaeljsmith/vim-indent-object'                               " identatio
 Plug 'mattn/vim-textobj-url'                                         " url text obj
 Plug 'glts/vim-textobj-comment'                                      " comments
 Plug 'fvictorio/vim-textobj-backticks'                               " better backtick surround
+" Plug 'junegunn/vim-after-object'                                     " select after paticular chars
 
 " Motions & navigation
 Plug 'rhysd/clever-f.vim'                                            " smart f/t movement
@@ -186,22 +196,29 @@ Plug 'sheerun/vim-polyglot'                                          " for lesse
 Plug 'honza/vim-snippets'                                            " pre-built snippets
 Plug 'majutsushi/tagbar'                                             " outline of file by class/function
 Plug 'kassio/neoterm'                                                " quick toggle term + REPL
+Plug 'junegunn/rainbow_parentheses.vim'                              " useful 2% of the time
 
 call plug#end()
 filetype plugin indent on
 " }}}
 
 
-" {{{ THEME
+" ==============================================================================
+" THEME
+" ==============================================================================
+" {{{
 set termguicolors
 
 let g:gruvbox_material_background = 'soft'
 let g:gruvbox_material_enable_italic = 1
 let g:gruvbox_material_enable_bold = 1
 let g:gruvbox_material_current_word = 'grey background'
+let g:seoul256_srgb=1
+let g:seoul256_background=235
 
 set background=dark
 colorscheme gruvbox-material
+" colorscheme seoul256 " for 256 terms
 let g:airline_theme='gruvbox_material'
 " semi-transparent pop-up window
 set pumblend=10
@@ -212,10 +229,16 @@ hi PmenuSel blend=0
 let g:vim_current_word#highlight_delay=600
 let g:vim_current_word#highlight_only_in_focused_window=1
 let g:vim_current_word#highlight_current_word=0
+
+" highlight yank colour
+highlight! HighlightedyankRegion guibg=#f5c542 guifg=#f5c542
 " }}}
 
 
-"  {{{ BINDINGS
+" ==============================================================================
+"  BINDINGS
+" ==============================================================================
+" {{{
 " Leader remap
 nnoremap <SPACE> <Nop>
 
@@ -271,8 +294,8 @@ vnoremap <Tab> >><esc>gv
 vnoremap <S-Tab> <<<esc>gv
 
 " Search results centered
-nnoremap <silent> n nzz
-nnoremap <silent> N Nzz
+" nnoremap <silent> n nzz
+" nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 
@@ -290,11 +313,7 @@ nnoremap cc "_cc
 
 " rebinds semi-colon to toggle full cmd window
 nnoremap ; q:
-autocmd CmdwinEnter * noremap <buffer> ; :q<CR>
-
-" switch to directory of current buffer
-nnoremap <leader>cdb :cd %:p:h<CR>:pwd<CR>
-nnoremap <leader>cdh :cd ~/<CR>:pwd<CR>
+au CmdwinEnter * noremap <buffer> ; :q<CR>
 
 " switch between buffers
 nnoremap <bs> <c-^>
@@ -322,18 +341,38 @@ noremap <Right> <Nop>
 noremap <Up> <Nop>
 
 " Run python files easily
-autocmd FileType python nnoremap <buffer> <leader>rf :!python3 %<cr>
+au FileType python nnoremap <buffer> <leader>rf :!python3 %<cr>
 
 " Run nodejs easily
-autocmd FileType javascript nnoremap <buffer> <leader>rf :!node %<cr>
+au FileType javascript nnoremap <buffer> <leader>rf :!node %<cr>
 
 " jump to end tag in html
-autocmd FileType html nnoremap <silent> <buffer> ) :MtaJumpToOtherTag<CR>
+au FileType html nnoremap <silent> <buffer> ) :MtaJumpToOtherTag<CR>
 
 " useful buffer switching
 nnoremap <silent> = :bn <cr>
 nnoremap <silent> - :bp <cr>
-nnoremap <silent> _ :bd <cr>
+" nnoremap <silent> _ :bd <cr>
+nnoremap <silent> _ :b#<bar>bd#<CR>
+
+" {{{2 Skip the neoterm toggle buffer
+" function! PrevBufferTab()
+"     bprev
+"     if &filetype == 'neoterm'
+"         bprev
+"     endif
+" endfunction
+" function! NextBufferTab()
+"     bnext
+"     if &filetype == 'neoterm'
+"         bnext
+"     endif
+" endfunction
+" " Cycle buffer tabs in airline's tab bar
+" nnoremap <silent> - :call PrevBufferTab()<cr>
+" nnoremap <silent> = :call NextBufferTab()<cr>
+" }}}
+
 
 " small tweak to vim-surround. I don't use default v_S
 vmap s S
@@ -341,6 +380,10 @@ vmap s S
 " consistent closing of windows
 nnoremap <C-w>q <C-w>c
 nnoremap <C-w><C-q> <C-w>c
+
+" prepend to all lines in block w/same indent
+nmap <silent> <leader>I ^vii<C-V>I
+nmap <silent> <leader>A ^vii<C-V>$A
 
 " text movement with ALT
 nnoremap <silent> <M-l> :SidewaysRight<CR>
@@ -352,7 +395,10 @@ nmap <M-k> <Plug>(textmanip-move-up)
 " }}}
 
 
-" {{{ Spelling / Writing Mode
+" ==============================================================================
+" Spelling / Writing Mode
+" ==============================================================================
+" {{{
 " ts - toggle mode
 " sa - add to dict
 " sc - spell correction
@@ -367,7 +413,7 @@ let g:ditto_min_word_length=4
 
 nnoremap <silent> <leader>ts :call WritingMode()<CR>
 
-autocmd! BufEnter, BufNewFile let b:writing_mode=0
+au BufEnter, BufNewFile let b:writing_mode=0
 function! WritingMode()
     if !exists("b:writing_mode")
         let b:writing_mode=0
@@ -400,13 +446,19 @@ endfunction
 " }}}
 
 
-" {{{ Find & Replace Functionality (TODO)
+" ==============================================================================
+" Find & Replace Functionality (TODO)
+" ==============================================================================
+" {{{
 nnoremap <C-s>r :%s/
 vnoremap <C-s>r :s/
 " }}}
 
 
-"  {{{ Clever F settings
+" ==============================================================================
+"  Clever F settings
+" ==============================================================================
+" {{{
 let g:clever_f_across_no_line=1
 let g:clever_f_ignore_case=1
 let g:clever_f_smart_case=1
@@ -414,12 +466,18 @@ let g:clver_f_fix_key_direction=1
 " }}}
 
 
-" {{{ Yank Stuff
-let g:highlightedyank_highlight_duration=5000
+" ==============================================================================
+" Yank Stuff
+" ==============================================================================
+" {{{
+let g:highlightedyank_highlight_duration=2000
 " }}}
 
 
-" {{{ Distraction Free Mode
+" ==============================================================================
+" Distraction Free Mode
+" ==============================================================================
+" {{{
 let g:goyo_width="50%"
 let g:goyo_height="70%"
 let g:limelight_paragraph_span = 1
@@ -432,8 +490,8 @@ function! s:goyo_enter()
   setlocal signcolumn=no
   setlocal nocursorline
   setlocal number
-  autocmd InsertLeave,WinEnter * set nocursorline
-  autocmd InsertEnter,WinLeave * set nocursorline
+  au InsertLeave,WinEnter * set nocursorline
+  au InsertEnter,WinLeave * set nocursorline
   let b:coc_suggest_disable = 1
   VimCurrentWordToggle
 endfunction
@@ -445,24 +503,30 @@ function! s:goyo_leave()
   setlocal signcolumn=auto:4
   Limelight!
   AirlineRefresh
-  autocmd InsertLeave,WinEnter * set cursorline
-  autocmd InsertEnter,WinLeave * set nocursorline
+  au InsertLeave,WinEnter * set cursorline
+  au InsertEnter,WinLeave * set nocursorline
   let b:coc_suggest_disable = 0
   VimCurrentWordToggle
 endfunction
 
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+au User GoyoEnter nested call <SID>goyo_enter()
+au User GoyoLeave nested call <SID>goyo_leave()
 " }}}
 
 
-" {{{ Colour Highlighting
+" ==============================================================================
+" Colour Highlighting
+" ==============================================================================
+" {{{
 let g:Hexokinase_highlighters=['foreground']
 " let g:Hexokinase_ftEnabled=['css', 'html', 'javascript']
 " }}}
 
 
-" {{{ Formatting Stuff
+" ==============================================================================
+" Formatting Stuff
+" ==============================================================================
+" {{{
 "  fa -> Alignment
 "  fF -> coc.nvim format whole file
 "  fI -> coc.nvim arrange imports
@@ -499,7 +563,10 @@ vnoremap <leader>fb m`:g/^$/,/./-j<CR>``
 " }}}
 
 
-" {{{ UndoTree Stuff
+" ==============================================================================
+" UndoTree Stuff
+" ==============================================================================
+" {{{
 nnoremap <leader>u :UndotreeToggle<cr>
 let g:undotree_WindowLayout=4
 let g:undotree_SplitWidth=40
@@ -508,16 +575,24 @@ let g:undotree_ShortIndicators=1
 " }}}
 
 
-" {{{ Polyglot Stuff
+" ==============================================================================
+" Polyglot Stuff
+" ==============================================================================
+" {{{
 let g:polyglot_disabled=['python', 'markdown', 'vim']
 " }}}
 
 
-" {{{ Neovim Terminal Configuration
+" ==============================================================================
+" In-built Terminal Configuration
+" ==============================================================================
+" {{{
 " escape goes to normal mode and c-v esc sends to program (and don't break fzf)
 tnoremap <C-s><esc> <C-\><C-n>
-autocmd! TermOpen * tnoremap <buffer> <Esc> <c-\><c-n>
-autocmd! FileType fzf tunmap <buffer> <Esc>
+au TermOpen * tnoremap <buffer> <Esc> <c-\><c-n>
+au FileType fzf tunmap <buffer> <Esc>
+au TermOpen * setfiletype dterm
+
 
 " Opening splits with terminal in all directions
 " nnoremap <Space>h<CR> :leftabove  vnew<CR>:terminal<CR>i
@@ -527,7 +602,7 @@ autocmd! FileType fzf tunmap <buffer> <Esc>
 nnoremap <C-Space><CR> :terminal<CR>i
 
 " close terminal like any other buffer
-autocmd TermOpen * nnoremap <buffer> _ :bd! <CR>
+au TermOpen * nnoremap <silent> _ :b#<bar>bd!#<CR>
 
 " " edit the currently in progress command in normal mode
 " if exists(':terminal')
@@ -550,24 +625,32 @@ autocmd TermOpen * nnoremap <buffer> _ :bd! <CR>
 "   autocmd FileType fzf * nunmap <buffer> dd
 "   autocmd FileType fzf * nunmap <buffer> _
 " endif
+" }}}
 
-" neoterm plugin setings
+" ==============================================================================
+" neoterm Plugin
+" ==============================================================================
+" {{{
 let g:neoterm_autoinsert=0
 let g:neoterm_default_mod='botright'
 let g:neoterm_size=12
 let g:neoterm_repl_python='python3'
 let g:neoterm_direct_open_repl=0
 let g:neoterm_eof=''
+let g:neoterm_autoscroll=1
 nnoremap <silent> <leader>` :Ttoggle<CR>
 nmap <leader><CR> <Plug>(neoterm-repl-send-line)
 xmap <leader><CR> <Plug>(neoterm-repl-send)
 
-
-
+" au BufCreate,BufNew FileType neoterm keepalt file neoterm
+au TermOpen FileType neoterm keepalt file neoterm
 " }}}
 
 
-" {{{ Toggle Stuff
+" ==============================================================================
+" Toggle Stuff
+" ==============================================================================
+" {{{
 " b: background
 " p: paste
 " n: linenumbers
@@ -578,13 +661,14 @@ xmap <leader><CR> <Plug>(neoterm-repl-send)
 " g: guides
 " G: Goyo
 " |: colour column
-"  : same word hghlighting
+" r: rainbow parentheses
 nnoremap <leader>tb :setlocal background=<C-R>=&background == "dark" ? "light" : "dark"<CR><CR>
 nnoremap <leader>tp :setlocal invpaste paste?<CR>
 nnoremap <silent> <leader>tn :exec &nu==&rnu? "setlocal nu!" : "setlocal rnu!"<CR>
 nnoremap <leader>tw :setlocal wrap!<CR>
 nnoremap <leader>tl :setlocal cursorline!<CR>
 nnoremap <leader>tc :setlocal cursorcolumn!<CR>
+nnoremap <leader>tr :RainbowParentheses!!<CR>
 
 set colorcolumn=
 set cc=
@@ -602,7 +686,10 @@ nnoremap <silent> <leader>t\ :call ToggleCC()<CR>
 " }}}
 
 
-" {{{ Python
+" ==============================================================================
+" Python
+" ==============================================================================
+" {{{
 let g:is_pythonsense_suppress_object_keymaps = 1
 let g:is_pythonsense_suppress_motion_keymaps = 1
 let g:is_pythonsense_suppress_location_keymaps = 1
@@ -610,22 +697,31 @@ let g:python_highlight_all = 1
 " }}}
 
 
-" {{{ Ulti Snips
+" ==============================================================================
+" Ulti Snips
+" ==============================================================================
+" {{{
 let g:ultisnips_python_style='numpy'
 " }}}
 
 
-"  {{{ JavaScript Snippets
-autocmd! FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab
-autocmd! FileType javascript nnoremap <buffer> <leader>jc ^iconsole.log(<esc>A);<esc>
-autocmd! FileType javascript vnoremap <buffer> <leader>jc diconsole.log(<esc>p`]li);<esc>
+" ==============================================================================
+"  JavaScript Snippets
+" ==============================================================================
+" {{{
+au FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab
+au FileType javascript nnoremap <buffer> <leader>jc ^iconsole.log(<esc>A);<esc>
+au FileType javascript vnoremap <buffer> <leader>jc diconsole.log(<esc>p`]li);<esc>
 " }}}
 
 
-" {{{ HTML Stuff
+" ==============================================================================
+" HTML Stuff
+" ==============================================================================
+" {{{
 " treat all htmldjangofiles as html (for ftplugins)
-autocmd! FileType htmldjango set filetype=html
-autocmd! FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
+au FileType htmldjango set filetype=html
+au FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
 
 " " then add back django syntax
 " syn region  djangotagmarkers start="{{" end="}}"
@@ -637,7 +733,10 @@ autocmd! FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
 " }}}
 
 
-" {{{ Markdown Stuff
+" ==============================================================================
+" Markdown Stuff
+" ==============================================================================
+" {{{
 " augroup pandoc_syntax
 "     au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
 " augroup END
@@ -648,29 +747,40 @@ let g:livedown_autorun = 0
 let g:livedown_open = 1
 let g:livedown_port = 1337
 let g:livedown_browser='firefox'
-autocmd! BufNewFile,BufFilePre,BufRead *.md set ft=markdown
+au BufNewFile,BufFilePre,BufRead *.md set ft=markdown
 
+" auto align table
+au FileType markdown vmap <leader>fT :EasyAlign*<Bar><CR>
+au FileType markdown nnoremap <leader>mv :LivedownToggle<CR>
+au FileType markdown nnoremap <leader>mh1 :s/^#* //ge<CR>^i#<space><esc>0
+au FileType markdown nnoremap <leader>mh2 :s/^#* //ge<CR>^i##<space><esc>0
+au FileType markdown nnoremap <leader>mh3 :s/^#* //ge<CR>^i###<space><esc>0
+au FileType markdown nnoremap <leader>mh4 :s/^#* //ge<CR>^i####<space><esc>0
+au FileType markdown nnoremap <leader>mh5 :s/^#* //ge<CR>^i#####<space><esc>0
+au FileType markdown nnoremap <leader>mh6 :s/^#* //ge<CR>^i######<space><esc>0
+au FileType markdown nnoremap <leader>mhc :s/^#* //ge<CR>0
+au FileType markdown nnoremap <leader>mc 0i```<CR><CR>```<esc>kka
 
-vmap <leader>fT :EasyAlign*<Bar><CR>
-nnoremap <leader>mv :LivedownToggle<CR>
-nnoremap <leader>mh1 :s/^#* //ge<CR>^i#<space><esc>0
-nnoremap <leader>mh2 :s/^#* //ge<CR>^i##<space><esc>0
-nnoremap <leader>mh3 :s/^#* //ge<CR>^i###<space><esc>0
-nnoremap <leader>mh4 :s/^#* //ge<CR>^i####<space><esc>0
-nnoremap <leader>mh5 :s/^#* //ge<CR>^i#####<space><esc>0
-nnoremap <leader>mh6 :s/^#* //ge<CR>^i######<space><esc>0
-nnoremap <leader>mhc :s/^#* //ge<CR>0
-nnoremap <leader>mc 0i```<CR><CR>```<esc>kka
-autocmd! BufNewFile,BufFilePre,BufRead *.md setlocal formatoptions+=t
-autocmd! BufNewFile,BufFilePre,BufRead *.md setlocal shiftwidth=2
-autocmd! BufNewFile,BufFilePre,BufRead *.md setlocal softtabstop=2
-autocmd! BufNewFile,BufFilePre,BufRead *.md setlocal expandtab
-autocmd! BufNewFile,BufFilePre,BufRead *.md setlocal textwidth=80
-autocmd! BufNewFile,BufFilePre,BufRead *.md call textobj#sentence#init()
+au FileType markdown setlocal formatoptions+=t
+au FileType markdown setlocal shiftwidth=2
+au FileType markdown setlocal softtabstop=2
+au FileType markdown setlocal expandtab
+au FileType markdown setlocal textwidth=80
+au FileType markdown call textobj#sentence#init()
+
+" easy insert of Numbered list
+command! -range=% -nargs=1 NL
+  \ <line1>,<line2>!nl -w <args> -s '. ' | perl -pe 's/^.{<args>}..$//'
+
+au FileType markdown vnoremap <leader>mn :NL1<CR>
+
 " }}}
 
 
-" {{{ Indent Line Stuff
+" ==============================================================================
+" Indent Line Stuff
+" ==============================================================================
+" {{{
 let g:indent_guides_enable_on_vim_startup=0
 let g:indent_guides_auto_colors=0
 let g:indent_guides_color_change_percent=90
@@ -678,13 +788,16 @@ let g:indent_guides_guide_size=1
 let g:indent_guides_start_level=2
 let g:indent_guides_default_mapping = 0
 let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'fzf']
-autocmd! VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#3c3836
-autocmd! VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3c3836
+au VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#3c3836
+au VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3c3836
 nnoremap <silent> <Leader>tg :IndentGuidesToggle<CR>
 " }}}
 
 
-" {{{ fzf options
+" ==============================================================================
+" fzf options
+" ==============================================================================
+" {{{
 let g:fzf_colors =
             \ {'fg':      ['fg', 'Normal'],
             \  'bg':      ['bg', 'Normal'],
@@ -763,13 +876,17 @@ nnoremap <silent> <C-f><C-p> :Rg<space>
 " }}}
 
 
-" {{{ Airline Stuff
+" ==============================================================================
+" Airline Stuff
+" ==============================================================================
+" {{{
 " Automatically display open buffers when only 1 tab
 let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#tabline#left_sep=' '
 let g:airline#extensions#tabline#buffer_nr_show=1
 let g:airline#extensions#tabline#formatter='unique_tail'
 let g:airline#extensions#tabline#show_splits=0
+let g:airline#extensions#term#enabled = 0
 let g:airline#extensions#whitespace#enabled=0
 let g:airline#extensions#wordcount#enabled=0
 let g:airline#extensions#coc#enabled = 1
@@ -781,7 +898,8 @@ let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#ale#enabled = 1
 let g:airline_detect_iminsert=0
 "let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline#extensions#tabline#ignore_bufadd_pat = 'defx|gundo|nerd_tree|startify|tagbar|undotree|vimfiler|fzf|neoterm'
+" keeping neoterm for now
+let g:airline#extensions#tabline#ignore_bufadd_pat = 'defx|gundo|nerd_tree|startify|tagbar|undotree|vimfiler|fzf'
 let g:airline#extensions#obsession#enabled = 1
 
 if !exists('g:airline_symbols')
@@ -805,7 +923,7 @@ let g:airline_symbols.dirty = ''
 if ! has('gui_running')
     " set ttimeoutlen=10
     augroup FastEscape
-        autocmd!
+        au!
         au InsertEnter * set timeoutlen=0
         au InsertEnter * set timeout
         au InsertLeave * set timeoutlen=1000
@@ -815,7 +933,10 @@ endif
 " }}}
 
 
-" {{{ Text Object mappings
+" ==============================================================================
+" Text Object mappings
+" ==============================================================================
+" {{{
 " if/af - functions, aC/iC - class, ai/ii - indent, au/iu - urls, ac/ic - comments, ah/ih - git changes
 omap aC <Plug>(PythonsenseOuterClassTextObject)
 omap iC <Plug>(PythonsenseInnerClassTextObject)
@@ -834,10 +955,10 @@ omap <silent> ia <Plug>SidewaysArgumentTextobjI
 xmap <silent> ia <Plug>SidewaysArgumentTextobjI
 
 " Git changes
-omap ig <Plug>(GitGutterTextObjectInnerPending)
-omap ag <Plug>(GitGutterTextObjectOuterPending)
-xmap ig <Plug>(GitGutterTextObjectInnerVisual)
-xmap ag <Plug>(GitGutterTextObjectOuterVisual)
+omap ih <Plug>(GitGutterTextObjectInnerPending)
+omap ah <Plug>(GitGutterTextObjectOuterPending)
+xmap ih <Plug>(GitGutterTextObjectInnerVisual)
+xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 
 "line text objects
 xnoremap il g_o^
@@ -855,16 +976,27 @@ onoremap ir :normal vi[<CR>
 onoremap ar :normal va[<CR>
 
 " Lots of delimiters
-for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#' ]
+for char in [ '_', '.', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#' ]
     execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'
     execute 'onoremap i' . char . ' :normal vi' . char . '<CR>'
     execute 'xnoremap a' . char . ' :<C-u>normal! F' . char . 'vf' . char . '<CR>'
     execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
 endfor
+
+xnoremap <silent> i¬ g_?^\s*```<cr>jo/^\s*```<cr>kV:<c-u>nohl<cr>gv
+xnoremap <silent> a¬ g_?^\s*```<cr>o/^\s*```<cr>V:<c-u>nohl<cr>gv
+onoremap <silent> i¬ :<C-U>execute "normal vi~"<cr>
+onoremap <silent> a¬ :<C-U>execute "normal va~"<cr>
+
+" After TODO
+" autocmd VimEnter * call after_object#enable('=', ':')
 " }}}
 
 
-" {{{ Signature Stuff (Marks)
+" ==============================================================================
+" Signature Stuff (Marks)
+" ==============================================================================
+" {{{
 let g:SignatureEnabledAtStartup=0
 nnoremap <leader>tm :SignatureToggleSigns<CR>
 let g:SignatureMap = {
@@ -893,18 +1025,27 @@ let g:SignatureMap = {
 " }}}
 
 
-" {{{ NERDTree Stuff
+" ==============================================================================
+" NERDTree Stuff
+" ==============================================================================
+" {{{
 let g:NERDTreeMinimalUI=1 " nerd tree hiding help button
 let g:NERDTreeShowHidden=1
 let g:NERDTreeWinSize=35
+let g:NERDTreeHijackNetrw=1
+let g:NERDTreeRespectWildIgnore=1
+let g:NERDTreeMinimalMenu=0
 let g:NERDTreeDirArrows=1
-let g:NERDTreeIgnore = ['\.pyc$', '\.egg-info$', '__pycache__', '__pycache__','.git', '.ipynb_checkpoints', '.DS_Store', '.localized', 'venv']
+let g:NERDTreeIgnore = ['\.pyc$', '\.egg-info$', '__pycache__', '__pycache__','.git', '.ipynb_checkpoints', '.DS_Store', '.localized', 'venv', '.mypy_cache']
 let g:NERDTreeQuitOnOpen=1
 let g:NERDTreeShowLineNumbers=1
+" sort based on file extension, roughly...
 let g:NERDTreeSortOrder = map(range(0, 25), '"\\." . nr2char(char2nr("a") + v:val) . "[^.]*$"')
 " let NERDTreeSortOrder=['\/$', '*']
 let g:webdevicons_conceal_nerdtree_brackets=1
 let g:NERDTreeHighlightCursorline = 0
+" remove conflict with signature vim using default 'm'
+let g:NERDTreeMapMenu='`'
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "M",
     \ "Staged"    : "S",
@@ -919,12 +1060,16 @@ let g:NERDTreeIndicatorMapCustom = {
     \ }
 
 nnoremap <leader>nf :NERDTreeFind<CR>
-nnoremap <silent> <leader>nn :NERDTreeToggle<CR>
+nnoremap <silent> <leader>nt :NERDTreeToggle<CR>
 nnoremap <leader>ng :NERDTreeToggleVCS<CR>
+nnoremap <silent> <leader>nn :NERDTree<CR>
 " }}}
 
 
-" {{{ Ale (Linting)
+" ==============================================================================
+" Ale (Linting)
+" ==============================================================================
+" {{{
 " disabled by default
 let g:ale_enabled = 0
 nnoremap <leader>ta :ALEToggle<CR>
@@ -935,7 +1080,7 @@ let g:ale_lint_on_text_changed='never'
 let g:ale_lsp_show_message_severity='error'
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
-            \ 'python': ['flake8'],
+            \ 'python': ['flake8', 'mypy'],
             \ 'javascript': ['prettier'],
             \ 'markdown': ['prettier'],
             \ 'css': ['prettier']
@@ -944,7 +1089,7 @@ let g:ale_fixers = {
             \ 'javascript': ['prettier'],
             \ 'html': ['prettier'],
             \ 'css': ['prettier'],
-            \ 'python': ['autopep8', 'isort'],
+            \ 'python': ['autopep8', 'isort', 'mypy'],
             \ 'markdown': ['prettier']
             \ }
 " lint inline html & css
@@ -957,7 +1102,10 @@ nnoremap <leader>fl :ALEFix<CR>
 " }}}
 
 
-" {{{ Auto Complete Stuff
+" ==============================================================================
+" Auto Complete Stuff
+" ==============================================================================
+" {{{
 let g:coc_global_extensions = ['coc-python', 'coc-html', 'coc-css', 'coc-json', 'coc-vimlsp', 'coc-snippets']
 
 " tab to trigger completion and navigate the menu
@@ -1007,13 +1155,19 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " }}}
 
 
-" {{{ Echo Doc function signatures
+" ==============================================================================
+" Echo Doc function signatures
+" ==============================================================================
+" {{{
 let g:echodoc#enable_at_startup=1
 let g:echodoc#type="echo"
 " }}}
 
 
-" {{{ Interesting words
+" ==============================================================================
+" Interesting words
+" ==============================================================================
+" {{{
 let g:interestingWordsDefaultMappings = 0
 let g:interestingWordsGUIColors = ['#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF']
 nnoremap <silent> <leader>hh :call InterestingWords('n')<CR>
@@ -1023,7 +1177,10 @@ nnoremap <silent> <leader>hN :call WordNavigation('backward')<CR>
 " }}}
 
 
-" {{{ Easy Motion Stuff
+" ==============================================================================
+" Easy Motion Stuff
+" ==============================================================================
+" {{{
 let g:EasyMotion_do_mapping = 0
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_keys='jklhuiowertycvbnm;fj'
@@ -1032,7 +1189,10 @@ nmap s <Plug>(easymotion-overwin-f2)
 " }}}
 
 
-" {{{ Tagbar
+" ==============================================================================
+" Tagbar
+" ==============================================================================
+" {{{
 nmap <leader>T :TagbarToggle<CR>
 let g:tagbar_auto_close=1
 let g:tagbar_autofocus=1
@@ -1044,7 +1204,10 @@ let g:tagbar_iconchars = ['▶', '▼']
 " }}}
 
 
-" {{{ Git Stuff
+" ==============================================================================
+" Git Stuff
+" ==============================================================================
+" {{{
 let g:gitgutter_map_keys = 0
 let g:gitgutter_enabled = 0
 let g:gitgutter_sign_added              = '+'
@@ -1064,14 +1227,20 @@ nnoremap <leader>gl :Gclog<CR>
 " }}}
 
 
-" {{{ Folding Stuff
+" ==============================================================================
+" Folding Stuff
+" ==============================================================================
+" {{{
 " don't fold files by default
 set foldlevelstart=99
-autocmd! FileType vim set foldmethod=marker
+au FileType vim set foldmethod=marker
 " }}}
 
 
-" {{{ Open Browser Stuff
+" ==============================================================================
+" Open Browser Stuff
+" ==============================================================================
+" {{{
 let g:web_search_query="https://www.google.com/search?q="
 let g:web_search_command="firefox"
 let g:web_search_use_default_mapping="no"
@@ -1083,20 +1252,50 @@ vnoremap <silent> gO :WebSearchVisual<CR>
 " }}}
 
 
-" {{{ OTHER
+" ==============================================================================
+" Easy directory switching
+" ==============================================================================
+" {{{
+function! s:root()
+  let root = systemlist('git rev-parse --show-toplevel')[0]
+  if v:shell_error
+    echo 'Not in git repo'
+  else
+    execute 'lcd' root
+    echo 'Changed directory to: '.root
+  endif
+endfunction
+command! Root call s:root()
+
+nnoremap <leader>cdb :cd %:p:h<CR>:pwd<CR>
+nnoremap <leader>cdh :cd ~/<CR>:pwd<CR>
+nnoremap <leader>cdp :Root<CR>
+" }}}
+
+
+" ==============================================================================
+" OTHER
+" ==============================================================================
+" {{{
 " Return to same line from when file last opened
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+" diable paste when exit insert mode
+au InsertLeave * silent! set nopaste
+
 " don't hijack the v in html files...
 let g:tagalong_mappings = ['c', 'C', 'i', 'a']
+
+" Easy shebang
+inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 " auto source vimrc on change
 " autocmd! BufWritePost $MYVIMRC nested source $MYVIMRC | AirlineToggle | AirlineToggle | AirlineRefresh
 
 " no signcolumn for special windows
-autocmd! FileType nerdtree setlocal signcolumn="no"
-autocmd! FileType tagbar setlocal signcolumn="no"
-autocmd! FileType undotree setlocal signcolumn="no"
+au FileType nerdtree setlocal signcolumn="no"
+au FileType tagbar setlocal signcolumn="no"
+au FileType undotree setlocal signcolumn="no"
 
 syntax enable " At the end to ensure it's enabled once all themeing is done
 
@@ -1138,24 +1337,42 @@ cnoremap <expr> <CR> CCR()
 
 " only highlight while search is in progress
 augroup vimrc-incsearch-highlight
-    autocmd!
-    autocmd CmdlineEnter [/\?] :set hlsearch
-    autocmd CmdlineLeave [/\?] :set nohlsearch
+    au!
+    au CmdlineEnter [/\?] :set hlsearch
+    au CmdlineLeave [/\?] :set nohlsearch
 augroup END
 
 " No cursorline in insert mode
-autocmd InsertLeave,WinEnter * set cursorline
-autocmd InsertEnter,WinLeave * set nocursorline
+au InsertLeave,WinEnter * set cursorline
+au InsertEnter,WinLeave * set nocursorline
 " }}}
 
 
-" {{{ Hacks :(
+" ==============================================================================
+" Hacks :(
+" ==============================================================================
+" {{{
 " make undoquit work for <c-w>c too
 nnoremap <silent> <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
 
 " hack to fix recent polyglot update bug
-autocmd! BufRead, BufNewFile, BufEnter FileType vim commentstring='" %s'
+au BufRead, BufNewFile, BufEnter FileType vim commentstring='" %s'
 
 " need to figure out what is overwriting it...
-autocmd! BufEnter * set formatoptions-=cro
+au BufEnter * set formatoptions-=cro
+" }}}
+
+
+" ==============================================================================
+" Disable in-built plugins
+" ==============================================================================
+" {{{
+let g:loaded_getscriptPlugin = 1
+let g:loaded_netrwPlugin = 1
+let g:loaded_tarPlugin = 1
+let g:loaded_tutor_mode_plugin = 1
+let g:loaded_vimballPlugin = 1
+let g:loaded_zipPlugin = 1
+let g:loaded_gzip = 1
+let g:loaded_rrhelper = 1
 " }}}

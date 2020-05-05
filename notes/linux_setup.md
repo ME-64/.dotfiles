@@ -148,3 +148,8 @@ npm install -g livedown
 
 pip3 install neovim-remote
 
+
+#### Postman
+
+sudo snap install postman
+
