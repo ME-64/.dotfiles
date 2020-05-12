@@ -381,7 +381,9 @@ exec --no-startup-id /usr/bin/unclutter -b
 
 
 # Remap caps lock to control
-exec_always --no-startup-id setxkbmap -option 'ctrl:nocaps'
+# exec_always --no-startup-id setxkbmap -option 'caps:swapescape'
+exec_always --no-startup-id setxkbmap -option 'caps:escape'
+
 
 
 # Start workspaces on specific screens

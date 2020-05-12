@@ -121,7 +121,7 @@ export PROMPT_COMMAND="pwd > /tmp/whereami"
 alias config='/usr/bin/git --git-dir=/home/milo/.dotfiles/ --work-tree=/home/milo'
 
 # tree for projects
-alias tree="tree -I '__pycache__|*.pyc|.git|venv'"
+alias tree="tree -I '__pycache__|*.pyc|.git|venv|node_modules'"
 
 
 # open man page in vim

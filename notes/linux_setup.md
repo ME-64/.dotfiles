@@ -153,3 +153,22 @@ pip3 install neovim-remote
 
 sudo snap install postman
 
+
+#### tcolors
+
+curl -Lo tcolors https://github.com/bcicen/tcolors/releases/download/v0.2/tcolors-0.2-$(uname -s)-amd64
+chmod +x tcolors
+sudo mv tcolors /usr/local/bin/
+
+
+#### Pick
+
+sudo snap install pick-colour-picker
+
+#### Sass
+
+sudo npm install -g sass
+
+#### Gulp
+
+sudo npm install -g gulp

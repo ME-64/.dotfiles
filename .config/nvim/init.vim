@@ -75,6 +75,7 @@ set spelllang=en_gb                  " the queen's english
 set complete+=kspell                 " autocomplete from dictionary w/spell
 runtime macros/matchit.vim           " matching if elses
 set foldmethod=indent                " simple folding
+let g:python3_host_prog="/usr/bin/python3" " save neovim some ms
 " }}}
 
 
@@ -117,15 +118,14 @@ call plug#begin('~/.vim/plugged')
 " File Navigation
 Plug 'junegunn/fzf',  {'dir': '~/.fzf', 'do': './install --bin'}
 Plug 'junegunn/fzf.vim'
-Plug 'airblade/vim-rooter'                                           " fzf from project roots
+Plug 'airblade/vim-rooter', {'on': ['FindRootDirectory']}
 Plug 'scrooloose/nerdtree', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind', 'NERDTreeToggleVCS']}
 Plug 'Xuyuanp/nerdtree-git-plugin', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind', 'NERDTreeToggleVCS']}
 Plug 'mbbill/undotree', {'on': ['UndotreeToggle']}                   " visualise undo history
 
 " Colours
-Plug 'morhetz/gruvbox'                                               " Gruvbox theme
+" Plug 'morhetz/gruvbox'                                               " Gruvbox theme
 Plug 'sainnhe/gruvbox-material'                                      " tweaked gruvbox
-Plug 'junegunn/seoul256.vim'                                         " low contrast
 Plug 'vim-airline/vim-airline'                                       " Simple Status line
 Plug 'vim-airline/vim-airline-themes'                                " Simple Status line
 Plug 'RRethy/vim-hexokinase', {'do': 'make hexokinase'}              " highlighting of colours
@@ -145,13 +145,14 @@ Plug 'jiangmiao/auto-pairs'                                          " auto clos
 Plug 'machakann/vim-highlightedyank'                                 " Highlight text that has been yanked
 Plug 'kshenoy/vim-signature'                                         " show marks in sign column
 Plug 'nathanaelkane/vim-indent-guides', {'on': ['IndentGuidesToggle']}
-Plug 'dstein64/vim-startuptime'                                      " debug startup time
+Plug 'dstein64/vim-startuptime', {'on': ['StartupTime']}             " debug startup time
 Plug 'linluk/vim-websearch'                                          " google terms
-Plug 'AndrewRadev/undoquit.vim'                                      " <c-w>u reopen last close window
 Plug 'junegunn/vim-peekaboo'                                         " see register content
 Plug 'lfv89/vim-interestingwords'                                    " tag hl words when exploring code
 Plug 'dominikduda/vim_current_word'                                  " syntax aware hl word under cursor
-Plug 'airblade/vim-gitgutter'                                        " highlight chagnes & text obj
+Plug 'airblade/vim-gitgutter', {'on': ['GitGutterToggle']}           " highlight chagnes & text obj
+Plug 'arecarn/vim-selection'                                         " dep for crunch
+Plug 'arecarn/vim-crunch'                                            " quick calcs!
 
 " Text Objects
 Plug 'kana/vim-textobj-user'                                         " UD objects
@@ -159,8 +160,12 @@ Plug 'reedes/vim-textobj-sentence', {'for': ['markdown']}            " clever se
 Plug 'michaeljsmith/vim-indent-object'                               " identation objects
 Plug 'mattn/vim-textobj-url'                                         " url text obj
 Plug 'glts/vim-textobj-comment'                                      " comments
-Plug 'fvictorio/vim-textobj-backticks'                               " better backtick surround
-" Plug 'junegunn/vim-after-object'                                     " select after paticular chars
+" Plug 'fvictorio/vim-textobj-backticks'                             " better backtick surround
+" Plug 'junegunn/vim-after-object'                                   " select after paticular chars
+Plug 'wellle/targets.vim'                                            " improve in-builts + more
+Plug 'whatyouhide/vim-textobj-xmlattr'                               " html tags
+Plug 'vimtaku/vim-textobj-keyvalue'                                  " key value pair
+Plug 'kana/vim-textobj-fold'                                         " folding
 
 " Motions & navigation
 Plug 'rhysd/clever-f.vim'                                            " smart f/t movement
@@ -172,31 +177,32 @@ Plug 'easymotion/vim-easymotion'                                     " used like
 
 " Writing
 Plug 'shime/vim-livedown', {'for': ['markdown']}                     " live preview of markdown
-Plug 'tpope/vim-markdown', {'for': ['markdown']}
-Plug 'dbmrq/vim-ditto'                                               " DRY, but for writing
-Plug 'reedes/vim-wordy'                                              " check yo profanity
+Plug 'dbmrq/vim-ditto', {'on': ['ToggleDitto']}                      " DRY, but for writing
+Plug 'reedes/vim-wordy', {'on': ['Wordy']}                           " check yo profanity
 Plug 'reedes/vim-litecorrect'                                        " gentle auto correct
+Plug 'SidOfc/mkdx'                                                   " insanely customisable markdown
 
 " Python stuff
 Plug 'vim-python/python-syntax', {'for': ['python']}                 " Python syntax highlighting
 Plug 'jeetsukumaran/vim-pythonsense', {'for': ['python']}            " objects for python
 Plug 'Vimjas/vim-python-pep8-indent', {'for': ['python']}            " better indent for python
 Plug 'raimon49/requirements.txt.vim', {'for': ['requirements']}      " syntax highlight req.txt
+" Plug 'chrisbra/csv.vim'                                              " nice csv viewing.
 
 " HTML / CSS stuff
-Plug 'alvan/vim-closetag'                                            " close html tags
-Plug 'Valloric/MatchTagAlways'                                       " html highlight tags
-Plug 'AndrewRadev/tagalong.vim'                                      " auto change tag (surround is manual)
+Plug 'alvan/vim-closetag', {'for': ['html']}                         " close html tags
+Plug 'Valloric/MatchTagAlways', {'for': ['html']}                    " html highlight tags
+Plug 'AndrewRadev/tagalong.vim', {'for': ['html']}                   " auto change tag (surround is manual)
 
 " General Language stuff
 Plug 'neoclide/coc.nvim', {'branch': 'release'}                      " code completion
 Plug 'Shougo/echodoc.vim'                                            " show function signatures
-Plug 'dense-analysis/ale'                                            " better linting
+Plug 'dense-analysis/ale', {'on': ['ALEToggle', 'ALEFix']}           " better linting
 Plug 'sheerun/vim-polyglot'                                          " for lesser used languages
 Plug 'honza/vim-snippets'                                            " pre-built snippets
-Plug 'majutsushi/tagbar'                                             " outline of file by class/function
-Plug 'kassio/neoterm'                                                " quick toggle term + REPL
-Plug 'junegunn/rainbow_parentheses.vim'                              " useful 2% of the time
+Plug 'majutsushi/tagbar', {'on': ['TagbarToggle']}                   " outline of file by class/function
+Plug 'kassio/neoterm', {'on': ['Ttoggle']}                           " quick toggle term + REPL
+Plug 'junegunn/rainbow_parentheses.vim', {'on': ['RainbowParentheses']} " useful 2% of the time
 
 call plug#end()
 filetype plugin indent on
@@ -218,7 +224,6 @@ let g:seoul256_background=235
 
 set background=dark
 colorscheme gruvbox-material
-" colorscheme seoul256 " for 256 terms
 let g:airline_theme='gruvbox_material'
 " semi-transparent pop-up window
 set pumblend=10
@@ -260,8 +265,8 @@ nmap Q <Nop>
 " correct y
 noremap Y y$
 
-" good visual mode
-nnoremap v <C-v>
+" good visual mode  (Removed b/c of targets vim)
+" nnoremap v <C-v>
 
 " join and split lines intuitively
 nnoremap <c-h> 0i<BS><esc>
@@ -287,6 +292,9 @@ noremap L $
 nnoremap <C-p> <C-o>
 nnoremap <C-n> <C-i>
 
+" When pasting over text, don't overrwrite register
+vnoremap p "_dP
+
 " Easier indentation
 noremap <Tab> >>
 noremap <S-Tab> <<
@@ -303,7 +311,7 @@ nnoremap <silent> # #zz
 noremap gk gg
 noremap gj G
 
-" moving between brackets simple
+" moving between brackets, 1 key stroke
 nmap 0 %
 
 " Change text without putting the text into register,
@@ -355,6 +363,7 @@ nnoremap <silent> - :bp <cr>
 " nnoremap <silent> _ :bd <cr>
 nnoremap <silent> _ :b#<bar>bd#<CR>
 
+
 " {{{2 Skip the neoterm toggle buffer
 " function! PrevBufferTab()
 "     bprev
@@ -392,6 +401,11 @@ xmap <M-j> <Plug>(textmanip-move-down)
 xmap <M-k> <Plug>(textmanip-move-up)
 nmap <M-j> <Plug>(textmanip-move-down)
 nmap <M-k> <Plug>(textmanip-move-up)
+
+" consistent next and prev in command mode
+cnoremap <C-j> <C-n>
+cnoremap <C-k> <C-p>
+
 " }}}
 
 
@@ -437,8 +451,8 @@ function! WritingMode()
         nnoremap <buffer> <leader>sa <Nop>
         nnoremap <buffer> <leader>sc <Nop>
         nnoremap <buffer> <leader>sC <Nop>
-        DittoOff
-        silent NoWordy
+        silent! DittoOff
+        silent! NoWordy
         let b:writing_mode=0
         echo("Writing Mode Off")
     endif
@@ -518,8 +532,16 @@ au User GoyoLeave nested call <SID>goyo_leave()
 " Colour Highlighting
 " ==============================================================================
 " {{{
-let g:Hexokinase_highlighters=['foreground']
+let g:Hexokinase_highlighters=['virtual']
 " let g:Hexokinase_ftEnabled=['css', 'html', 'javascript']
+let g:Hexokinase_optInPatterns = [
+            \     'full_hex',
+            \     'triple_hex',
+            \     'rgb',
+            \     'rgba',
+            \     'hsl',
+            \     'hsla',
+            \ ]
 " }}}
 
 
@@ -555,11 +577,16 @@ nnoremap <leader>fw m`ggVGgwi``
 nnoremap <leader>fi m`ggVG=``
 vnoremap <leader>fw gwi<esc>
 vnoremap <leader>fi =<esc>
-xmap <leader>fa <Plug>(EasyAlign)
-xmap <leader>fA <Plug>(LiveEasyAlign)
+" xmap <leader>fa <Plug>(EasyAlign)
+" xmap <leader>fA <Plug>(LiveEasyAlign)
 
 nnoremap <leader>fb m`:silent! g/^$/,/./-j<CR>``
 vnoremap <leader>fb m`:g/^$/,/./-j<CR>``
+
+nmap cmm gcc
+omap cm gc
+vmap cm gc
+
 " }}}
 
 
@@ -579,7 +606,7 @@ let g:undotree_ShortIndicators=1
 " Polyglot Stuff
 " ==============================================================================
 " {{{
-let g:polyglot_disabled=['python', 'markdown', 'vim']
+let g:polyglot_disabled=['python', 'markdown', 'vim', 'csv']
 " }}}
 
 
@@ -592,7 +619,7 @@ tnoremap <C-s><esc> <C-\><C-n>
 au TermOpen * tnoremap <buffer> <Esc> <c-\><c-n>
 au FileType fzf tunmap <buffer> <Esc>
 au TermOpen * setfiletype dterm
-
+highlight TermCursor ctermfg=red guifg=red
 
 " Opening splits with terminal in all directions
 " nnoremap <Space>h<CR> :leftabove  vnew<CR>:terminal<CR>i
@@ -605,27 +632,21 @@ nnoremap <C-Space><CR> :terminal<CR>i
 au TermOpen * nnoremap <silent> _ :b#<bar>bd!#<CR>
 
 " " edit the currently in progress command in normal mode
-" if exists(':terminal')
-"   " Readline cheatsheet:
-"   " ctrl-a - jump to start of line
-"   " ctrl-e - jump to end of line
-"   " ctrl-k - kill forwards to the end of line
-"   " ctrl-u - kill backwards to the start of line
-"   autocmd TermOpen * nnoremap <buffer> I I<C-a>
-"   autocmd TermOpen * nnoremap <buffer> A A<C-e>
-"   autocmd TermOpen * nnoremap <buffer> C A<C-k>
-"   autocmd TermOpen * nnoremap <buffer> D A<C-k><C-\><C-n>
-"   autocmd TermOpen * nnoremap <buffer> cc A<C-e><C-u>
-"   autocmd TermOpen * nnoremap <buffer> dd A<C-e><C-u><C-\><C-n>
-"   autocmd FileType fzf * nunmap <buffer> I
-"   autocmd FileType fzf * nunmap <buffer> A
-"   autocmd FileType fzf * nunmap <buffer> C
-"   autocmd FileType fzf * nunmap <buffer> D
-"   autocmd FileType fzf * nunmap <buffer> cc
-"   autocmd FileType fzf * nunmap <buffer> dd
-"   autocmd FileType fzf * nunmap <buffer> _
-" endif
+if exists(':terminal')
+  " Readline cheatsheet:
+  " ctrl-a - jump to start of line
+  " ctrl-e - jump to end of line
+  " ctrl-k - kill forwards to the end of line
+  " ctrl-u - kill backwards to the start of line
+  autocmd TermOpen * nnoremap <buffer> I I<C-a>
+  autocmd TermOpen * nnoremap <buffer> A A<C-e>
+  autocmd TermOpen * nnoremap <buffer> C A<C-k>
+  autocmd TermOpen * nnoremap <buffer> D A<C-k><C-\><C-n>
+  autocmd TermOpen * nnoremap <buffer> cc A<C-e><C-u>
+  autocmd TermOpen * nnoremap <buffer> dd A<C-e><C-u><C-\><C-n>
+endif
 " }}}
+
 
 " ==============================================================================
 " neoterm Plugin
@@ -643,7 +664,8 @@ nmap <leader><CR> <Plug>(neoterm-repl-send-line)
 xmap <leader><CR> <Plug>(neoterm-repl-send)
 
 " au BufCreate,BufNew FileType neoterm keepalt file neoterm
-au TermOpen FileType neoterm keepalt file neoterm
+au TermOpen FileType neoterm file neoterm
+" au TerminalOpen FileType neoterm file neoterm
 " }}}
 
 
@@ -663,11 +685,11 @@ au TermOpen FileType neoterm keepalt file neoterm
 " |: colour column
 " r: rainbow parentheses
 nnoremap <leader>tb :setlocal background=<C-R>=&background == "dark" ? "light" : "dark"<CR><CR>
-nnoremap <leader>tp :setlocal invpaste paste?<CR>
+nnoremap <leader>tp :setlocal invpaste paste?<CR> <bar>:set paste?<CR>
 nnoremap <silent> <leader>tn :exec &nu==&rnu? "setlocal nu!" : "setlocal rnu!"<CR>
-nnoremap <leader>tw :setlocal wrap!<CR>
-nnoremap <leader>tl :setlocal cursorline!<CR>
-nnoremap <leader>tc :setlocal cursorcolumn!<CR>
+nnoremap <leader>tw :setlocal wrap!<CR> <bar>:set wrap?<CR>
+nnoremap <leader>tl :setlocal cursorline!<CR> <bar>:set cursorline?<CR>
+nnoremap <leader>tc :setlocal cursorcolumn!<CR> <bar>:set cursorcolumn?<CR>
 nnoremap <leader>tr :RainbowParentheses!!<CR>
 
 set colorcolumn=
@@ -734,15 +756,17 @@ au FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
 
 
 " ==============================================================================
+" scss/sass Stuff
+" ==============================================================================
+autocmd FileType scss set iskeyword+=-
+
+" ==============================================================================
 " Markdown Stuff
 " ==============================================================================
 " {{{
-" augroup pandoc_syntax
-"     au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
-" augroup END
-let g:markdown_fenced_languages=['html', 'css', 'javascript', 'python', 'js=javascript', 'py=python']
+" let g:markdown_fenced_languages=['html', 'css', 'javascript', 'python', 'js=javascript', 'py=python']
 " let g:markdown_minlines = 100
-let g:markdown_folding=1
+" let g:markdown_folding=1
 let g:livedown_autorun = 0
 let g:livedown_open = 1
 let g:livedown_port = 1337
@@ -750,16 +774,20 @@ let g:livedown_browser='firefox'
 au BufNewFile,BufFilePre,BufRead *.md set ft=markdown
 
 " auto align table
-au FileType markdown vmap <leader>fT :EasyAlign*<Bar><CR>
-au FileType markdown nnoremap <leader>mv :LivedownToggle<CR>
-au FileType markdown nnoremap <leader>mh1 :s/^#* //ge<CR>^i#<space><esc>0
-au FileType markdown nnoremap <leader>mh2 :s/^#* //ge<CR>^i##<space><esc>0
-au FileType markdown nnoremap <leader>mh3 :s/^#* //ge<CR>^i###<space><esc>0
-au FileType markdown nnoremap <leader>mh4 :s/^#* //ge<CR>^i####<space><esc>0
-au FileType markdown nnoremap <leader>mh5 :s/^#* //ge<CR>^i#####<space><esc>0
-au FileType markdown nnoremap <leader>mh6 :s/^#* //ge<CR>^i######<space><esc>0
-au FileType markdown nnoremap <leader>mhc :s/^#* //ge<CR>0
-au FileType markdown nnoremap <leader>mc 0i```<CR><CR>```<esc>kka
+" au FileType markdown vmap <leader>fT :EasyAlign*<Bar><CR>
+" au FileType markdown nnoremap <leader>mv :LivedownToggle<CR>
+" au FileType markdown nnoremap <leader>mh1 :s/^#* //ge<CR>^i#<space><esc>0
+" au FileType markdown nnoremap <leader>mh2 :s/^#* //ge<CR>^i##<space><esc>0
+" au FileType markdown nnoremap <leader>mh3 :s/^#* //ge<CR>^i###<space><esc>0
+" au FileType markdown nnoremap <leader>mh4 :s/^#* //ge<CR>^i####<space><esc>0
+" au FileType markdown nnoremap <leader>mh5 :s/^#* //ge<CR>^i#####<space><esc>0
+" au FileType markdown nnoremap <leader>mh6 :s/^#* //ge<CR>^i######<space><esc>0
+" au FileType markdown nnoremap <leader>mhc :s/^#* //ge<CR>0
+" au FileType markdown nnoremap <leader>mc 0i```<CR><CR>```<esc>kka
+" easy insert of Numbered list
+command! -range=% -nargs=1 NL
+  \ <line1>,<line2>!nl -w <args> -s '. ' | perl -pe 's/^.{<args>}..$//'
+" au FileType markdown vnoremap <leader>mn :NL1<CR>
 
 au FileType markdown setlocal formatoptions+=t
 au FileType markdown setlocal shiftwidth=2
@@ -768,11 +796,50 @@ au FileType markdown setlocal expandtab
 au FileType markdown setlocal textwidth=80
 au FileType markdown call textobj#sentence#init()
 
-" easy insert of Numbered list
-command! -range=% -nargs=1 NL
-  \ <line1>,<line2>!nl -w <args> -s '. ' | perl -pe 's/^.{<args>}..$//'
 
-au FileType markdown vnoremap <leader>mn :NL1<CR>
+let g:mkdx#settings = {
+            \ 'map': {'enable': 0},
+            \ 'tokens': {
+                \ 'italic' : '*',
+                \ 'bold' : '**',
+                \ 'strike' : '~~',
+                \ },
+            \ 'toc': {
+                \ 'update_on_write': 1,
+                \ },
+                \ 'highlight': {
+                \ 'enable': 1,
+                \ },
+            \ 'fold': {'enable': 1, 'components': ['toc', 'fence']},
+            \ }
+
+fun! s:MarkdownStuff()
+    nmap <buffer><silent> <leader>mtoc <Plug>(mkdx-gen-or-upd-toc)
+    nmap <buffer><silent> <leader>mi <Plug>(mkdx-mkdx-text-italic-n)
+    vmap <buffer><silent> <leader>mi <Plug>(mkdx-mkdx-text-italic-v)
+    nmap <buffer><silent> <leader>mb <Plug>(mkdx-mkdx-text-bold-n)
+    vmap <buffer><silent> <leader>mb <Plug>(mkdx-mkdx-text-bold-v)
+    nmap <buffer><silent> <leader>m` <Plug>(mkdx-mkdx-text-inline-code-n)
+    vmap <buffer><silent> <leader>m` <Plug>(mkdx-mkdx-text-inline-code-v)
+    nmap <buffer><silent> <leader>mtc <Plug>(mkdx-toggle-checkbox-n)
+    vmap <buffer><silent> <leader>mtc <Plug>(mkdx-toggle-checkbox-v)
+
+    vmap <leader>fT :EasyAlign*<Bar><CR>
+    nnoremap <leader>mv :LivedownToggle<CR>
+    nnoremap <leader>mh1 :s/^#* //ge<CR>^i#<space><esc>0
+    nnoremap <leader>mh2 :s/^#* //ge<CR>^i##<space><esc>0
+    nnoremap <leader>mh3 :s/^#* //ge<CR>^i###<space><esc>0
+    nnoremap <leader>mh4 :s/^#* //ge<CR>^i####<space><esc>0
+    nnoremap <leader>mh5 :s/^#* //ge<CR>^i#####<space><esc>0
+    nnoremap <leader>mh6 :s/^#* //ge<CR>^i######<space><esc>0
+    nnoremap <leader>mhc :s/^#* //ge<CR>0
+    nnoremap <leader>mc 0i```<CR><CR>```<esc>kka
+endfun
+
+augroup Mkdx
+    au!
+    au FileType markdown call s:MarkdownStuff()
+augroup END
 
 " }}}
 
@@ -847,32 +914,23 @@ let g:fzf_action = {
 let g:rooter_manual_only = 1
 let g:rooter_patterns = ['.git/']
 
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . shellescape(<q-args>), 1, {"dir": FindRootDirectory()})
 
 nnoremap <silent> <C-f>f :call fzf#vim#files('.', {'options': '--prompt "" --border "rounded"'})<CR>
-" noremap <silent> <C-f>p :call fzf#vim#files(FindRootDirectory(), {'options': '--prompt "" --border "rounded"', 'dir': FindRootDirectory()})<CR>
 nnoremap <silent> <C-f>b :call fzf#vim#buffers({'options': '--prompt "" --border "rounded"'})<CR>
-" nnoremap <C-f>b :ls<CR>:b
-" nnoremap <C-f>m :marks<CR>:norm! `
-nnoremap <C-F>m :Marks<CR>
-nnoremap <C-f>o :History<CR>
-nnoremap <C-f>h :Helptags<CR>
+nnoremap <silent> <C-f>m :call fzf#vim#marks({'options': '--prompt "" --border "rounded"'})<CR>
+nnoremap <silent> <C-f>o :call fzf#vim#history({'options': '--prompt "MRU >" --border "rounded"'})<CR>
+nnoremap <silent> <C-f>h :call fzf#vim#helptags({'options': '--prompt "" --border "rounded"'})<CR>
 nnoremap <silent> <C-f>l :call fzf#vim#buffer_lines({'options': '--prompt "" --border "rounded"'})<CR>
 nnoremap <silent> <C-f>L :call fzf#vim#lines({'options': '--prompt "" --border "rounded"'})<CR>
 nnoremap <silent> <C-f>d :call fzf#run(fzf#wrap({'source': 'find ~/* -type d', 'sink': 'cd'}))<CR>
-nnoremap <silent> <C-f>p :Rg<space>
 " and the hold down variant
 nnoremap <silent> <C-f><C-f> :call fzf#vim#files('.', {'options': '--prompt "" --border "rounded"'})<CR>
 nnoremap <silent> <C-f><C-b> :call fzf#vim#buffers({'options': '--prompt "" --border "rounded"'})<CR>
-" nnoremap <C-f><C-b> :ls<CR>:b
-" nnoremap <C-f><C-m> :marks<CR>:norm! `
-nnoremap <C-F><C-m> :Marks<CR>
-nnoremap <C-f><C-o> :History<CR>
-nnoremap <C-f><C-h> :Helptags<CR>
+nnoremap <silent> <C-f><C-m> :call fzf#vim#marks({'options': '--prompt "" --border "rounded"'})<CR>
+nnoremap <silent> <C-f><C-o> :call fzf#vim#history({'options': '--prompt "MRU >" --border "rounded"'})<CR>
+nnoremap <silent> <C-f><C-h> :call fzf#vim#helptags({'options': '--prompt "" --border "rounded"'})<CR>
 nnoremap <silent> <C-f><C-l> :call fzf#vim#buffer_lines({'options': '--prompt "" --border "rounded"'})<CR>
-nnoremap <silent> <C-f><C-d> :call fzf#run(fzf#wrap({'source': 'find ~/* -type d'}))<CR>
-nnoremap <silent> <C-f><C-p> :Rg<space>
-" noremap <silent> <C-f><C-p> :call fzf#vim#files(FindRootDirectory(), {'options': '--prompt "" --border "rounded"', 'dir': FindRootDirectory()})<CR>
+nnoremap <silent> <C-f><C-d> :call fzf#run(fzf#wrap({'source': 'find ~/* -type d', 'sink': 'cd'}))<CR>
 " }}}
 
 
@@ -937,7 +995,7 @@ endif
 " Text Object mappings
 " ==============================================================================
 " {{{
-" if/af - functions, aC/iC - class, ai/ii - indent, au/iu - urls, ac/ic - comments, ah/ih - git changes
+" if/af - functions, aC/iC - class, ai/ii - indent, au/iu - urls, ac/ic - comments, ah/ih - git changes, ax/ix tag arugments, ak/iv - key value, iz, az - fold
 omap aC <Plug>(PythonsenseOuterClassTextObject)
 omap iC <Plug>(PythonsenseInnerClassTextObject)
 omap af <Plug>(PythonsenseOuterFunctionTextObject)
@@ -948,11 +1006,11 @@ vmap iC <Plug>(PythonsenseInnerClassTextObject)
 vmap af <Plug>(PythonsenseOuterFunctionTextObject)
 vmap if <Plug>(PythonsenseInnerFunctionTextObject)
 
-" Arguments w/ sideways
-omap <silent> aa <Plug>SidewaysArgumentTextobjA
-xmap <silent> aa <Plug>SidewaysArgumentTextobjA
-omap <silent> ia <Plug>SidewaysArgumentTextobjI
-xmap <silent> ia <Plug>SidewaysArgumentTextobjI
+" Arguments w/ sideways (replaced by targets)
+" omap <silent> aa <Plug>SidewaysArgumentTextobjA
+" xmap <silent> aa <Plug>SidewaysArgumentTextobjA
+" omap <silent> ia <Plug>SidewaysArgumentTextobjI
+" xmap <silent> ia <Plug>SidewaysArgumentTextobjI
 
 " Git changes
 omap ih <Plug>(GitGutterTextObjectInnerPending)
@@ -970,23 +1028,27 @@ onoremap al :<C-u>normal val<CR>
 xnoremap ad <esc>vggoVG
 onoremap ad :<C-u>normal vad<CR>
 
-xnoremap ir i[
-xnoremap ar a[
-onoremap ir :normal vi[<CR>
-onoremap ar :normal va[<CR>
+xmap ir i[
+xmap ar a[
+omap ir :normal vi[<CR>
+omap ar :normal va[<CR>
 
-" Lots of delimiters
-for char in [ '_', '.', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#' ]
-    execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'
-    execute 'onoremap i' . char . ' :normal vi' . char . '<CR>'
-    execute 'xnoremap a' . char . ' :<C-u>normal! F' . char . 'vf' . char . '<CR>'
-    execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
-endfor
+" Lots of delimiters replaced by targets vim.
+" for char in [ '_', '.', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#' ]
+"     execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'
+"     execute 'onoremap i' . char . ' :normal vi' . char . '<CR>'
+"     execute 'xnoremap a' . char . ' :<C-u>normal! F' . char . 'vf' . char . '<CR>'
+"     execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
+" endfor
 
+" Code block (triple back-tick) object with <Shift-`>
 xnoremap <silent> i¬ g_?^\s*```<cr>jo/^\s*```<cr>kV:<c-u>nohl<cr>gv
 xnoremap <silent> a¬ g_?^\s*```<cr>o/^\s*```<cr>V:<c-u>nohl<cr>gv
 onoremap <silent> i¬ :<C-U>execute "normal vi~"<cr>
 onoremap <silent> a¬ :<C-U>execute "normal va~"<cr>
+
+" limit targets to the current line only
+let g:targets_seekRanges = 'cc cr cb cB lc lr rr ll lb lB rb rB'
 
 " After TODO
 " autocmd VimEnter * call after_object#enable('=', ':')
@@ -1005,8 +1067,8 @@ let g:SignatureMap = {
             \ 'ToggleMarkAtLine'   :  "",
             \ 'PurgeMarksAtLine'   :  "",
             \ 'DeleteMark'         :  "dm",
-            \ 'PurgeMarks'         :  "",
             \ 'PurgeMarkers'       :  "",
+            \ 'PurgeMarks'         :  "m<BS>",
             \ 'GotoNextLineAlpha'  :  "",
             \ 'GotoPrevLineAlpha'  :  "",
             \ 'GotoNextSpotAlpha'  :  "",
@@ -1033,10 +1095,10 @@ let g:NERDTreeMinimalUI=1 " nerd tree hiding help button
 let g:NERDTreeShowHidden=1
 let g:NERDTreeWinSize=35
 let g:NERDTreeHijackNetrw=1
-let g:NERDTreeRespectWildIgnore=1
+let g:NERDTreeRespectWildIgnore=0
 let g:NERDTreeMinimalMenu=0
 let g:NERDTreeDirArrows=1
-let g:NERDTreeIgnore = ['\.pyc$', '\.egg-info$', '__pycache__', '__pycache__','.git', '.ipynb_checkpoints', '.DS_Store', '.localized', 'venv', '.mypy_cache']
+let g:NERDTreeIgnore = ['\.pyc$', '\.egg-info$', '__pycache__', '__pycache__','.git', '.ipynb_checkpoints', '.DS_Store', '.localized', 'venv', '.mypy_cache', 'node_modules']
 let g:NERDTreeQuitOnOpen=1
 let g:NERDTreeShowLineNumbers=1
 " sort based on file extension, roughly...
@@ -1106,7 +1168,7 @@ nnoremap <leader>fl :ALEFix<CR>
 " Auto Complete Stuff
 " ==============================================================================
 " {{{
-let g:coc_global_extensions = ['coc-python', 'coc-html', 'coc-css', 'coc-json', 'coc-vimlsp', 'coc-snippets']
+let g:coc_global_extensions = ['coc-python', 'coc-html', 'coc-css', 'coc-json', 'coc-vimlsp', 'coc-snippets', 'coc-tsserver', 'coc-angular']
 
 " tab to trigger completion and navigate the menu
 inoremap <silent><expr> <TAB>
@@ -1168,12 +1230,13 @@ let g:echodoc#type="echo"
 " Interesting words
 " ==============================================================================
 " {{{
-let g:interestingWordsDefaultMappings = 0
 let g:interestingWordsGUIColors = ['#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF']
+let g:interestingWordsDefaultMappings = 0
 nnoremap <silent> <leader>hh :call InterestingWords('n')<CR>
 nnoremap <silent> <leader>hH :call UncolorAllWords()<CR>
 nnoremap <silent> <leader>hn :call WordNavigation('forward')<CR>
 nnoremap <silent> <leader>hN :call WordNavigation('backward')<CR>
+nnoremap <leader>k <Nop>
 " }}}
 
 
@@ -1220,10 +1283,6 @@ nnoremap <leader>gg :GitGutterToggle<CR>
 nnoremap <leader>gs :G<CR>
 nnoremap <leader>gb :Git Blame<CR>
 nnoremap <leader>gl :Gclog<CR>
-
-
-
-
 " }}}
 
 
@@ -1352,14 +1411,15 @@ au InsertEnter,WinLeave * set nocursorline
 " Hacks :(
 " ==============================================================================
 " {{{
-" make undoquit work for <c-w>c too
-nnoremap <silent> <c-w>c :call undoquit#SaveWindowQuitHistory()<cr><c-w>c
 
 " hack to fix recent polyglot update bug
 au BufRead, BufNewFile, BufEnter FileType vim commentstring='" %s'
 
 " need to figure out what is overwriting it...
 au BufEnter * set formatoptions-=cro
+
+" fix floating pop-up not removing in latest master branch coc-nvim
+autocmd CursorMoved,CursorMovedI * call coc#util#float_hide()
 " }}}
 
 
@@ -1368,7 +1428,7 @@ au BufEnter * set formatoptions-=cro
 " ==============================================================================
 " {{{
 let g:loaded_getscriptPlugin = 1
-let g:loaded_netrwPlugin = 1
+" let g:loaded_netrwPlugin = 1
 let g:loaded_tarPlugin = 1
 let g:loaded_tutor_mode_plugin = 1
 let g:loaded_vimballPlugin = 1
