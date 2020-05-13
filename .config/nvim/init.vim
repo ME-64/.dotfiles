@@ -152,7 +152,7 @@ Plug 'lfv89/vim-interestingwords'                                    " tag hl wo
 Plug 'dominikduda/vim_current_word'                                  " syntax aware hl word under cursor
 Plug 'airblade/vim-gitgutter', {'on': ['GitGutterToggle']}           " highlight chagnes & text obj
 Plug 'arecarn/vim-selection'                                         " dep for crunch
-Plug 'arecarn/vim-crunch'                                            " quick calcs!
+Plug 'arecarn/vim-crunch'                                            " quick calcs! with g=
 
 " Text Objects
 Plug 'kana/vim-textobj-user'                                         " UD objects
@@ -160,8 +160,6 @@ Plug 'reedes/vim-textobj-sentence', {'for': ['markdown']}            " clever se
 Plug 'michaeljsmith/vim-indent-object'                               " identation objects
 Plug 'mattn/vim-textobj-url'                                         " url text obj
 Plug 'glts/vim-textobj-comment'                                      " comments
-" Plug 'fvictorio/vim-textobj-backticks'                             " better backtick surround
-" Plug 'junegunn/vim-after-object'                                   " select after paticular chars
 Plug 'wellle/targets.vim'                                            " improve in-builts + more
 Plug 'whatyouhide/vim-textobj-xmlattr'                               " html tags
 Plug 'vimtaku/vim-textobj-keyvalue'                                  " key value pair
@@ -169,7 +167,7 @@ Plug 'kana/vim-textobj-fold'                                         " folding
 
 " Motions & navigation
 Plug 'rhysd/clever-f.vim'                                            " smart f/t movement
-Plug 'chaoren/vim-wordmotion'                                        " improved word definiton
+Plug 'chaoren/vim-wordmotion'                                        " improved/consistent word definiton
 Plug 'AndrewRadev/sideways.vim'                                      " move arguments/li's around
 Plug 'junegunn/vim-easy-align'                                       " horizontal alignment of words
 Plug 't9md/vim-textmanip'                                            " shift text around, vertically
@@ -188,6 +186,7 @@ Plug 'jeetsukumaran/vim-pythonsense', {'for': ['python']}            " objects f
 Plug 'Vimjas/vim-python-pep8-indent', {'for': ['python']}            " better indent for python
 Plug 'raimon49/requirements.txt.vim', {'for': ['requirements']}      " syntax highlight req.txt
 " Plug 'chrisbra/csv.vim'                                              " nice csv viewing.
+Plug 'janko/vim-test'                                                " run tests easily
 
 " HTML / CSS stuff
 Plug 'alvan/vim-closetag', {'for': ['html']}                         " close html tags
@@ -348,20 +347,17 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 noremap <Up> <Nop>
 
-" Run python files easily
-au FileType python nnoremap <buffer> <leader>rf :!python3 %<cr>
-
 " Run nodejs easily
 au FileType javascript nnoremap <buffer> <leader>rf :!node %<cr>
 
 " jump to end tag in html
-au FileType html nnoremap <silent> <buffer> ) :MtaJumpToOtherTag<CR>
+au FileType html nmap <silent> <buffer> ) :MtaJumpToOtherTag<CR>
 
 " useful buffer switching
 nnoremap <silent> = :bn <cr>
 nnoremap <silent> - :bp <cr>
-" nnoremap <silent> _ :bd <cr>
-nnoremap <silent> _ :b#<bar>bd#<CR>
+nnoremap <silent> _ :bd <cr>
+" nnoremap <silent> _ :b#<bar>bd#<CR>
 
 
 " {{{2 Skip the neoterm toggle buffer
@@ -381,10 +377,6 @@ nnoremap <silent> _ :b#<bar>bd#<CR>
 " nnoremap <silent> - :call PrevBufferTab()<cr>
 " nnoremap <silent> = :call NextBufferTab()<cr>
 " }}}
-
-
-" small tweak to vim-surround. I don't use default v_S
-vmap s S
 
 " consistent closing of windows
 nnoremap <C-w>q <C-w>c
@@ -577,15 +569,11 @@ nnoremap <leader>fw m`ggVGgwi``
 nnoremap <leader>fi m`ggVG=``
 vnoremap <leader>fw gwi<esc>
 vnoremap <leader>fi =<esc>
-" xmap <leader>fa <Plug>(EasyAlign)
-" xmap <leader>fA <Plug>(LiveEasyAlign)
+xmap <leader>fa <Plug>(EasyAlign)
+xmap <leader>fA <Plug>(LiveEasyAlign)
 
 nnoremap <leader>fb m`:silent! g/^$/,/./-j<CR>``
 vnoremap <leader>fb m`:g/^$/,/./-j<CR>``
-
-nmap cmm gcc
-omap cm gc
-vmap cm gc
 
 " }}}
 
@@ -660,8 +648,11 @@ let g:neoterm_direct_open_repl=0
 let g:neoterm_eof=''
 let g:neoterm_autoscroll=1
 nnoremap <silent> <leader>` :Ttoggle<CR>
-nmap <leader><CR> <Plug>(neoterm-repl-send-line)
-xmap <leader><CR> <Plug>(neoterm-repl-send)
+nmap gtt <Plug>(neoterm-repl-send-line)
+xmap gt <Plug>(neoterm-repl-send)
+nmap gt <Plug>(neoterm-repl-send)
+omap gt <Plug>(neoterm-repl-send)
+
 
 " au BufCreate,BufNew FileType neoterm keepalt file neoterm
 au TermOpen FileType neoterm file neoterm
@@ -716,6 +707,11 @@ let g:is_pythonsense_suppress_object_keymaps = 1
 let g:is_pythonsense_suppress_motion_keymaps = 1
 let g:is_pythonsense_suppress_location_keymaps = 1
 let g:python_highlight_all = 1
+let test#python#runner = 'pytest'
+" Run python files easily
+au FileType python nnoremap <buffer> <leader>rf :!python3 %<CR>
+" Run doctests
+au FileType python nnoremap <buffer> <leader>rt :!pytest --doctest-modules %<CR>
 " }}}
 
 
@@ -773,17 +769,6 @@ let g:livedown_port = 1337
 let g:livedown_browser='firefox'
 au BufNewFile,BufFilePre,BufRead *.md set ft=markdown
 
-" auto align table
-" au FileType markdown vmap <leader>fT :EasyAlign*<Bar><CR>
-" au FileType markdown nnoremap <leader>mv :LivedownToggle<CR>
-" au FileType markdown nnoremap <leader>mh1 :s/^#* //ge<CR>^i#<space><esc>0
-" au FileType markdown nnoremap <leader>mh2 :s/^#* //ge<CR>^i##<space><esc>0
-" au FileType markdown nnoremap <leader>mh3 :s/^#* //ge<CR>^i###<space><esc>0
-" au FileType markdown nnoremap <leader>mh4 :s/^#* //ge<CR>^i####<space><esc>0
-" au FileType markdown nnoremap <leader>mh5 :s/^#* //ge<CR>^i#####<space><esc>0
-" au FileType markdown nnoremap <leader>mh6 :s/^#* //ge<CR>^i######<space><esc>0
-" au FileType markdown nnoremap <leader>mhc :s/^#* //ge<CR>0
-" au FileType markdown nnoremap <leader>mc 0i```<CR><CR>```<esc>kka
 " easy insert of Numbered list
 command! -range=% -nargs=1 NL
   \ <line1>,<line2>!nl -w <args> -s '. ' | perl -pe 's/^.{<args>}..$//'
@@ -977,6 +962,21 @@ let g:airline_symbols.linenr = ''
 let g:airline_symbols.maxlinenr = ''
 let g:airline_symbols.dirty = ''
 
+" au BufNew FileType neoterm let g:airline_disable_statusline = 1
+
+let g:airline_filetype_overrides = {
+    \ 'defx':  ['defx', '%{b:defx.paths[0]}'],
+    \ 'gundo': [ 'Gundo', '' ],
+    \ 'help':  [ 'Help', '%f' ],
+    \ 'minibufexpl': [ 'MiniBufExplorer', '' ],
+    \ 'nerdtree': [ get(g:, 'NERDTreeStatusline', 'NERD'), '' ],
+    \ 'startify': [ 'startify', '' ],
+    \ 'vim-plug': [ 'Plugins', '' ],
+    \ 'vimfiler': [ 'vimfiler', '%{vimfiler#get_status_string()}' ],
+    \ 'vimshell': ['vimshell','%{vimshell#get_status_string()}'],
+    \ 'neoterm': ['neoterm', '']
+    \ }
+
 " fixes slow insert mode leaving
 if ! has('gui_running')
     " set ttimeoutlen=10
@@ -1041,6 +1041,11 @@ omap ar :normal va[<CR>
 "     execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
 " endfor
 
+" remapping vim-surround to follow the "g" verb convention
+nmap gs ys
+vmap gs S
+
+
 " Code block (triple back-tick) object with <Shift-`>
 xnoremap <silent> i¬ g_?^\s*```<cr>jo/^\s*```<cr>kV:<c-u>nohl<cr>gv
 xnoremap <silent> a¬ g_?^\s*```<cr>o/^\s*```<cr>V:<c-u>nohl<cr>gv
@@ -1048,7 +1053,8 @@ onoremap <silent> i¬ :<C-U>execute "normal vi~"<cr>
 onoremap <silent> a¬ :<C-U>execute "normal va~"<cr>
 
 " limit targets to the current line only
-let g:targets_seekRanges = 'cc cr cb cB lc lr rr ll lb lB rb rB'
+" unintended consequences so removed
+" let g:targets_seekRanges = 'cc cr cb cB lc lr rr ll lb lB rb rB'
 
 " After TODO
 " autocmd VimEnter * call after_object#enable('=', ':')

@@ -35,6 +35,12 @@ set_from_resource $ws16 i3-wm.workspace.16.name
 set_from_resource $ws17 i3-wm.workspace.17.name
 set_from_resource $ws18 i3-wm.workspace.18.name
 set_from_resource $ws19 i3-wm.workspace.19.name
+set_from_resource $ws20 i3-wm.workspace.20.name
+set_from_resource $ws21 i3-wm.workspace.21.name
+set_from_resource $ws22 i3-wm.workspace.22.name
+set_from_resource $ws23 i3-wm.workspace.23.name
+set_from_resource $ws24 i3-wm.workspace.24.name
+set_from_resource $ws25 i3-wm.workspace.25.name
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -126,6 +132,16 @@ bindsym $mod+Ctrl+7 workspace $ws17
 bindsym $mod+Ctrl+8 workspace $ws18
 bindsym $mod+Ctrl+9 workspace $ws19
 
+# virtualbox workspaces
+bindsym $mod+w workspace $ws20; workspace $ws21; workspace $ws22; workspace $ws23
+bindsym $mod+Shift+w workspace $ws1; workspace $ws2; workspace $ws3; workspace $ws4
+
+# spotify
+bindsym $mod+s workspace $ws24
+
+# system monitor
+bindsym $mod+m workspace $ws25
+
 # cycle across workspaces
 bindsym $mod+Tab workspace next
 bindsym $mod+Shift+Tab workspace prev
@@ -152,7 +168,7 @@ bindsym $mod+Shift+Ctrl+8 move container to workspace $ws18
 bindsym $mod+Shift+Ctrl+9 move container to workspace $ws19
 
 # move focused container to workspace, move to workspace
-bindsym $mod+$alt+1 move container to workspace $ws1; workspace $ws1  
+bindsym $mod+$alt+1 move container to workspace $ws1; workspace $ws1
 bindsym $mod+$alt+2 move container to workspace $ws2; workspace $ws2
 bindsym $mod+$alt+3 move container to workspace $ws3; workspace $ws3
 bindsym $mod+$alt+4 move container to workspace $ws4; workspace $ws4
@@ -196,12 +212,12 @@ bindsym $mod+Shift+s exec systemctl suspend
 # shortcuts for common system configuration tasks
 bindsym $mod+c exec gnome-control-center
 bindsym $mod+d exec gnome-control-center display
-bindsym $mod+w exec gnome-control-center wifi
+# bindsym $mod+w exec gnome-control-center wifi
 bindsym $mod+Shift+n exec nautilus
 bindsym $mod+n exec /usr/share/rofication/rofication-gui.py
 
 # i3-snapshot for load/save current layout
-bindsym $mod+comma  exec /usr/bin/i3-snapshot -o > /tmp/i3-snapshot 
+bindsym $mod+comma  exec /usr/bin/i3-snapshot -o > /tmp/i3-snapshot
 bindsym $mod+period exec /usr/bin/i3-snapshot -c < /tmp/i3-snapshot
 
 # Toggle bar visibility
@@ -210,6 +226,7 @@ bindsym $mod+i bar mode toggle
 # Cause Settings app to float above tiled windows
 floating_maximum_size -1 x -1
 for_window [class="Gnome-control-center"] floating enable
+# for matplotlib figures
 for_window [title="Figure *"] floating enable
 for_window [title="Figure 1"] floating enable
 # for_window [class="Gnome-control-center"] border 4
@@ -387,34 +404,44 @@ exec_always --no-startup-id setxkbmap -option 'caps:escape'
 
 
 # Start workspaces on specific screens
+workspace $ws1 output HDMI-0
 workspace $ws2 output DVI-I-1
 workspace $ws4 output DP-4
-workspace $ws3 output DP-2 
-workspace $ws5 output DP-2 
-workspace $ws1 output HDMI-0
-workspace $ws6 output DP-4
-workspace $ws7 output DVI-I-1
-workspace $ws8 output DVI-I-1
+workspace $ws3 output DP-2
+workspace $ws20 output HDMI-0
+workspace $ws21 output DVI-I-1
+workspace $ws22 output DP-2
+workspace $ws23 output DP-4
+workspace $ws24 output HDMI-0
+workspace $ws25 output HDMI-0
 
+
+# virtualbox windows stuff
+exec --no-startup-id VBoxManage startvm "wind10"
+for_window [title="^wind10.*1$"] move to workspace $ws20
+for_window [title="^wind10.*2$"] move to workspace $ws21
+for_window [title="^wind10.*3$"] move to workspace $ws22
+for_window [title="^wind10.*4$"] move to workspace $ws23
 
  # NEW LAYOUTS
- 
-exec --no-startup-id i3-msg "workspace $ws6; append_layout /home/milo/.i3/sys.json"
-exec --no-startup-id nautilus
-exec --no-startup-id st -e gtop
+
+# exec --no-startup-id i3-msg "workspace $ws6; append_layout /home/milo/.i3/sys.json"
+# exec --no-startup-id nautilus
+exec st -e gtop
+for_window[title="^gtop$"] move to workspace $ws25
 
 # exec --no-startup-id i3-msg "workspace $ws5; append_layout /home/milo/.i3/music.json"
 exec --no-startup-id spotify
-for_window [class="Spotify"] move to workspace $ws5
+for_window [class="Spotify"] move to workspace $ws24
 
-exec --no-startup-id i3-msg "workspace $ws8; append_layout /home/milo/.i3/work.json"
-exec --no-startup-id chromium --new-window http://myworkspace.jpmchase.com/
-exec --no-startup-id nautilus --name dls -w ~/Downloads
+# exec --no-startup-id i3-msg "workspace $ws8; append_layout /home/milo/.i3/work.json"
+# exec --no-startup-id chromium --new-window http://myworkspace.jpmchase.com/
+# exec --no-startup-id nautilus --name dls -w ~/Downloads
 
 
 
-exec --no-startup-id virtualbox
-for_window [class="VirtualBox Manager"] move to workspace $ws7
+# exec --no-startup-id virtualbox
+# for_window [class="VirtualBox Manager"] move to workspace $ws7
 
 
 # Start Spotify in background workspace
