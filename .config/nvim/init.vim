@@ -1157,7 +1157,7 @@ let g:ale_fixers = {
             \ 'javascript': ['prettier'],
             \ 'html': ['prettier'],
             \ 'css': ['prettier'],
-            \ 'python': ['autopep8', 'isort', 'mypy'],
+            \ 'python': ['autopep8', 'isort'],
             \ 'markdown': ['prettier']
             \ }
 " lint inline html & css
