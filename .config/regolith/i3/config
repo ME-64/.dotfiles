@@ -51,7 +51,7 @@ floating_modifier $mod
 bindsym $mod+Return exec $terminal_path
 
 # start a web browser
-bindsym $mod+Shift+Return exec /usr/bin/sensible-browser
+bindsym $mod+Shift+Return exec /usr/bin/firefox
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -361,11 +361,12 @@ set_from_resource $i3-wm.bar.workspace.urgent.text.color i3-wm.bar.workspace.urg
 set_from_resource $i3-wm.bar.font i3-wm.bar.font
 font $i3-wm.bar.font
 
+set_from_resource $i3-wm.bar.status_command i3-wm.bar.status_command i3xrocks -u ~/.config/regolith/i3xrocks/conf.d -d /etc/regolith/i3xrocks/conf.d
 # The bar configuration
 bar {
   font $i3-wm.bar.font
   separator_symbol "|"
-  status_command i3xrocks -c $i3xrocks_config
+  status_command $i3-wm.bar.status_command
   tray_output none
   strip_workspace_numbers no
 

@@ -75,7 +75,7 @@ set spelllang=en_gb                  " the queen's english
 set complete+=kspell                 " autocomplete from dictionary w/spell
 runtime macros/matchit.vim           " matching if elses
 set foldmethod=indent                " simple folding
-let g:python3_host_prog="/usr/bin/python3" " save neovim some ms
+let g:python3_host_prog="/home/milo/.config/nvim/neo-venv/bin/python3" " save neovim some ms
 " }}}
 
 
@@ -118,41 +118,41 @@ call plug#begin('~/.vim/plugged')
 " File Navigation
 Plug 'junegunn/fzf',  {'dir': '~/.fzf', 'do': './install --bin'}
 Plug 'junegunn/fzf.vim'
-Plug 'airblade/vim-rooter', {'on': ['FindRootDirectory']}
-Plug 'scrooloose/nerdtree', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind', 'NERDTreeToggleVCS']}
-Plug 'Xuyuanp/nerdtree-git-plugin', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind', 'NERDTreeToggleVCS']}
+    Plug 'airblade/vim-rooter', {'on': ['FindRootDirectory']}
+    Plug 'scrooloose/nerdtree', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind', 'NERDTreeToggleVCS']}
+    Plug 'Xuyuanp/nerdtree-git-plugin', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind', 'NERDTreeToggleVCS']}
 Plug 'mbbill/undotree', {'on': ['UndotreeToggle']}                   " visualise undo history
 
 " Colours
 " Plug 'morhetz/gruvbox'                                               " Gruvbox theme
 Plug 'sainnhe/gruvbox-material'                                      " tweaked gruvbox
-Plug 'vim-airline/vim-airline'                                       " Simple Status line
-Plug 'vim-airline/vim-airline-themes'                                " Simple Status line
+    Plug 'vim-airline/vim-airline'                                       " Simple Status line
+    Plug 'vim-airline/vim-airline-themes'                                " Simple Status line
 Plug 'RRethy/vim-hexokinase', {'do': 'make hexokinase'}              " highlighting of colours
-Plug 'junegunn/goyo.vim', {'on': ['Goyo']}                           " Distraction free mode
-Plug 'junegunn/limelight.vim', {'on': ['Goyo']}                      " used w goyo
-Plug 'ryanoasis/vim-devicons'
+    Plug 'junegunn/goyo.vim', {'on': ['Goyo']}                           " Distraction free mode
+    Plug 'junegunn/limelight.vim', {'on': ['Goyo']}                      " used w goyo
+    Plug 'ryanoasis/vim-devicons'
 
 " tpope goodness
 Plug 'tpope/vim-surround'                                            " wow quotes
-Plug 'tpope/vim-fugitive'                                            " git integration
+    Plug 'tpope/vim-fugitive'                                            " git integration
 Plug 'tpope/vim-repeat'                                              " let . work for (some) plugins
 Plug 'tpope/vim-commentary'                                          " gcc to comment and uncomment things
-Plug 'tpope/vim-obsession'                                           " how sessions should be
+    Plug 'tpope/vim-obsession'                                           " how sessions should be
 
 " helpers
 Plug 'jiangmiao/auto-pairs'                                          " auto close brackets
-Plug 'machakann/vim-highlightedyank'                                 " Highlight text that has been yanked
-Plug 'kshenoy/vim-signature'                                         " show marks in sign column
+    Plug 'machakann/vim-highlightedyank'                                 " Highlight text that has been yanked
+    Plug 'kshenoy/vim-signature'                                         " show marks in sign column
 Plug 'nathanaelkane/vim-indent-guides', {'on': ['IndentGuidesToggle']}
 Plug 'dstein64/vim-startuptime', {'on': ['StartupTime']}             " debug startup time
 Plug 'linluk/vim-websearch'                                          " google terms
 Plug 'junegunn/vim-peekaboo'                                         " see register content
-Plug 'lfv89/vim-interestingwords'                                    " tag hl words when exploring code
+" Plug 'lfv89/vim-interestingwords'                                    " tag hl words when exploring code
 Plug 'dominikduda/vim_current_word'                                  " syntax aware hl word under cursor
-Plug 'airblade/vim-gitgutter', {'on': ['GitGutterToggle']}           " highlight chagnes & text obj
-Plug 'arecarn/vim-selection'                                         " dep for crunch
-Plug 'arecarn/vim-crunch'                                            " quick calcs! with g=
+    Plug 'airblade/vim-gitgutter', {'on': ['GitGutterToggle']}           " highlight chagnes & text obj
+    Plug 'arecarn/vim-selection'                                         " dep for crunch
+    Plug 'arecarn/vim-crunch'                                            " quick calcs! with g=
 
 " Text Objects
 Plug 'kana/vim-textobj-user'                                         " UD objects
@@ -175,10 +175,10 @@ Plug 'easymotion/vim-easymotion'                                     " used like
 
 " Writing
 Plug 'shime/vim-livedown', {'for': ['markdown']}                     " live preview of markdown
-Plug 'dbmrq/vim-ditto', {'on': ['ToggleDitto']}                      " DRY, but for writing
-Plug 'reedes/vim-wordy', {'on': ['Wordy']}                           " check yo profanity
-Plug 'reedes/vim-litecorrect'                                        " gentle auto correct
-Plug 'SidOfc/mkdx'                                                   " insanely customisable markdown
+    Plug 'dbmrq/vim-ditto', {'on': ['ToggleDitto']}                      " DRY, but for writing
+    Plug 'reedes/vim-wordy', {'on': ['Wordy']}                           " check yo profanity
+    Plug 'reedes/vim-litecorrect'                                        " gentle auto correct
+    Plug 'SidOfc/mkdx'                                                   " insanely customisable markdown
 
 " Python stuff
 Plug 'vim-python/python-syntax', {'for': ['python']}                 " Python syntax highlighting
@@ -186,7 +186,7 @@ Plug 'jeetsukumaran/vim-pythonsense', {'for': ['python']}            " objects f
 Plug 'Vimjas/vim-python-pep8-indent', {'for': ['python']}            " better indent for python
 Plug 'raimon49/requirements.txt.vim', {'for': ['requirements']}      " syntax highlight req.txt
 " Plug 'chrisbra/csv.vim'                                              " nice csv viewing.
-Plug 'janko/vim-test'                                                " run tests easily
+    Plug 'janko/vim-test'                                                " run tests easily
 
 " HTML / CSS stuff
 Plug 'alvan/vim-closetag', {'for': ['html']}                         " close html tags
@@ -195,13 +195,11 @@ Plug 'AndrewRadev/tagalong.vim', {'for': ['html']}                   " auto chan
 
 " General Language stuff
 Plug 'neoclide/coc.nvim', {'branch': 'release'}                      " code completion
-Plug 'Shougo/echodoc.vim'                                            " show function signatures
-Plug 'dense-analysis/ale', {'on': ['ALEToggle', 'ALEFix']}           " better linting
-Plug 'sheerun/vim-polyglot'                                          " for lesser used languages
-Plug 'honza/vim-snippets'                                            " pre-built snippets
+" Plug 'Shougo/echodoc.vim'                                            " show function signatures
+    Plug 'sheerun/vim-polyglot'                                          " for lesser used languages
 Plug 'majutsushi/tagbar', {'on': ['TagbarToggle']}                   " outline of file by class/function
 Plug 'kassio/neoterm', {'on': ['Ttoggle']}                           " quick toggle term + REPL
-Plug 'junegunn/rainbow_parentheses.vim', {'on': ['RainbowParentheses']} " useful 2% of the time
+    Plug 'junegunn/rainbow_parentheses.vim', {'on': ['RainbowParentheses']} " useful 2% of the time
 
 call plug#end()
 filetype plugin indent on
@@ -1135,59 +1133,26 @@ nnoremap <silent> <leader>nn :NERDTree<CR>
 
 
 " ==============================================================================
-" Ale (Linting)
-" ==============================================================================
-" {{{
-" disabled by default
-let g:ale_enabled = 0
-nnoremap <leader>ta :ALEToggle<CR>
-let g:ale_sign_error = ''
-let g:ale_sign_warning = ''
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_text_changed='never'
-let g:ale_lsp_show_message_severity='error'
-let g:ale_linters_explicit = 1
-let g:ale_linters = {
-            \ 'python': ['flake8', 'mypy'],
-            \ 'javascript': ['prettier'],
-            \ 'markdown': ['prettier'],
-            \ 'css': ['prettier']
-            \ }
-let g:ale_fixers = {
-            \ 'javascript': ['prettier'],
-            \ 'html': ['prettier'],
-            \ 'css': ['prettier'],
-            \ 'python': ['autopep8', 'isort'],
-            \ 'markdown': ['prettier']
-            \ }
-" lint inline html & css
-let g:ale_linter_aliases = {'html': ['html', 'javascript', 'css']}
-let g:ale_use_global_executables = 1
-let g:ale_virtualenv_dir_names= ['.env', '.venv', 'env', 'virtualenv', 'venv']
-let g:ale_warn_about_trailing_whitespace=0
-let g:ale_warn_about_trailing_blank_lines=0
-nnoremap <leader>fl :ALEFix<CR>
-" }}}
-
-
-" ==============================================================================
 " Auto Complete Stuff
 " ==============================================================================
 " {{{
-let g:coc_global_extensions = ['coc-python', 'coc-html', 'coc-css', 'coc-json', 'coc-vimlsp', 'coc-snippets', 'coc-tsserver', 'coc-angular']
+let g:coc_global_extensions = ['coc-python', 'coc-html', 'coc-css', 'coc-json', 'coc-tsserver', 'coc-angular']
 
 " tab to trigger completion and navigate the menu
 inoremap <silent><expr> <TAB>
-            \ pumvisible() ? "\<C-n>" :
+            \ pumvisible() ? coc#_select_confirm() :
             \ <SID>check_back_space() ? "\<TAB>" :
             \ coc#refresh()
 
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-" cancel autocomplete with escape
-inoremap <expr> <Esc> pumvisible() ? '<C-e>' : '<Esc>'
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " make enter confirm, and select first if not selected
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+" inoremap <silent><expr> <TAB> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+" cancel autocomplete with escape
+" inoremap <expr> <Esc> pumvisible() ? '<C-e>' : '<Esc>'
+
+" use j and k to scroll
+inoremap <expr> <C-j> pumvisible() ? '<C-n>' : '<Nop>'
+inoremap <expr> <C-k> pumvisible() ? '<C-p>' : '<Nop>'
 
 function! s:check_back_space() abort
     let col = col('.') - 1
@@ -1195,7 +1160,7 @@ function! s:check_back_space() abort
 endfunction
 
 " Also trigger completion with c-space
-" inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <c-space> coc#refresh()
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -1223,27 +1188,18 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " }}}
 
 
-" ==============================================================================
-" Echo Doc function signatures
-" ==============================================================================
-" {{{
-let g:echodoc#enable_at_startup=1
-let g:echodoc#type="echo"
-" }}}
-
-
-" ==============================================================================
-" Interesting words
-" ==============================================================================
-" {{{
-let g:interestingWordsGUIColors = ['#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF']
-let g:interestingWordsDefaultMappings = 0
-nnoremap <silent> <leader>hh :call InterestingWords('n')<CR>
-nnoremap <silent> <leader>hH :call UncolorAllWords()<CR>
-nnoremap <silent> <leader>hn :call WordNavigation('forward')<CR>
-nnoremap <silent> <leader>hN :call WordNavigation('backward')<CR>
-nnoremap <leader>k <Nop>
-" }}}
+" " ==============================================================================
+" " Interesting words
+" " ==============================================================================
+" " {{{
+" let g:interestingWordsGUIColors = ['#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF']
+" let g:interestingWordsDefaultMappings = 0
+" nnoremap <silent> <leader>hh :call InterestingWords('n')<CR>
+" nnoremap <silent> <leader>hH :call UncolorAllWords()<CR>
+" nnoremap <silent> <leader>hn :call WordNavigation('forward')<CR>
+" nnoremap <silent> <leader>hN :call WordNavigation('backward')<CR>
+" nnoremap <leader>k <Nop>
+" " }}}
 
 
 " ==============================================================================
