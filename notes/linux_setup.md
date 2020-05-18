@@ -172,3 +172,9 @@ sudo npm install -g sass
 #### Gulp
 
 sudo npm install -g gulp
+
+### vim 8.2
+
+sudo add-apt-repository ppa:jonathonf/vim
+sudo apt update
+sudo apt install vim-gtk3

@@ -8,14 +8,16 @@ export ZSH=$HOME/.oh-my-zsh
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
 # If set to an empty array, this variable will have no effect.
+# PROMPT="%F{245}~ %f"
+# PS1='%m %1d$ '
+PROMPT="[%F{59}%n%f] %B%1d%b %F{blue}|%f "
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -102,6 +104,7 @@ alias la="ls -A"
 
 
 alias fd="fdfind"
+alias ipy="ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner"
 
 alias cit="/opt/Citrix/ICAClient/wfica"
 
@@ -178,3 +181,17 @@ fif() {
   if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
   rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
 }
+
+
+function OpenFileInEnclosingVim {
+    if [ -z "${VIM_TERMINAL}" ]; then
+        echo "Not running in Vim's terminal. Open a new vim!"
+        return
+    fi
+
+    # See :help terminal-api for what this is and why it works. Basically the
+        # vim embedded terminal reads this 51 command
+        echo -e "\033]51;[\"drop\", \"$1\"]\007"
+}
+
+alias rv="OpenFileInEnclosingVim"
