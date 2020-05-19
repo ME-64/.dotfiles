@@ -11,59 +11,51 @@ set wildmenu wildmode=longest,full
 set incsearch ignorecase smartcase
 set notimeout ttimeout timeoutlen=100 ttimeoutlen=0 updatetime=100
 set backspace=indent,eol,start
-set formatoptions-=tcro
-set shortmess=atIAcFW
+set formatoptions-=tcro shortmess=atIAcFW
 set list listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 set lazyredraw
 set textwidth=80 nowrap
 set spellfile=~/.vim/spell/en.utf-8.add spelllang=en_gb
 set foldmethod=indent
-set laststatus=0 statusline=%#Normal# showtabline=0 noruler noshowmatch showcmd
-set fillchars=stl:−,stlnc:−,vert:\|
+set laststatus=2 showtabline=0 noruler noshowmatch showcmd
+" statusline=%#Normal#
+set fillchars=stl:\ ,stlnc:\ ,vert:\|
 set ve=all
 set termguicolors
-runtime matchit
+runtime macros/matchit.vim
+set path=.,,
 " }}}
 
 " PLUGINS {{{
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  au VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
 call plug#begin('~/.vim/plugged')
 " File Navigation
-Plug 'junegunn/fzf',  {'dir': '~/.fzf', 'do': './install --bin'} | Plug 'junegunn/fzf.vim'
+    Plug 'junegunn/fzf',  {'dir': '~/.fzf', 'do': './install --bin'} | Plug 'junegunn/fzf.vim'
 " Plug 'hardselius/warlock'
-Plug 'sainnhe/gruvbox-material'
+    Plug 'sainnhe/gruvbox-material'
 " Custom Nouns
-Plug 'kana/vim-textobj-user'
-Plug 'reedes/vim-textobj-sentence', {'for': ['markdown']}
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'mattn/vim-textobj-url'
-Plug 'kana/vim-textobj-fold'
-Plug 'glts/vim-textobj-comment'
+    Plug 'kana/vim-textobj-user'
+    Plug 'reedes/vim-textobj-sentence', {'for': ['markdown']}
+    Plug 'glts/vim-textobj-comment'
 Plug 'wellle/targets.vim'
 " Custom Verbs
 Plug 'kana/vim-operator-user'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-abolish'
-Plug 'habamax/vim-sendtoterm'
-Plug 'junegunn/vim-easy-align'
+    Plug 'tpope/vim-abolish'
+    Plug 'habamax/vim-sendtoterm'
+    Plug 'junegunn/vim-easy-align'
 " Helpers
-Plug 'rhysd/clever-f.vim'
-Plug 'dstein64/vim-startuptime', {'on': ['StartupTime']}
+    Plug 'rhysd/clever-f.vim'
+    Plug 'dstein64/vim-startuptime', {'on': ['StartupTime']}
 Plug 'tpope/vim-repeat'
 " Python stuff
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'vim-python/python-syntax', {'for': ['python']}
-Plug 'jeetsukumaran/vim-pythonsense', {'for': ['python']}
-Plug 'Vimjas/vim-python-pep8-indent', {'for': ['python']}
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'vim-python/python-syntax', {'for': ['python']}
+    Plug 'jeetsukumaran/vim-pythonsense', {'for': ['python']}
+    Plug 'Vimjas/vim-python-pep8-indent', {'for': ['python']}
 " Poppy things
-Plug 'majutsushi/tagbar', {'on': ['TagbarToggle']}
-Plug 'junegunn/vim-peekaboo'
+    Plug 'majutsushi/tagbar', {'on': ['TagbarToggle']}
+    Plug 'junegunn/vim-peekaboo'
 Plug 'mbbill/undotree', {'on': ['UndotreeToggle']}
 call plug#end()
 filetype plugin indent on
@@ -79,9 +71,9 @@ nnoremap <silent> <leader>O :<C-u>call append(line(".")-1, repeat([""], v:count1
 " Save files when you forgot to sudo into it
 cmap w!! w !sudo tee > /dev/null %
 " Better saving
-nmap <leader>w ;w<cr>
+nnoremap <leader>w :w<cr>
 " Better quitting
-nmap <leader>q ;qall<cr>
+nnoremap <leader>q :qall<cr>
 nmap Q <Nop>
 " rebinds semi-colon to toggle full cmd window
 noremap ; :
@@ -149,12 +141,24 @@ endfunction
 " close all other folds, open only current
 nnoremap zZ zMzazz
 
+" }}}
+
+" Abbreviations {{{
 " nuking buffers
 command BDO :%bd|e#|bd#
 cnoreabbrev bon BDO
 command BDA :%bd
 cnoreabbrev bda BDA
+" terminal
+cnoreabbrev ipy ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner
+" cnoreabbrev +c ++close
+cnoreabbrev ipt terminal ++close ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner
+cnoreabbrev vsb vert sb
+" }}}
 
+" Status Line {{{
+set statusline=
+set statusline+=%<\ %t\ %m%r%y%w%=Line:\ \%l\/\%L\ Col:\ \%c\ 
 " }}}
 
 " Clever F settings {{{
@@ -270,7 +274,7 @@ fun! s:MarkdownStuff()
     nnoremap <leader>mc 0i```<CR><CR>```<esc>kka
 endfun
 
-augroup Mkdx
+augroup MarkdownSetup
     au!
     au FileType markdown call s:MarkdownStuff()
     au FileType markdown setlocal formatoptions+=t sw=2 sts=2 et tw=80
@@ -291,21 +295,23 @@ let g:fzf_colors =
             \  'header': ['fg', 'Comment'] }
 
 let $FZF_DEFAULT_COMMAND="fdfind --type f -H"
-let $FZF_DEFAULT_OPTS="--layout=reverse"
-let g:fzf_layout= {'window': {'width': 0.9, 'height': 0.6}}
+let $FZF_DEFAULT_OPTS="--layout=reverse --preview=''"
+" let g:fzf_layout= {'window': {'width': 0.9, 'height': 0.6}}
+let g:fzf_preview_window=''
+let g:fzf_layout= {'down': '~20%'}
 let g:fzf_action = {
             \ 'ctrl-s': 'split',
             \ 'ctrl-v': 'vsplit',
             \ 'ctrl-t': 'tab split'}
 
-nnoremap <leader>f :Files ~/<CR>
-nnoremap <leader>b :ls<CR>:b<space>
-nnoremap <leader>g :GFiles<CR>
-nnoremap <C-f>b :Buffers<CR>
-nnoremap <C-f>l :BLines<CR>
-nnoremap <C-f>L :Lines<CR>
-nnoremap <C-f>h :Help<CR>
-nnoremap <C-f>d :call fzf#run(fzf#wrap({'source': 'fdfind --type d . ~/', 'sink': 'cd'}))<CR>
+nnoremap <silent> <leader>f :Files ~/<CR>
+nnoremap <leader>b :ls<CR>:
+nnoremap <silent> <leader>g :GFiles<CR>
+nnoremap <silent> <C-f>b :Buffers<CR>
+nnoremap <silent> <C-f>l :BLines<CR>
+nnoremap <silent> <C-f>L :Lines<CR>
+nnoremap <silent> <C-f>h :Help<CR>
+nnoremap <silent> <C-f>d :call fzf#run(fzf#wrap({'source': 'fdfind --type d . ~/', 'sink': 'cd'}))<CR>
 " }}}
 
 " Text Object mappings {{{
@@ -345,7 +351,7 @@ xmap ar a[
 omap ir :normal vi[<CR>
 omap ar :normal va[<CR>
 
-" remapping vim-surround to follow the "g" verb convention
+" remapping vim-surround to follow the 'g' verb convention
 nmap gs ys
 vmap gs S
 
@@ -354,13 +360,106 @@ xnoremap <silent> i¬ g_?^\s*```<cr>jo/^\s*```<cr>kV:<c-u>nohl<cr>gv
 xnoremap <silent> a¬ g_?^\s*```<cr>o/^\s*```<cr>V:<c-u>nohl<cr>gv
 onoremap <silent> i¬ :<C-U>execute "normal vi~"<cr>
 onoremap <silent> a¬ :<C-U>execute "normal va~"<cr>
+
+" fold text object
+vnoremap az :<C-U>silent! normal! [zV]z<CR>
+onoremap az :normal Vaz<CR>
+
+" indentation
+onoremap <silent>ai :<C-U>cal <SID>IndTxtObj(0)<CR>
+onoremap <silent>ii :<C-U>cal <SID>IndTxtObj(1)<CR>
+vnoremap <silent>ai :<C-U>cal <SID>IndTxtObj(0)<CR><Esc>gv
+vnoremap <silent>ii :<C-U>cal <SID>IndTxtObj(1)<CR><Esc>gv
+
+function! s:IndTxtObj(inner)
+    let curline = line(".")
+    let lastline = line("$")
+    let i = indent(line(".")) - &shiftwidth * (v:count1 - 1)
+    let i = i < 0 ? 0 : i
+    if getline(".") =~ "^\\s*$"
+        return
+    endif
+    let p = line(".") - 1
+    let nextblank = getline(p) =~ "^\\s*$"
+    while p > 0 && (nextblank || indent(p) >= i )
+        -
+        let p = line(".") - 1
+        let nextblank = getline(p) =~ "^\\s*$"
+    endwhile
+    if (!a:inner)
+        -
+    endif
+    normal! 0V
+    call cursor(curline, 0)
+    let p = line(".") + 1
+    let nextblank = getline(p) =~ "^\\s*$"
+    while p <= lastline && (nextblank || indent(p) >= i )
+        +
+        let p = line(".") + 1
+        let nextblank = getline(p) =~ "^\\s*$"
+    endwhile
+    if (!a:inner)
+        +
+    endif
+    normal! $
+endfunction
+
+
+let s:regex = '\c\<\(\%([a-z][0-9A-Za-z_-]\+:\%(\/\{1,3}\|[a-z0-9%]\)\|www\d\'
+let s:regex.='{0,3}[.]\|[a-z0-9.\-]\+[.][a-z]\{2,4}\/\)\%([^ \t()<>]\+\|(\([^'
+let s:regex.='\t()<>]\+\|\(([^ \t()<>]\+)\)\)*)\)\+\%((\([^ \t()<>]\+\|\(([^ '
+let s:regex.='\t()<>]\+)\)\)*)\|[^ \t`!()[\]{};:'."'".'".,<>?«»“”‘’]\)\)'
+
+call textobj#user#plugin('url', {
+            \      '-': {
+            \       'pattern': s:regex,
+            \       'select': ['au', 'iu'],
+            \      },
+            \    })
+
+let s:regNums = [ '0b[01]', '0x\x', '\d' ]
+
+function! s:inNumber()
+    let l:magic = &magic
+    set magic
+    let l:lineNr = line('.')
+    let l:pat = join(s:regNums, '\+\|') . '\+'
+    if (!search(l:pat, 'ce', l:lineNr))
+        return
+    endif
+    normal! v
+    call search(l:pat, 'cb', l:lineNr)
+    let &magic = l:magic
+endfunction
+
+function! s:aroundNumber()
+    let l:magic = &magic
+    set magic
+    let l:lineNr = line('.')
+    let l:pat = join(s:regNums, '\+\|') . '\+'
+    if (!search(l:pat, 'ce', l:lineNr))
+        return
+    endif
+    call search('\%'.(virtcol('.')+1).'v\s*', 'ce', l:lineNr)
+    normal! v
+    call search(l:pat, 'cb', l:lineNr)
+    call search('\s*\%'.virtcol('.').'v', 'b', l:lineNr)
+    let &magic = l:magic
+endfunction
+
+" Numbers
+xnoremap <silent> aN :<c-u>call <sid>aroundNumber()<cr>
+onoremap <silent> aN :<c-u>call <sid>aroundNumber()<cr>
+xnoremap <silent> iN :<c-u>call <sid>inNumber()<cr>
+onoremap <silent> iN :<c-u>call <sid>inNumber()<cr>
+
 " }}}
 
 " Poppy Stuff {{{
-nmap <leader>T ;TagbarToggle<CR>
+nnoremap <leader>T :TagbarToggle<CR>
 let g:tagbar_auto_close=1
 let g:tagbar_autofocus=1
-let g:tagbar_sort=0 " sort by location
+let g:tagbar_sort=0
 let g:tagbar_compact=1
 let g:tagbar_indent=1
 let g:tagbar_show_linenumbers=1
@@ -400,12 +499,7 @@ au TerminalOpen * if &buftype == 'terminal' | setlocal nolist | endif
 
 " sensical escape
 tnoremap <F1> <C-W>N
-
-cnoreabbrev ipy ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner
-cnoreabbrev +c ++close
-cnoreabbrev ipt terminal ++close ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner
-cnoreabbrev vsb vert sb
-set shell=zsh
+" set shell=zsh
 " }}}
 
 " Netrw {{{
@@ -460,6 +554,22 @@ augroup vimrc-incsearch-highlight
     au CmdlineEnter [/\?] :set hlsearch
     au CmdlineLeave [/\?] :set nohlsearch
 augroup END
+
+" visual */#
+function! s:VSetSearch()
+  let temp = @@
+  norm! gvy
+  let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+  let @@ = temp
+endfunction
+vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
+vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
+
+" insert current line into cmd
+if !has('patch-8.0.1787')
+    cnoremap <C-r><C-l> <C-r>=getline('.')<CR>
+endif
+
 " }}}
 
 " Hacks {{{
@@ -474,4 +584,3 @@ let g:loaded_zipPlugin = 1
 let g:loaded_gzip = 1
 let g:loaded_rrhelper = 1
 " }}}
-
