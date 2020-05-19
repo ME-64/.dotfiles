@@ -17,13 +17,15 @@ set lazyredraw
 set textwidth=80 nowrap
 set spellfile=~/.vim/spell/en.utf-8.add spelllang=en_gb
 set foldmethod=indent
-set laststatus=2 showtabline=0 noruler noshowmatch showcmd
+set laststatus=2 showtabline=0 noruler noshowmatch showcmd noshowmode
 " statusline=%#Normal#
+" showtabline=0
 set fillchars=stl:\ ,stlnc:\ ,vert:\|
 set ve=all
 set termguicolors
 runtime macros/matchit.vim
 set path=.,,
+set tags=./tags;,tags; " need to look for standard library tags
 " }}}
 
 " PLUGINS {{{
@@ -83,7 +85,7 @@ au CmdwinEnter * noremap <buffer> <esc> :q<CR>
 
 " correct y
 noremap Y y$
-" join and split lines intuitively
+" join and split lines 'intuitively'
 nnoremap <c-h> 0i<BS><esc>
 nnoremap <c-l> i<cr><esc>kj$
 " Better navigation
@@ -119,8 +121,8 @@ noremap <Down> <Nop>
 noremap <Left> <Nop>
 noremap <Right> <Nop>
 noremap <Up> <Nop>
+" consistent window closing
 nnoremap <C-w>q <C-w>c
-nnoremap <C-w><C-q> <C-w>c
 " pre/append to all lines in block w/same indent
 nmap <silent> <leader>I ^vii<C-V>I
 nmap <silent> <leader>A ^vii<C-V>$A
@@ -158,7 +160,55 @@ cnoreabbrev vsb vert sb
 
 " Status Line {{{
 set statusline=
-set statusline+=%<\ %t\ %m%r%y%w%=Line:\ \%l\/\%L\ Col:\ \%c\ 
+set statusline+=%<\ %{StatuslineMode()}\ %t\ %m%r%w%=Line:\ \%l\/\%L\ Col:\ \%c\ 
+function! StatuslineMode()
+  let l:mode=mode()
+  if l:mode==#"n"
+    return "N"
+  elseif l:mode==?"v"
+    return "V"
+  elseif l:mode==#"i"
+    return "I"
+  elseif l:mode==#"R"
+    return "R"
+  elseif l:mode==?"s"
+    return "S"
+  elseif l:mode==#"t"
+    return "T"
+  elseif l:mode==#"c"
+    return "C"
+  elseif l:mode==#"!"
+    return "S"
+  endif
+endfunction
+
+" function! MyTabLine()
+"     let s = ''
+"     for i in range(tabpagenr('$'))
+"         let tabnr = i + 1 " range() starts at 0
+"         let winnr = tabpagewinnr(tabnr)
+"         let buflist = tabpagebuflist(tabnr)
+"         let bufnr = buflist[winnr - 1]
+"         let bufname = fnamemodify(bufname(bufnr), ':t')
+
+"         let s .= '%' . tabnr . 'T'
+"         let s .= (tabnr == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
+"         let s .= ' ' . tabnr
+
+"         let n = tabpagewinnr(tabnr,'$')
+"         if n > 1 | let s .= ':' . n | endif
+
+"         let s .= empty(bufname) ? ' [No Name] ' : ' ' . bufname . ' '
+
+"         let bufmodified = getbufvar(bufnr, "&mod")
+"         if bufmodified | let s .= '+ ' | endif
+"     endfor
+"     let s .= '%#TabLineFill#'
+"     return s
+" endfunction
+" set tabline=%!MyTabLine()
+
+
 " }}}
 
 " Clever F settings {{{
@@ -514,7 +564,7 @@ let g:netrw_cursor=4
 let g:netrw_sort_by="exten"
 let g:netrw_fastbrowse=0
 let g:netrw_altfile=1
-cnoreabbrev lex 20Lex
+cabbrev lex 20Lex
 cnoreabbrev ex Explore
 autocmd FileType netrw setl bufhidden=wipe
 autocmd FileType netrw nnoremap <buffer> cdh :Ntree /home/milo<CR>
@@ -572,12 +622,52 @@ if !has('patch-8.0.1787')
     cnoremap <C-r><C-l> <C-r>=getline('.')<CR>
 endif
 
+" command line usability
+" function! CCR()
+"     let cmdline = getcmdline()
+"     if cmdline =~ '\v\C^(ls|files|buffers)'
+"         " like :ls but prompts for a buffer command
+"         return "\<CR>:b"
+"     elseif cmdline =~ '\v\C/(#|nu|num|numb|numbe|number)$'
+"         " like :g//# but prompts for a command
+"         return "\<CR>:"
+"     elseif cmdline =~ '\v\C^(dli|il)'
+"         " like :dlist or :ilist but prompts for a count for :djump or :ijump
+"         return "\<CR>:" . cmdline[0] . "j  " . split(cmdline, " ")[1] . "\<S-Left>\<Left>"
+"     elseif cmdline =~ '\v\C^(cli|lli)'
+"         " like :clist or :llist but prompts for an error/location number
+"         return "\<CR>:sil " . repeat(cmdline[0], 2) . "\<Space>"
+"     elseif cmdline =~ '\C^old'
+"         " like :oldfiles but prompts for an old file to edit
+"         set nomore
+"         return "\<CR>:sil se more|e #<"
+"     elseif cmdline =~ '\C^changes'
+"         " like :changes but prompts for a change to jump to
+"         set nomore
+"         return "\<CR>:sil se more|norm! g;\<S-Left>"
+"     elseif cmdline =~ '\C^ju'
+"         " like :jumps but prompts for a position to jump to
+"         set nomore
+"         return "\<CR>:sil se more|norm! \<C-o>\<S-Left>"
+"     elseif cmdline =~ '\C^marks'
+"         " like :marks but prompts for a mark to jump to
+"         return "\<CR>:norm! `"
+"     elseif cmdline =~ '\C^undol'
+"         " like :undolist but prompts for a change to undo
+"         return "\<CR>:u "
+"     else
+"         return "\<CR>"
+"     endif
+" endfunction
+" cnoremap <expr> <CR> CCR()
+
+
 " }}}
 
 " Hacks {{{
 
-" Some filetypes override this grr
-au BufEnter * set formatoptions-=cro
+" overrwrite default vim syntax file
+au FileType vim set formatoptions-=cro
 let g:loaded_getscriptPlugin = 1
 let g:loaded_tarPlugin = 1
 let g:loaded_tutor_mode_plugin = 1
@@ -585,4 +675,159 @@ let g:loaded_vimballPlugin = 1
 let g:loaded_zipPlugin = 1
 let g:loaded_gzip = 1
 let g:loaded_rrhelper = 1
+" }}}
+
+" tabline {{{
+" https://github.com/ap/vim-buftabline/blob/master/plugin/buftabline.vim
+hi default link BufTabLineCurrent TabLineSel
+hi default link BufTabLineActive  PmenuSel
+hi default link BufTabLineHidden  TabLine
+" hi default link BufTabLineFill    VertSplit
+" hi TabLineFill guibg=#504945
+hi TabLineFill guibg=NONE
+
+let g:buftabline_numbers    = get(g:, 'buftabline_numbers',    1)
+let g:buftabline_indicators = get(g:, 'buftabline_indicators', 0)
+let g:buftabline_separators = get(g:, 'buftabline_separators', 0)
+let g:buftabline_show       = get(g:, 'buftabline_show',       2)
+let g:buftabline_plug_max   = get(g:, 'buftabline_plug_max',  10)
+
+function! UserBuffers() " help buffers are always unlisted, but quickfix buffers are not
+    return filter(range(1,bufnr('$')),'buflisted(v:val) && "quickfix" !=? getbufvar(v:val, "&buftype")')
+endfunction
+
+let s:dirsep = fnamemodify(getcwd(),':p')[-1:]
+let s:centerbuf = winbufnr(0)
+function! Render()
+    let show_num = g:buftabline_numbers == 1
+    let show_ord = g:buftabline_numbers == 2
+    let show_mod = g:buftabline_indicators
+    let lpad     = g:buftabline_separators ? nr2char(0x23B8) : ' '
+
+    let bufnums = UserBuffers()
+    let centerbuf = s:centerbuf " prevent tabline jumping around when non-user buffer current (e.g. help)
+
+    " pick up data on all the buffers
+    let tabs = []
+    let path_tabs = []
+    let tabs_per_tail = {}
+    let currentbuf = winbufnr(0)
+    let screen_num = 0
+    for bufnum in bufnums
+        let screen_num = show_num ? bufnum : show_ord ? screen_num + 1 : ''
+        let tab = { 'num': bufnum }
+        let tab.hilite = currentbuf == bufnum ? 'Current' : bufwinnr(bufnum) > 0 ? 'Active' : 'Hidden'
+        if currentbuf == bufnum | let [centerbuf, s:centerbuf] = [bufnum, bufnum] | endif
+        let bufpath = bufname(bufnum)
+        if strlen(bufpath)
+            let tab.path = fnamemodify(bufpath, ':p:~:.')
+            let tab.sep = strridx(tab.path, s:dirsep, strlen(tab.path) - 2) " keep trailing dirsep
+            let tab.label = tab.path[tab.sep + 1:]
+            let pre = ( show_mod && getbufvar(bufnum, '&mod') ? '+' : '' ) . screen_num
+            let tab.pre = strlen(pre) ? pre . ' ' : ''
+            let tabs_per_tail[tab.label] = get(tabs_per_tail, tab.label, 0) + 1
+            let path_tabs += [tab]
+        elseif -1 < index(['nofile','acwrite'], getbufvar(bufnum, '&buftype')) " scratch buffer
+            let tab.label = ( show_mod ? '!' . screen_num : screen_num ? screen_num . ' !' : '!' )
+        else " unnamed file
+            let tab.label = ( show_mod && getbufvar(bufnum, '&mod') ? '+' : '' )
+                        \             . ( screen_num ? screen_num : '*' )
+        endif
+        let tabs += [tab]
+    endfor
+
+    " disambiguate same-basename files by adding trailing path segments
+    while len(filter(tabs_per_tail, 'v:val > 1'))
+        let [ambiguous, tabs_per_tail] = [tabs_per_tail, {}]
+        for tab in path_tabs
+            if -1 < tab.sep && has_key(ambiguous, tab.label)
+                let tab.sep = strridx(tab.path, s:dirsep, tab.sep - 1)
+                let tab.label = tab.path[tab.sep + 1:]
+            endif
+            let tabs_per_tail[tab.label] = get(tabs_per_tail, tab.label, 0) + 1
+        endfor
+    endwhile
+
+    " now keep the current buffer center-screen as much as possible:
+
+    " 1. setup
+    let lft = { 'lasttab':  0, 'cut':  '.', 'indicator': '<', 'width': 0, 'half': &columns / 2 }
+    let rgt = { 'lasttab': -1, 'cut': '.$', 'indicator': '>', 'width': 0, 'half': &columns - lft.half }
+
+    " 2. sum the string lengths for the left and right halves
+    let currentside = lft
+    for tab in tabs
+        let tab.label = lpad . get(tab, 'pre', '') . tab.label . ' '
+        let tab.width = strwidth(strtrans(tab.label))
+        if centerbuf == tab.num
+            let halfwidth = tab.width / 2
+            let lft.width += halfwidth
+            let rgt.width += tab.width - halfwidth
+            let currentside = rgt
+            continue
+        endif
+        let currentside.width += tab.width
+    endfor
+    if currentside is lft " centered buffer not seen?
+        " then blame any overflow on the right side, to protect the left
+        let [lft.width, rgt.width] = [0, lft.width]
+    endif
+
+    " 3. toss away tabs and pieces until all fits:
+    if ( lft.width + rgt.width ) > &columns
+        let oversized
+                    \ = lft.width < lft.half ? [ [ rgt, &columns - lft.width ] ]
+                    \ : rgt.width < rgt.half ? [ [ lft, &columns - rgt.width ] ]
+                    \ :                        [ [ lft, lft.half ], [ rgt, rgt.half ] ]
+        for [side, budget] in oversized
+            let delta = side.width - budget
+            " toss entire tabs to close the distance
+            while delta >= tabs[side.lasttab].width
+                let delta -= remove(tabs, side.lasttab).width
+            endwhile
+            " then snip at the last one to make it fit
+            let endtab = tabs[side.lasttab]
+            while delta > ( endtab.width - strwidth(strtrans(endtab.label)) )
+                let endtab.label = substitute(endtab.label, side.cut, '', '')
+            endwhile
+            let endtab.label = substitute(endtab.label, side.cut, side.indicator, '')
+        endfor
+    endif
+
+    if len(tabs) | let tabs[0].label = substitute(tabs[0].label, lpad, ' ', '') | endif
+
+    let swallowclicks = '%'.(1 + tabpagenr('$')).'X'
+    return swallowclicks . join(map(tabs,'printf("%%#BufTabLine%s#%s",v:val.hilite,strtrans(v:val.label))'),'') . '%#BufTabLineFill#'
+endfunction
+
+function! BUpdate(zombie)
+    set tabline=
+    if tabpagenr('$') > 1 | set guioptions+=e showtabline=2 | return | endif
+    set guioptions-=e
+    if 0 == g:buftabline_show
+        set showtabline=1
+        return
+    elseif 1 == g:buftabline_show
+        " account for BufDelete triggering before buffer is actually deleted
+        let bufnums = filter(UserBuffers(), 'v:val != a:zombie')
+        let &g:showtabline = 1 + ( len(bufnums) > 1 )
+    elseif 2 == g:buftabline_show
+        set showtabline=2
+    endif
+    set tabline=%!Render()
+endfunction
+
+augroup BufTabLine
+    autocmd!
+    autocmd VimEnter  * call BUpdate(0)
+    autocmd TabEnter  * call BUpdate(0)
+    autocmd BufAdd    * call BUpdate(0)
+    autocmd BufDelete * call BUpdate(str2nr(expand('<abuf>')))
+augroup END
+
+for s:n in range(1, g:buftabline_plug_max) + ( g:buftabline_plug_max > 0 ? [-1] : [] )
+    let s:b = s:n == -1 ? -1 : s:n - 1
+    execute printf("noremap <silent> <Plug>BufTabLine.Go(%d) :<C-U>exe 'b'.get(UserBuffers(),%d,'')<cr>", s:n, s:b)
+endfor
+unlet! s:n s:b
 " }}}
