@@ -33,9 +33,9 @@ call plug#begin('~/.vim/plugged')
 " Plug 'hardselius/warlock'
     Plug 'sainnhe/gruvbox-material'
 " Custom Nouns
-    Plug 'kana/vim-textobj-user'
-    Plug 'reedes/vim-textobj-sentence', {'for': ['markdown']}
-    Plug 'glts/vim-textobj-comment'
+Plug 'kana/vim-textobj-user'
+Plug 'reedes/vim-textobj-sentence', {'for': ['markdown']}
+Plug 'glts/vim-textobj-comment'
 Plug 'wellle/targets.vim'
 " Custom Verbs
 Plug 'kana/vim-operator-user'
@@ -364,6 +364,8 @@ onoremap <silent> a¬ :<C-U>execute "normal va~"<cr>
 " fold text object
 vnoremap az :<C-U>silent! normal! [zV]z<CR>
 onoremap az :normal Vaz<CR>
+vnoremap iz :<C-U>silent! normal! [zjVo]zk<CR>
+onoremap iz :normal Viz<CR>
 
 " indentation
 onoremap <silent>ai :<C-U>cal <SID>IndTxtObj(0)<CR>
