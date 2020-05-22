@@ -14,51 +14,39 @@ set backspace=indent,eol,start
 set formatoptions-=tcro shortmess=atIAcFW
 set list listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 set lazyredraw
-set textwidth=80 nowrap
+set textwidth=79 nowrap
 set spellfile=~/.vim/spell/en.utf-8.add spelllang=en_gb
 set foldmethod=indent
 set laststatus=2 showtabline=0 noruler noshowmatch showcmd noshowmode
-" statusline=%#Normal#
-" showtabline=0
 set fillchars=stl:\ ,stlnc:\ ,vert:\|
 set ve=all
 set termguicolors
 runtime macros/matchit.vim
+set synmaxcol=200
 set path=.,,
-set tags=./tags;,tags; " need to look for standard library tags
+set nomore
+" set tags=./tags;,tags; " need to look for standard library tags
 " }}}
 
 " PLUGINS {{{
 call plug#begin('~/.vim/plugged')
 " File Navigation
-    Plug 'junegunn/fzf',  {'dir': '~/.fzf', 'do': './install --bin'} | Plug 'junegunn/fzf.vim'
-" Plug 'hardselius/warlock'
+Plug 'junegunn/fzf',  {'dir': '~/.fzf', 'do': './install --bin'} | Plug 'junegunn/fzf.vim'
     Plug 'sainnhe/gruvbox-material'
 " Custom Nouns
-Plug 'kana/vim-textobj-user'
-Plug 'reedes/vim-textobj-sentence', {'for': ['markdown']}
-Plug 'glts/vim-textobj-comment'
-Plug 'wellle/targets.vim'
+    Plug 'kana/vim-textobj-user'
+    " Plug 'glts/vim-textobj-comment'
 " Custom Verbs
-Plug 'kana/vim-operator-user'
+    Plug 'kana/vim-operator-user'
+Plug 'wellle/targets.vim'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-    Plug 'tpope/vim-abolish'
-    Plug 'habamax/vim-sendtoterm'
     Plug 'junegunn/vim-easy-align'
 " Helpers
-    Plug 'rhysd/clever-f.vim'
     Plug 'dstein64/vim-startuptime', {'on': ['StartupTime']}
-Plug 'tpope/vim-repeat'
 " Python stuff
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    Plug 'vim-python/python-syntax', {'for': ['python']}
-    Plug 'jeetsukumaran/vim-pythonsense', {'for': ['python']}
-    Plug 'Vimjas/vim-python-pep8-indent', {'for': ['python']}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Poppy things
-    Plug 'majutsushi/tagbar', {'on': ['TagbarToggle']}
-    Plug 'junegunn/vim-peekaboo'
-Plug 'mbbill/undotree', {'on': ['UndotreeToggle']}
+    Plug 'mbbill/undotree', {'on': ['UndotreeToggle']}
 call plug#end()
 filetype plugin indent on
 " }}}
@@ -68,20 +56,9 @@ filetype plugin indent on
 nnoremap <SPACE> <Nop>
 let mapleader = " "
 " Inserting new lines without leaving normal mode
-nnoremap <silent> <leader>o :<C-u>call append(line("."),   repeat([""], v:count1))<CR>
-nnoremap <silent> <leader>O :<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>
 " Save files when you forgot to sudo into it
-cmap w!! w !sudo tee > /dev/null %
-" Better saving
-nnoremap <leader>w :w<cr>
-" Better quitting
-nnoremap <leader>q :qall<cr>
+cmap W!! w !sudo tee > /dev/null %
 nmap Q <Nop>
-" rebinds semi-colon to toggle full cmd window
-noremap ; :
-noremap : q:
-au CmdwinEnter * noremap <buffer> : :q<CR>
-au CmdwinEnter * noremap <buffer> <esc> :q<CR>
 
 " correct y
 noremap Y y$
@@ -105,15 +82,6 @@ noremap <Tab> >>
 noremap <S-Tab> <<
 vnoremap <Tab> >><esc>gv
 vnoremap <S-Tab> <<<esc>gv
-" mnemoinc top & bottom
-noremap gk gg
-noremap gj G
-" Change text without putting the text into register
-nnoremap c "_c
-nnoremap C "_C
-nnoremap cc "_cc
-" make slightly more informative
-nnoremap <C-g> 1<c-g>
 " switch between buffers
 nnoremap <bs> <c-^>
 " No Arrow keys!
@@ -129,38 +97,16 @@ nmap <silent> <leader>A ^vii<C-V>$A
 " consistent next and prev in command mode
 cnoremap <C-j> <C-n>
 cnoremap <C-k> <C-p>
-nnoremap <silent> <leader>ts :set spell!<CR>
-" open in firefox, netrw
-nmap go gx
-vmap go gx
-vnoremap gO "gy<Esc>:call GoogleSearch()<CR>
-function! GoogleSearch()
-    let searchterm = getreg("g")
-    silent! exec "silent! !firefox \"http://google.com/search?q=" . searchterm . "\" &"
-    redraw!
-endfunction
-
 " close all other folds, open only current
 nnoremap zZ zMzazz
 
-" }}}
+nnoremap <leader>l :w !ls<CR>:
 
-" Abbreviations {{{
-" nuking buffers
-command BDO :%bd|e#|bd#
-cnoreabbrev bon BDO
-command BDA :%bd
-cnoreabbrev bda BDA
-" terminal
-cnoreabbrev ipy ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner
-" cnoreabbrev +c ++close
-cnoreabbrev ipt terminal ++close ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner
-cnoreabbrev vsb vert sb
 " }}}
 
 " Status Line {{{
 set statusline=
-set statusline+=%<\ %{StatuslineMode()}\ %t\ %m%r%w%=Line:\ \%l\/\%L\ Col:\ \%c\ 
+set statusline+=%<\ %{StatuslineMode()}\ %t\ %m%r%w%=[%{getcwd()}]\ Line:\ \%l\/\%L\ Col:\ \%c\ 
 function! StatuslineMode()
   let l:mode=mode()
   if l:mode==#"n"
@@ -181,44 +127,9 @@ function! StatuslineMode()
     return "S"
   endif
 endfunction
-
-" function! MyTabLine()
-"     let s = ''
-"     for i in range(tabpagenr('$'))
-"         let tabnr = i + 1 " range() starts at 0
-"         let winnr = tabpagewinnr(tabnr)
-"         let buflist = tabpagebuflist(tabnr)
-"         let bufnr = buflist[winnr - 1]
-"         let bufname = fnamemodify(bufname(bufnr), ':t')
-
-"         let s .= '%' . tabnr . 'T'
-"         let s .= (tabnr == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
-"         let s .= ' ' . tabnr
-
-"         let n = tabpagewinnr(tabnr,'$')
-"         if n > 1 | let s .= ':' . n | endif
-
-"         let s .= empty(bufname) ? ' [No Name] ' : ' ' . bufname . ' '
-
-"         let bufmodified = getbufvar(bufnr, "&mod")
-"         if bufmodified | let s .= '+ ' | endif
-"     endfor
-"     let s .= '%#TabLineFill#'
-"     return s
-" endfunction
-" set tabline=%!MyTabLine()
-
-
 " }}}
 
-" Clever F settings {{{
-let g:clever_f_across_no_line=1
-let g:clever_f_ignore_case=1
-let g:clever_f_smart_case=1
-let g:clver_f_fix_key_direction=1
-" }}}
-
-" Formatting Stuff {{{
+" Operators {{{
 function! RemoveTrailingWhitespace()
     for lineno in range(a:firstline, a:lastline)
         let line = getline(lineno)
@@ -228,8 +139,32 @@ function! RemoveTrailingWhitespace()
 endfunction
 
 command! -range RT  :<line1>,<line2>call RemoveTrailingWhitespace()
-command -range=% RDB :<line1>,<line2>g/^$/,/./-j
-command -range=% RB :<line1>,<line2>g/^\s*$/d
+command! -range=% RDB :<line1>,<line2>g/^$/,/./-j
+command! -range=% RB :<line1>,<line2>g/^\s*$/d
+
+" open in firefox, netrw
+function! WebSearch(type, ...)
+    let sel_save = &selection
+    let &selection = "inclusive"
+    let reg_save = @@
+    if a:0
+        silent exe "normal! `<" . a:type . "`>y"
+    elseif a:type == 'line'
+        silent exe "normal! '[V']y"
+    elseif a:type == 'block'
+        silent exe "normal! `[\<C-V>`]y"
+    else
+        silent exe "normal! `[v`]y"
+    endif
+    let search = substitute(trim(@@), ' \+', '+', 'g')
+    silent! exe "!firefox --new-tab 'https://google.com/search?q=" . search . "'" . "&"
+    redraw!
+    let &selection = sel_save
+    let @@ = reg_save
+endfunction
+
+nmap <silent> go :set opfunc=WebSearch<CR>g@
+vmap <silent> go :<C-u>call WebSearch(visualmode(), 1)<Cr>
 
 map <silent> grdb <Plug>(operator-RDB)
 call operator#user#define_ex_command('RDB', 'RDB')
@@ -240,10 +175,6 @@ call operator#user#define_ex_command('RT', 'RT')
 " }}}
 
 " Python Stuff {{{
-let g:is_pythonsense_suppress_object_keymaps = 1
-let g:is_pythonsense_suppress_motion_keymaps = 1
-let g:is_pythonsense_suppress_location_keymaps = 1
-let g:python_highlight_all = 1
 " running various tools
 au FileType python nnoremap <buffer> <leader>rf :w !python3 %<CR>
 au FileType python nnoremap <buffer> <leader>rt :w !pytest --doctest-modules %<CR>
@@ -251,6 +182,7 @@ au FileType python nnoremap <buffer> <leader>rl :w !pylint -f parseable -r n -s 
 au FileType python nnoremap <buffer> <leader>rs :w !mypy %<CR>
 au FileType python inoreabbr ipdb import<space>pdb;<space>pdb.set_trace();<BS>
 au FileType python setlocal nofoldenable
+au FileType python setlocal foldmethod=indent
 
 " coc
 let g:coc_global_extensions = ['coc-python', 'coc-json']
@@ -289,13 +221,17 @@ call coc#config('diagnostic', {
 call coc#config('suggest', {'floatEnable': 0})
 call coc#config('python', {'jediEnabled': 0})
 call coc#config('coc.preferences', {'useQuickfixForLocations': 1})
+
+" completion options
+set completeopt=menu,menuone,popup,noinsert,noselect
+
 " }}}
 
-" Web Stuff {{{
+" HTML/CSS/JS {{{
 " treat all htmldjangofiles as html (for ftplugins)
 au FileType htmldjango set filetype=html
-au FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
-au FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab
+au FileType html setlocal shiftwidth=2 softtabstop=2
+au FileType javascript setlocal shiftwidth=2 softtabstop=2
 au FileType javascript nnoremap <buffer> <leader>jc ^iconsole.log(<esc>A);<esc>
 au FileType javascript vnoremap <buffer> <leader>jc diconsole.log(<esc>p`]li);<esc>
 autocmd FileType scss set iskeyword+=-
@@ -311,24 +247,23 @@ au BufNewFile,BufFilePre,BufRead *.md set ft=markdown
 command! -range=% -nargs=1 NL
   \ <line1>,<line2>!nl -w <args> -s '. ' | perl -pe 's/^.{<args>}..$//'
 
-
-fun! s:MarkdownStuff()
-    vmap <leader>fT :EasyAlign*<Bar><CR>
-    nnoremap <leader>mh1 :s/^#* //ge<CR>^i#<space><esc>0
-    nnoremap <leader>mh2 :s/^#* //ge<CR>^i##<space><esc>0
-    nnoremap <leader>mh3 :s/^#* //ge<CR>^i###<space><esc>0
-    nnoremap <leader>mh4 :s/^#* //ge<CR>^i####<space><esc>0
-    nnoremap <leader>mh5 :s/^#* //ge<CR>^i#####<space><esc>0
-    nnoremap <leader>mh6 :s/^#* //ge<CR>^i######<space><esc>0
-    nnoremap <leader>mhc :s/^#* //ge<CR>0
-    nnoremap <leader>mc 0i```<CR><CR>```<esc>kka
-endfun
+function! s:MarkdownStuff()
+    vmap <buffer> <leader>fT :EasyAlign*<Bar><CR>
+    nnoremap <buffer> <leader>mh1 :s/^#* //ge<CR>^i#<space><esc>0
+    nnoremap <buffer> <leader>mh2 :s/^#* //ge<CR>^i##<space><esc>0
+    nnoremap <buffer> <leader>mh3 :s/^#* //ge<CR>^i###<space><esc>0
+    nnoremap <buffer> <leader>mh4 :s/^#* //ge<CR>^i####<space><esc>0
+    nnoremap <buffer> <leader>mh5 :s/^#* //ge<CR>^i#####<space><esc>0
+    nnoremap <buffer> <leader>mh6 :s/^#* //ge<CR>^i######<space><esc>0
+    nnoremap <buffer> <leader>mhc :s/^#* //ge<CR>0
+    nnoremap <buffer> <leader>mc 0i```<CR><CR>```<esc>kka
+    setlocal nofoldenable
+endfunction
 
 augroup MarkdownSetup
     au!
     au FileType markdown call s:MarkdownStuff()
     au FileType markdown setlocal formatoptions+=t sw=2 sts=2 et tw=80
-    au FileType markdown call textobj#sentence#init()
     au FileType markdown vnoremap <leader>mn :NL1<CR>
 augroup END
 
@@ -346,7 +281,6 @@ let g:fzf_colors =
 
 let $FZF_DEFAULT_COMMAND="fdfind --type f -H"
 let $FZF_DEFAULT_OPTS="--layout=reverse --preview=''"
-" let g:fzf_layout= {'window': {'width': 0.9, 'height': 0.6}}
 let g:fzf_preview_window=''
 let g:fzf_layout= {'down': '~20%'}
 let g:fzf_action = {
@@ -366,21 +300,6 @@ nnoremap <silent> <C-f>d :call fzf#run(fzf#wrap({'source': 'fdfind --type d . ~/
 
 " Text Object mappings {{{
 " if/af - functions, aC/iC - class, ai/ii - indent, au/iu - urls, ac/ic - comments, iz, az - fold
-omap aC <Plug>(PythonsenseOuterClassTextObject)
-omap iC <Plug>(PythonsenseInnerClassTextObject)
-omap af <Plug>(PythonsenseOuterFunctionTextObject)
-omap if <Plug>(PythonsenseInnerFunctionTextObject)
-
-vmap aC <Plug>(PythonsenseOuterClassTextObject)
-vmap iC <Plug>(PythonsenseInnerClassTextObject)
-vmap af <Plug>(PythonsenseOuterFunctionTextObject)
-vmap if <Plug>(PythonsenseInnerFunctionTextObject)
-
-vmap aD <Plug>(PythonsenseOuterDocStringTextObject)
-vmap iD <Plug>(PythonsenseInnerDocStringTextObject)
-omap aD <Plug>(PythonsenseOuterDocStringTextObject)
-omap iD <Plug>(PythonsenseInnerDocStringTextObject)
-
 "line text objects
 xnoremap il g_o^
 onoremap il :<C-u>normal vil<CR>
@@ -398,8 +317,8 @@ onoremap ad :<C-u>normal vad<CR>
 " rectangular
 xmap ir i[
 xmap ar a[
-omap ir :normal vi[<CR>
-omap ar :normal va[<CR>
+onoremap ir :normal vi[<CR>
+onoremap ar :normal va[<CR>
 
 " remapping vim-surround to follow the 'g' verb convention
 nmap gs ys
@@ -412,10 +331,10 @@ onoremap <silent> i¬ :<C-U>execute "normal vi~"<cr>
 onoremap <silent> a¬ :<C-U>execute "normal va~"<cr>
 
 " fold text object
-vnoremap az :<C-U>silent! normal! [zV]z<CR>
-onoremap az :normal Vaz<CR>
-vnoremap iz :<C-U>silent! normal! [zjVo]zk<CR>
-onoremap iz :normal Viz<CR>
+vnoremap <silent> az :<C-U>silent! normal! [zV]z<CR>
+onoremap <silent> az :normal Vaz<CR>
+vnoremap <silent> iz :<C-U>silent! normal! [zjVo]zk<CR>
+onoremap <silent> iz :normal Viz<CR>
 
 " indentation
 onoremap <silent>ai :<C-U>cal <SID>IndTxtObj(0)<CR>
@@ -455,6 +374,14 @@ function! s:IndTxtObj(inner)
     endif
     normal! $
 endfunction
+
+" many seps - https://gist.github.com/romainl/c0a8b57a36aec71a986f1120e1931f20
+for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#' ]
+    execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'
+    execute 'onoremap i' . char . ' :normal vi' . char . '<CR>'
+    execute 'xnoremap a' . char . ' :<C-u>normal! F' . char . 'vf' . char . '<CR>'
+    execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
+endfor
 
 
 let s:regex = '\c\<\(\%([a-z][0-9A-Za-z_-]\+:\%(\/\{1,3}\|[a-z0-9%]\)\|www\d\'
@@ -505,17 +432,86 @@ onoremap <silent> aN :<c-u>call <sid>aroundNumber()<cr>
 xnoremap <silent> iN :<c-u>call <sid>inNumber()<cr>
 onoremap <silent> iN :<c-u>call <sid>inNumber()<cr>
 
+" class & method python text objs
+" TODO: don't change most recent search; work on two line functions,
+" work when on top of a definition
+function! s:PyObjs(typ, region, mode)
+    let foldenabled = &foldenable
+    let foldedmethod = &foldmethod
+    exe "silent set foldenable"
+    exe "silent set foldmethod=indent"
+    if a:mode == 'v'
+        normal ^]
+    endif
+    normal zR
+    if a:typ == 'function'
+        exe "normal ?def\<CR>"
+    else
+        exe "normal ?class\<CR>"
+    endif
+
+    if a:region == 'a'
+        normal kjjV]zokoip
+    else
+        normal kjjV]z
+    endif
+    if foldenabled == 0
+        set nofoldenable
+    endif
+    exe "silent set foldmethod=" . foldedmethod
+endfunction
+
+autocmd FileType python vmap af :<c-u>call <sid>PyObjs('function', 'a', 'v')<CR>
+autocmd FileType python vmap if :<c-u>call <sid>PyObjs('function', 'i', 'v')<CR>
+autocmd FileType python omap if :<c-u>call <sid>PyObjs('function', 'i', 'o')<CR>
+autocmd FileType python omap af :<c-u>call <sid>PyObjs('function', 'a', 'o')<CR>
+autocmd FileType python vmap aC :<c-u>call <sid>PyObjs('class', 'a', 'v')<CR>
+autocmd FileType python vmap iC :<c-u>call <sid>PyObjs('class', 'i', 'v')<CR>
+autocmd FileType python omap iC :<c-u>call <sid>PyObjs('class', 'i', 'o')<CR>
+autocmd FileType python omap aC :<c-u>call <sid>PyObjs('class', 'a', 'o')<CR>
+
+" }}}
+
+" Abbreviations & Commands {{{
+" nuking buffers
+command BDO :%bd|e#|bd#
+cnoreabbrev bon BDO
+command BDA :%bd
+cnoreabbrev bda BDA
+command BDK :bp|bd#
+cnoreabbrev bdk BDK
+
+" terminal
+cnoreabbrev ipy ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner
+" cnoreabbrev +c ++close
+cnoreabbrev ipt terminal ++close ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner
+cnoreabbrev vsb vert sb
+
+" Easy shebang
+inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+
+" visual */#
+function! s:VSetSearch()
+  let temp = @@
+  norm! gvy
+  let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+  let @@ = temp
+endfunction
+vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
+vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
+
+" insert current line into cmd
+if !has('patch-8.0.1787')
+    cnoremap <C-r><C-l> <C-r>=getline('.')<CR>
+endif
+" see difference between current buffer and the file opened initially
+if !exists(":DiffOrig")
+    command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+                \ | wincmd p | diffthis
+endif
 " }}}
 
 " Poppy Stuff {{{
-nnoremap <leader>T :TagbarToggle<CR>
-let g:tagbar_auto_close=1
-let g:tagbar_autofocus=1
-let g:tagbar_sort=0
-let g:tagbar_compact=1
-let g:tagbar_indent=1
-let g:tagbar_show_linenumbers=1
-
 nnoremap <leader>u :UndotreeToggle<cr>
 let g:undotree_WindowLayout=4
 let g:undotree_SplitWidth=40
@@ -566,37 +562,28 @@ let g:netrw_fastbrowse=0
 let g:netrw_altfile=1
 cabbrev lex 20Lex
 cnoreabbrev ex Explore
-autocmd FileType netrw setl bufhidden=wipe
-autocmd FileType netrw nnoremap <buffer> cdh :Ntree /home/milo<CR>
-autocmd FileType netrw nnoremap <buffer> cdb :execute 'Ntree' expand('%:p:h')<CR>
+autocmd FileType netrw setlocal bufhidden=wipe
+autocmd FileType netrw nmap <buffer> <silent> <nowait> = <Plug>NetrwTreeSqueeze
 " }}}
 
 " OTHER {{{
-" Return to same line from when file last opened
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-" diable paste when exit insert mode
-au InsertLeave * silent! set nopaste
-
-" folding
-" set foldlevelstart=99
-au FileType vim set foldmethod=marker
-
-" Easy shebang
-inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
-
-" colorscheme warlock
 let g:gruvbox_material_background='soft'
 let g:gruvbox_material_enable_bold=1
-set background=dark
 colorscheme gruvbox-material
 syntax enable
-" hi CursorLine guibg=#262626
-" hi CursorLineNr guibg=#262626
-" hi LineNr guibg=#303030
-" hi LineNr guibg=#303030
-" hi FoldColumn guibg=#303030
-" hi Folded guibg=#303030
+set background=dark
+highlight! pythonFunction guifg=#d8a657
+" Return to same line from when file last opened
+autocmd BufReadPost *
+            \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+            \ |   exe "normal! g`\""
+            \ | endif
+  augroup END
+
+if executable('rg')
+    set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+    set grepformat^=%f:%l:%c:%m
+endif
 
 autocmd VimResized * :wincmd =
 
@@ -607,20 +594,17 @@ augroup vimrc-incsearch-highlight
     au CmdlineLeave [/\?] :set nohlsearch
 augroup END
 
-" visual */#
-function! s:VSetSearch()
-  let temp = @@
-  norm! gvy
-  let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
-  let @@ = temp
-endfunction
-vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
-vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
+au FileType vim set foldmethod=marker
 
-" insert current line into cmd
-if !has('patch-8.0.1787')
-    cnoremap <C-r><C-l> <C-r>=getline('.')<CR>
-endif
+" auto open quickfix when errors
+augroup autoquickfix
+    autocmd!
+    autocmd QuickFixCmdPost [^l]* cwindow
+    autocmd QuickFixCmdPost    l* lwindow
+augroup END
+
+" diable paste when exit insert mode
+au InsertLeave * silent! set nopaste
 
 " command line usability
 " function! CCR()
@@ -660,8 +644,6 @@ endif
 "     endif
 " endfunction
 " cnoremap <expr> <CR> CCR()
-
-
 " }}}
 
 " Hacks {{{
@@ -677,157 +659,186 @@ let g:loaded_gzip = 1
 let g:loaded_rrhelper = 1
 " }}}
 
-" tabline {{{
-" https://github.com/ap/vim-buftabline/blob/master/plugin/buftabline.vim
-hi default link BufTabLineCurrent TabLineSel
-hi default link BufTabLineActive  PmenuSel
-hi default link BufTabLineHidden  TabLine
-" hi default link BufTabLineFill    VertSplit
-" hi TabLineFill guibg=#504945
-hi TabLineFill guibg=NONE
+" sendtoterm {{{
+" https://github.com/habamax/vim-sendtoterm/blob/master/plugin/sendtoterm.vim
+fun! s:get_terminal_windows()
+    return map(filter(copy(getwininfo()), {k,v -> getbufvar(v.bufnr, '&buftype') == 'terminal'}), 'v:val')
+endfu
 
-let g:buftabline_numbers    = get(g:, 'buftabline_numbers',    1)
-let g:buftabline_indicators = get(g:, 'buftabline_indicators', 0)
-let g:buftabline_separators = get(g:, 'buftabline_separators', 0)
-let g:buftabline_show       = get(g:, 'buftabline_show',       2)
-let g:buftabline_plug_max   = get(g:, 'buftabline_plug_max',  10)
-
-function! UserBuffers() " help buffers are always unlisted, but quickfix buffers are not
-    return filter(range(1,bufnr('$')),'buflisted(v:val) && "quickfix" !=? getbufvar(v:val, "&buftype")')
-endfunction
-
-let s:dirsep = fnamemodify(getcwd(),':p')[-1:]
-let s:centerbuf = winbufnr(0)
-function! Render()
-    let show_num = g:buftabline_numbers == 1
-    let show_ord = g:buftabline_numbers == 2
-    let show_mod = g:buftabline_indicators
-    let lpad     = g:buftabline_separators ? nr2char(0x23B8) : ' '
-
-    let bufnums = UserBuffers()
-    let centerbuf = s:centerbuf " prevent tabline jumping around when non-user buffer current (e.g. help)
-
-    " pick up data on all the buffers
-    let tabs = []
-    let path_tabs = []
-    let tabs_per_tail = {}
-    let currentbuf = winbufnr(0)
-    let screen_num = 0
-    for bufnum in bufnums
-        let screen_num = show_num ? bufnum : show_ord ? screen_num + 1 : ''
-        let tab = { 'num': bufnum }
-        let tab.hilite = currentbuf == bufnum ? 'Current' : bufwinnr(bufnum) > 0 ? 'Active' : 'Hidden'
-        if currentbuf == bufnum | let [centerbuf, s:centerbuf] = [bufnum, bufnum] | endif
-        let bufpath = bufname(bufnum)
-        if strlen(bufpath)
-            let tab.path = fnamemodify(bufpath, ':p:~:.')
-            let tab.sep = strridx(tab.path, s:dirsep, strlen(tab.path) - 2) " keep trailing dirsep
-            let tab.label = tab.path[tab.sep + 1:]
-            let pre = ( show_mod && getbufvar(bufnum, '&mod') ? '+' : '' ) . screen_num
-            let tab.pre = strlen(pre) ? pre . ' ' : ''
-            let tabs_per_tail[tab.label] = get(tabs_per_tail, tab.label, 0) + 1
-            let path_tabs += [tab]
-        elseif -1 < index(['nofile','acwrite'], getbufvar(bufnum, '&buftype')) " scratch buffer
-            let tab.label = ( show_mod ? '!' . screen_num : screen_num ? screen_num . ' !' : '!' )
-        else " unnamed file
-            let tab.label = ( show_mod && getbufvar(bufnum, '&mod') ? '+' : '' )
-                        \             . ( screen_num ? screen_num : '*' )
-        endif
-        let tabs += [tab]
-    endfor
-
-    " disambiguate same-basename files by adding trailing path segments
-    while len(filter(tabs_per_tail, 'v:val > 1'))
-        let [ambiguous, tabs_per_tail] = [tabs_per_tail, {}]
-        for tab in path_tabs
-            if -1 < tab.sep && has_key(ambiguous, tab.label)
-                let tab.sep = strridx(tab.path, s:dirsep, tab.sep - 1)
-                let tab.label = tab.path[tab.sep + 1:]
-            endif
-            let tabs_per_tail[tab.label] = get(tabs_per_tail, tab.label, 0) + 1
-        endfor
-    endwhile
-
-    " now keep the current buffer center-screen as much as possible:
-
-    " 1. setup
-    let lft = { 'lasttab':  0, 'cut':  '.', 'indicator': '<', 'width': 0, 'half': &columns / 2 }
-    let rgt = { 'lasttab': -1, 'cut': '.$', 'indicator': '>', 'width': 0, 'half': &columns - lft.half }
-
-    " 2. sum the string lengths for the left and right halves
-    let currentside = lft
-    for tab in tabs
-        let tab.label = lpad . get(tab, 'pre', '') . tab.label . ' '
-        let tab.width = strwidth(strtrans(tab.label))
-        if centerbuf == tab.num
-            let halfwidth = tab.width / 2
-            let lft.width += halfwidth
-            let rgt.width += tab.width - halfwidth
-            let currentside = rgt
-            continue
-        endif
-        let currentside.width += tab.width
-    endfor
-    if currentside is lft " centered buffer not seen?
-        " then blame any overflow on the right side, to protect the left
-        let [lft.width, rgt.width] = [0, lft.width]
-    endif
-
-    " 3. toss away tabs and pieces until all fits:
-    if ( lft.width + rgt.width ) > &columns
-        let oversized
-                    \ = lft.width < lft.half ? [ [ rgt, &columns - lft.width ] ]
-                    \ : rgt.width < rgt.half ? [ [ lft, &columns - rgt.width ] ]
-                    \ :                        [ [ lft, lft.half ], [ rgt, rgt.half ] ]
-        for [side, budget] in oversized
-            let delta = side.width - budget
-            " toss entire tabs to close the distance
-            while delta >= tabs[side.lasttab].width
-                let delta -= remove(tabs, side.lasttab).width
-            endwhile
-            " then snip at the last one to make it fit
-            let endtab = tabs[side.lasttab]
-            while delta > ( endtab.width - strwidth(strtrans(endtab.label)) )
-                let endtab.label = substitute(endtab.label, side.cut, '', '')
-            endwhile
-            let endtab.label = substitute(endtab.label, side.cut, side.indicator, '')
-        endfor
-    endif
-
-    if len(tabs) | let tabs[0].label = substitute(tabs[0].label, lpad, ' ', '') | endif
-
-    let swallowclicks = '%'.(1 + tabpagenr('$')).'X'
-    return swallowclicks . join(map(tabs,'printf("%%#BufTabLine%s#%s",v:val.hilite,strtrans(v:val.label))'),'') . '%#BufTabLineFill#'
-endfunction
-
-function! BUpdate(zombie)
-    set tabline=
-    if tabpagenr('$') > 1 | set guioptions+=e showtabline=2 | return | endif
-    set guioptions-=e
-    if 0 == g:buftabline_show
-        set showtabline=1
+fun! SendToTerm(...)
+    let terms = s:get_terminal_windows()
+    if len(terms) < 1
+        echomsg "There is no visible terminal!"
         return
-    elseif 1 == g:buftabline_show
-        " account for BufDelete triggering before buffer is actually deleted
-        let bufnums = filter(UserBuffers(), 'v:val != a:zombie')
-        let &g:showtabline = 1 + ( len(bufnums) > 1 )
-    elseif 2 == g:buftabline_show
-        set showtabline=2
     endif
-    set tabline=%!Render()
+
+    if !a:0
+        let &operatorfunc = matchstr(expand('<sfile>'), '[^. ]*$')
+        return 'g@'
+    endif
+
+    let term_window = terms[0].winnr
+    if len(terms) > 1
+        let msg =  "Too many terminals open!"
+        for t in terms
+            let msg .= "\n\t[".t.winnr.']: '.t.variables.netrw_prvfile
+        endfor
+        let msg .= "\nSelect terminal: "
+        let term_window = input(msg, terms[0].winnr)
+    endif
+
+    let sel_save = &selection
+    let &selection = "inclusive"
+    let reg_save = @@
+    let clipboard_save = &clipboard
+    let &clipboard = ""
+
+    if a:1 == 'char'	" Invoked from Visual mode, use gv command.
+        silent exe 'normal! gvy'
+    elseif a:1 == 'line'
+        silent exe "normal! '[V']y"
+    else
+        silent exe 'normal! `[v`]y'
+    endif
+
+    if has('nvim')
+        exe term_window . "wincmd w"
+
+        if has('win32')
+            let @" .= "\r"
+        else
+            let @" .= "\n"
+        endif
+        normal! pG
+
+        exe winnr('#') . "wincmd w"
+    else
+        let text = substitute(@", '\n\|$', '\r', "g")
+        if !&expandtab && g:sendtoterm_expandtab
+            let text = substitute(text, '\t', repeat(' ', shiftwidth()), "g")
+        endif
+        call term_sendkeys(winbufnr(term_window+0), text)
+    endif
+
+    let &selection = sel_save
+    let @@ = reg_save
+    let &clipboard = clipboard_save
+endfun
+
+xnoremap <expr> <Plug>(SendToTerm)     SendToTerm()
+nnoremap <expr> <Plug>(SendToTerm)     SendToTerm()
+nnoremap <expr> <Plug>(SendToTermLine) SendToTerm() . '_'
+
+if !exists("g:sendtoterm_expandtab")
+    let g:sendtoterm_expandtab = 1
+endif
+" }}}
+
+" Commentary {{{
+" https://github.com/tpope/vim-commentary/blob/master/plugin/commentary.vim
+function! s:surroundings() abort
+    return split(get(b:, 'commentary_format', substitute(substitute(substitute(
+                \ &commentstring, '^$', '%s', ''), '\S\zs%s',' %s', '') ,'%s\ze\S', '%s ', '')), '%s', 1)
 endfunction
 
-augroup BufTabLine
-    autocmd!
-    autocmd VimEnter  * call BUpdate(0)
-    autocmd TabEnter  * call BUpdate(0)
-    autocmd BufAdd    * call BUpdate(0)
-    autocmd BufDelete * call BUpdate(str2nr(expand('<abuf>')))
-augroup END
+function! s:strip_white_space(l,r,line) abort
+    let [l, r] = [a:l, a:r]
+    if l[-1:] ==# ' ' && stridx(a:line,l) == -1 && stridx(a:line,l[0:-2]) == 0
+        let l = l[:-2]
+    endif
+    if r[0] ==# ' ' && a:line[-strlen(r):] != r && a:line[1-strlen(r):] == r[1:]
+        let r = r[1:]
+    endif
+    return [l, r]
+endfunction
 
-for s:n in range(1, g:buftabline_plug_max) + ( g:buftabline_plug_max > 0 ? [-1] : [] )
-    let s:b = s:n == -1 ? -1 : s:n - 1
-    execute printf("noremap <silent> <Plug>BufTabLine.Go(%d) :<C-U>exe 'b'.get(UserBuffers(),%d,'')<cr>", s:n, s:b)
-endfor
-unlet! s:n s:b
+function! s:go(...) abort
+    if !a:0
+        let &operatorfunc = matchstr(expand('<sfile>'), '[^. ]*$')
+        return 'g@'
+    elseif a:0 > 1
+        let [lnum1, lnum2] = [a:1, a:2]
+    else
+        let [lnum1, lnum2] = [line("'["), line("']")]
+    endif
+
+    let [l, r] = s:surroundings()
+    let uncomment = 2
+    for lnum in range(lnum1,lnum2)
+        let line = matchstr(getline(lnum),'\S.*\s\@<!')
+        let [l, r] = s:strip_white_space(l,r,line)
+        if len(line) && (stridx(line,l) || line[strlen(line)-strlen(r) : -1] != r)
+            let uncomment = 0
+        endif
+    endfor
+
+    if get(b:, 'commentary_startofline')
+        let indent = '^'
+    else
+        let indent = '^\s*'
+    endif
+
+    for lnum in range(lnum1,lnum2)
+        let line = getline(lnum)
+        if strlen(r) > 2 && l.r !~# '\\'
+            let line = substitute(line,
+                        \'\M' . substitute(l, '\ze\S\s*$', '\\zs\\d\\*\\ze', '') . '\|' . substitute(r, '\S\zs', '\\zs\\d\\*\\ze', ''),
+                        \'\=substitute(submatch(0)+1-uncomment,"^0$\\|^-\\d*$","","")','g')
+        endif
+        if uncomment
+            let line = substitute(line,'\S.*\s\@<!','\=submatch(0)[strlen(l):-strlen(r)-1]','')
+        else
+            let line = substitute(line,'^\%('.matchstr(getline(lnum1),indent).'\|\s*\)\zs.*\S\@<=','\=l.submatch(0).r','')
+        endif
+        call setline(lnum,line)
+    endfor
+    let modelines = &modelines
+    try
+        set modelines=0
+        silent doautocmd User CommentaryPost
+    finally
+        let &modelines = modelines
+    endtry
+    return ''
+endfunction
+
+function! s:textobject(inner) abort
+    let [l, r] = s:surroundings()
+    let lnums = [line('.')+1, line('.')-2]
+    for [index, dir, bound, line] in [[0, -1, 1, ''], [1, 1, line('$'), '']]
+        while lnums[index] != bound && line ==# '' || !(stridx(line,l) || line[strlen(line)-strlen(r) : -1] != r)
+            let lnums[index] += dir
+            let line = matchstr(getline(lnums[index]+dir),'\S.*\s\@<!')
+            let [l, r] = s:strip_white_space(l,r,line)
+        endwhile
+    endfor
+    while (a:inner || lnums[1] != line('$')) && empty(getline(lnums[0]))
+        let lnums[0] += 1
+    endwhile
+    while a:inner && empty(getline(lnums[1]))
+        let lnums[1] -= 1
+    endwhile
+    if lnums[0] <= lnums[1]
+        execute 'normal! 'lnums[0].'GV'.lnums[1].'G'
+    endif
+endfunction
+
+command! -range -bar Commentary call s:go(<line1>,<line2>)
+xnoremap <expr>   <Plug>Commentary     <SID>go()
+nnoremap <expr>   <Plug>Commentary     <SID>go()
+nnoremap <expr>   <Plug>CommentaryLine <SID>go() . '_'
+onoremap <silent> <Plug>Commentary        :<C-U>call <SID>textobject(get(v:, 'operator', '') ==# 'c')<CR>
+nnoremap <silent> <Plug>ChangeCommentary c:<C-U>call <SID>textobject(1)<CR>
+
+if !hasmapto('<Plug>Commentary') || maparg('gc','n') ==# ''
+    xmap gc  <Plug>Commentary
+    nmap gc  <Plug>Commentary
+    omap gc  <Plug>Commentary
+    nmap gcc <Plug>CommentaryLine
+    if maparg('c','n') ==# '' && !exists('v:operator')
+        nmap cgc <Plug>ChangeCommentary
+    endif
+    nmap gcu <Plug>Commentary<Plug>Commentary
+endif
 " }}}
+
