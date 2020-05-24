@@ -44,7 +44,7 @@ PROMPT="[%F{59}%n%f] %B%1d%b %F{blue}|%f "
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
@@ -68,11 +68,11 @@ COMPLETION_WAITING_DOTS="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git 
-  # tmux                     # tmux on startup 
+  # tmux                     # tmux on startup
   # vi-mode                  # vi-mode
   dotenv                   # auto load .env files when cd into project
   zsh-autosuggestions     # fish like suggestions
-  zsh-syntax-highlighting 
+  zsh-syntax-highlighting
   colorize                # syntax highlighting cat output
   you-should-use          # alias reminder
   fzf
@@ -124,7 +124,7 @@ export PROMPT_COMMAND="pwd > /tmp/whereami"
 alias config='/usr/bin/git --git-dir=/home/milo/.dotfiles/ --work-tree=/home/milo'
 
 # tree for projects
-alias tree="tree -I '__pycache__|*.pyc|.git|venv|node_modules'"
+alias tree="tree -I '__pycache__|*.pyc|.git|venv|node_modules|undodir|plugged'"
 
 
 # open man page in vim

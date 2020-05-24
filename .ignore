@@ -7,7 +7,6 @@
 **/.oh-my-zsh/**
 **/.dotfiles/**
 **/.ICAClient/**
-**/.vim/**
 **/.pylint.d/**
 **/.mypy_cache/**
 **/spicetify/**

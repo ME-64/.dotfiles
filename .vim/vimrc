@@ -10,27 +10,37 @@ set wildmenu wildmode=longest,full
 set incsearch nowrapscan ignorecase smartcase
 set notimeout ttimeout timeoutlen=100 ttimeoutlen=0 updatetime=100
 set backspace=indent,eol,start
-set formatoptions-=tcro shortmess=atIAcFW
+set formatoptions=q shortmess=atIAcFW
 set list listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 set lazyredraw
 set textwidth=79 nowrap
 set spellfile=~/.vim/spell/en.utf-8.add spelllang=en_gb
 set foldmethod=marker
-set laststatus=2 showtabline=0 noruler noshowmatch showcmd cursorline
+set laststatus=2 showtabline=0 ruler noshowmatch showcmd cursorline
 set fillchars=stl:\ ,stlnc:\ ,vert:\|
-set ve=all nostartofline nomore
+" set ve=all nostartofline nomore
 set termguicolors
 runtime macros/matchit.vim
 set synmaxcol=200
 set path=.,,
 set viminfo='15,<50,s10,h
+syntax enable
 filetype plugin indent on
 
-syntax enable
-set background=dark
-colorscheme nord
+
+let mapleader = " "
+nnoremap <leader>b :ls<CR>:
 
 au CmdlineEnter [/\?] :set hlsearch
 au CmdlineLeave [/\?] :set nohlsearch
-let &t_SI = "\e[6 q"
-let &t_EI = "\e[2 q"
+
+if filereadable(expand("~/.vim/colors/gruvbox8_soft.vim"))
+    set background=dark
+    colorscheme gruvbox8_soft
+else
+    colorscheme default
+endif
+
+if filereadable(expand("~/.vim/vim-plugs.vim"))
+    source ~/.vim/vim-plugs.vim
+endif
