@@ -41,6 +41,7 @@ else
     colorscheme default
 endif
 
-if filereadable(expand("~/.vim/vim-plugs.vim"))
-    source ~/.vim/vim-plugs.vim
+if filereadable(expand("~/.vim/extended-vimrc.vim")) ||
+            \ filereadable(expand("~/.vim/autoload/plug.vim"))
+    source ~/.vim/extended-vimrc.vim
 endif
