@@ -91,8 +91,8 @@ export TERM=xterm-256color
 #[ -n "$TMUX" ] && export TERM=screen-256color
 
 alias vi="vim"
-export EDITOR="nvim"
-export VISUAL="nvim"
+export EDITOR="vim"
+export VISUAL="vim"
 alias nv="nvim"
 alias v="vim"
 alias la="ls -A"

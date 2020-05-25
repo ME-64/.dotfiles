@@ -116,6 +116,70 @@ if ! shopt -oq posix; then
   fi
 fi
 
+alias vi="vim"
+export EDITOR="vim"
+export VISUAL="vim"
+alias nv="nvim"
+alias v="vim"
+alias la="ls -A"
+# tree for projects
+alias tree="tree -I '__pycache__|*.pyc|.git|venv|node_modules|undodir|plugged'"
+alias fd="fdfind"
+alias ipy="ipython --no-autoindent --pprint --colors='NoColor' --nosep --no-banner"
+
+alias cit="/opt/Citrix/ICAClient/wfica"
+
+export PATH=$PATH:/home/milo/.local/bin
+export ICAROOT=/opt/Citrix/ICAClient
+
+
+# open man page in vim
+vman() { nvim <(man $1); }
+
+
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" . "$1"
+}
+
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"
+}
+
+
+export FZF_DEFAULT_COMMAND='rg --files --hidden . $HOME'
+export FZF_CTRL_T_COMMAND='fd -t f -H . $HOME'
+export FZF_ALT_C_COMMAND="fd -t d -H . $HOME"
+
 
 export PATH=$PATH:/home/milo/.local/bin
 alias config='/usr/bin/git --git-dir=/home/milo/.dotfiles/ --work-tree=/home/milo'
+
+
+vf() (
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "$files" ]] && vim "${files[@]}"
+)
+
+nvf() (
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "$files" ]] && nvim "${files[@]}"
+)
+
+fif() {
+  if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
+  rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
+}
+
+
+function OpenFileInEnclosingVim {
+    if [ -z "${VIM_TERMINAL}" ]; then
+        echo "Not running in Vim's terminal. Open a new vim!"
+        return
+    fi
+
+    # See :help terminal-api for what this is and why it works. Basically the
+        # vim embedded terminal reads this 51 command
+        echo -e "\033]51;[\"drop\", \"$1\"]\007"
+}
+
+alias rv="OpenFileInEnclosingVim"

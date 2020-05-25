@@ -6,42 +6,39 @@ set splitbelow splitright
 set autoindent smartindent
 set hid noswapfile nowritebackup
 set sidescroll=1 sidescrolloff=3 scrolloff=2
-set wildmenu wildmode=longest,full
+set wildmode=list:longest
 set incsearch nowrapscan ignorecase smartcase
 set notimeout ttimeout timeoutlen=100 ttimeoutlen=0 updatetime=100
 set backspace=indent,eol,start
 set formatoptions=q shortmess=atIAcFW
-set list listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+set list listchars=tab:>\ ,trail:·,extends:>,precedes:<,nbsp:+
 set lazyredraw
 set textwidth=79 nowrap
 set spellfile=~/.vim/spell/en.utf-8.add spelllang=en_gb
 set foldmethod=marker
-set laststatus=2 showtabline=0 ruler noshowmatch showcmd cursorline
+set laststatus=2 showtabline=0 ruler noshowmatch showcmd nocursorline
 set fillchars=stl:\ ,stlnc:\ ,vert:\|
-" set ve=all nostartofline nomore
 set termguicolors
 runtime macros/matchit.vim
 set synmaxcol=200
-set path=.,,
+set wildcharm=<C-z> path=$PWD/**
+set wildignore+=**/.git/**,**/__pycache__/**,**/venv/**,**/node_modules/**,**/dist/**,**/build/**,*.o,*.pyc,*.swp
 set viminfo='15,<50,s10,h
+colo nord
+set background=dark
 syntax enable
 filetype plugin indent on
 
-
 let mapleader = " "
-nnoremap <leader>b :ls<CR>:
+nnoremap <leader>b :b <C-z>
+nnoremap <leader>o :bro oldf<CR>
+nnoremap <leader>l :vimg  %<Left><Left>
+nnoremap <leader>f :find *
 
 au CmdlineEnter [/\?] :set hlsearch
 au CmdlineLeave [/\?] :set nohlsearch
 
-if filereadable(expand("~/.vim/colors/gruvbox8_soft.vim"))
-    set background=dark
-    colorscheme gruvbox8_soft
-else
-    colorscheme default
-endif
-
-if filereadable(expand("~/.vim/extended-vimrc.vim")) ||
-            \ filereadable(expand("~/.vim/autoload/plug.vim"))
-    source ~/.vim/extended-vimrc.vim
-endif
+" if filereadable(expand("~/.vim/extended-vimrc.vim")) &&
+"             \ filereadable(expand("~/.vim/autoload/plug.vim"))
+"     source ~/.vim/extended-vimrc.vim
+" endif

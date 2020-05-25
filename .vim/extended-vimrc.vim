@@ -13,20 +13,23 @@ Plug 'junegunn/vim-easy-align'
 Plug 'habamax/vim-sendtoterm'
 Plug 'dstein64/vim-startuptime', {'on': ['StartupTime']}
 Plug 'tpope/vim-repeat'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'vim-python/python-syntax'
 Plug 'jeetsukumaran/vim-pythonsense'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'mbbill/undotree', {'on': ['UndotreeToggle']}
+Plug 'davidhalter/jedi-vim'
 call plug#end()
 " }}}
 " OPTIONS {{{
-let &t_SI = "\e[6 q"
-let &t_EI = "\e[2 q"
+colorscheme nord
+
+" let &t_SI = "\e[6 q"
+" let &t_EI = "\e[2 q"
 if executable('rg')
     set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
     set grepformat^=%f:%l:%c:%m
 endif
+set completeopt=menu,menuone,popup,noinsert,noselect
 " }}}
 " AUTOCOMMANDS {{{
 autocmd BufReadPost *
@@ -45,7 +48,6 @@ noremap <Right> <Nop>
 noremap <Up> <Nop>
 nnoremap <C-w>q <C-w>c
 nnoremap zZ zMzazt
-tnoremap <F1> <C-W>N
 nmap <silent> <leader>I ^vii<C-V>I
 nmap <silent> <leader>A ^vii<C-V>$A
 " get highlight group under cursor
@@ -58,6 +60,13 @@ if !has('patch-8.0.1787')
 endif
 vnoremap * :<C-u>call VSetSearch()<CR>//<CR><c-o>
 vnoremap # :<C-u>call VSetSearch()<CR>??<CR><c-o>
+
+if !has('nvim')
+    tnoremap <F1> <C-W>N
+else
+    tnoremap <Esc> <C-\><C-n>
+endif
+
 " }}}
 " TEXT OBJECTS {{{
 "line text objects
@@ -275,74 +284,35 @@ if !exists(":DiffOrig")
 endif
 
 " }}}
-" COC NVIM {{{
-
-let g:coc_global_extensions = ['coc-python', 'coc-json']
-inoremap <expr> <C-j> pumvisible() ? '<C-n>' : '<Nop>'
-inoremap <expr> <C-k> pumvisible() ? '<C-p>' : '<Nop>'
-inoremap <silent><expr> <TAB>
-            \ pumvisible() ? coc#_select_confirm() :
-            \ <SID>check_back_space() ? "\<TAB>" :
-            \ coc#refresh()
-
-nmap <silent> gd <Plug>(coc-definition)
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-nmap <F2> <Plug>(coc-rename)
-
-vmap gy <Plug>(coc-format-selected)
-nmap gy <Plug>(coc-format-selected)
-
-function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    else
-        call CocAction('doHover')
-    endif
-endfunction
-command! -nargs=0 Format :call CocAction('format')
-command! -nargs=0 OR     :call CocAction('runCommand', 'editor.action.organizeImport')
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-call coc#config('diagnostic', {
-            \ 'enableSign': 0,
-            \ 'checkCurrentLine': 1,
-            \ })
-call coc#config('suggest', {'floatEnable': 0})
-call coc#config('python', {'jediEnabled': 0})
-call coc#config('coc.preferences', {'useQuickfixForLocations': 1})
-
-" }}}
 " FZF {{{
+if executable('fzf')
+    let g:fzf_colors =
+                \ {'fg':     ['fg', 'Normal'],'bg':                      ['bg', 'Normal'],
+                \  'hl':     ['fg', 'Comment'],'fg+':                    ['fg', 'Label'],
+                \  'bg+':    ['bg', 'CursorLine', 'CursorColumn'],'hl+': ['fg', 'Statement'],
+                \  'info':   ['fg', 'PreProc'],'border':                 ['fg', 'Ignore'],
+                \  'prompt': ['fg', 'Conditional'],'pointer':            ['fg', 'Exception'],
+                \  'marker': ['fg', 'Keyword'],'spinner':                ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+                \  'header': ['fg', 'Comment'] }
 
-let g:fzf_colors =
-            \ {'fg':     ['fg', 'Normal'],'bg':                      ['bg', 'Normal'],
-            \  'hl':     ['fg', 'Comment'],'fg+':                    ['fg', 'Label'],
-            \  'bg+':    ['bg', 'CursorLine', 'CursorColumn'],'hl+': ['fg', 'Statement'],
-            \  'info':   ['fg', 'PreProc'],'border':                 ['fg', 'Ignore'],
-            \  'prompt': ['fg', 'Conditional'],'pointer':            ['fg', 'Exception'],
-            \  'marker': ['fg', 'Keyword'],'spinner':                ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-            \  'header': ['fg', 'Comment'] }
+    let $FZF_DEFAULT_COMMAND="fdfind --type f -H"
+    let $FZF_DEFAULT_OPTS="--layout=reverse --preview=''"
+    let g:fzf_preview_window=''
+    let g:fzf_layout= {'down': '~20%'}
+    let g:fzf_action = {
+                \ 'ctrl-s': 'split',
+                \ 'ctrl-v': 'vsplit',
+                \ 'ctrl-t': 'tab split'}
 
-let $FZF_DEFAULT_COMMAND="fdfind --type f -H"
-let $FZF_DEFAULT_OPTS="--layout=reverse --preview=''"
-let g:fzf_preview_window=''
-let g:fzf_layout= {'down': '~20%'}
-let g:fzf_action = {
-            \ 'ctrl-s': 'split',
-            \ 'ctrl-v': 'vsplit',
-            \ 'ctrl-t': 'tab split'}
-
-nnoremap <silent> <leader>f :Files ~/<CR>
-nnoremap <silent> <leader>g :GFiles<CR>
-nnoremap <silent> <C-f>b :Buffers<CR>
-nnoremap <silent> <C-f>l :BLines<CR>
-nnoremap <silent> <C-f>L :Lines<CR>
-nnoremap <silent> <C-f>h :Help<CR>
-nnoremap <silent> <C-f>d :call fzf#run(fzf#wrap({'source': 'fdfind --type d . ~/', 'sink': 'cd'}))<CR>
-
+    nnoremap <silent> <leader>f :Files ~/<CR>
+    nnoremap <silent> <leader>g :GFiles<CR>
+    nnoremap <silent> <leader>b :Buffers<CR>
+    nnoremap <silent> <leader>l :BLines<CR>
+    nnoremap <silent> <leader>L :Lines<CR>
+    nnoremap <silent> <leader>h :Help<CR>
+    nnoremap <silent> <leader>d :call fzf#run(fzf#wrap({'source': 'fdfind --type d . ~/', 'sink': 'cd'}))<CR>
+    nnoremap <silent> <leader>o :History<CR>
+endif
 " }}}
 " UNDOTREE {{{
 
@@ -359,6 +329,21 @@ autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2
 autocmd FileType javascript nnoremap <buffer> <leader>jc ^iconsole.log(<esc>A);<esc>
 autocmd FileType javascript vnoremap <buffer> <leader>jc diconsole.log(<esc>p`]li);<esc>
 setlocal iskeyword+=-
+" }}}
+" EASY DIR SWITCH {{{
+function! s:root()
+  let root = systemlist('git rev-parse --show-toplevel')[0]
+  if v:shell_error
+    echo 'Not in git repo'
+  else
+    execute 'lcd' root
+    echo 'Changed directory to: '.root
+  endif
+endfunction
+command! Root call s:root()
+nnoremap cdb :cd %:p:h<CR>:pwd<CR>
+nnoremap cdh :cd ~/<CR>:pwd<CR>
+nnoremap cdg :Root<CR>
 " }}}
 " MARKDOWN {{{
 let g:markdown_fenced_languages=['html', 'css', 'javascript', 'python', 'js=javascript', 'py=python']
@@ -381,12 +366,11 @@ autocmd FileType markdown onoremap <silent> i¬ :<C-U>execute "normal vi~"<cr>
 autocmd FileType markdown onoremap <silent> a¬ :<C-U>execute "normal va~"<cr>
 " }}}
 " NETRW {{{
-setlocal bufhidden=wipe
+autocmd FileType netrw setlocal bufhidden=wipe
 let g:netrw_fastbrowse=0
 let g:netrw_altfile=0
 " }}}
 " PYTHON {{{
-
 let g:python_highlight_all=1
 autocmd FileType python setlocal foldlevelstart=99
 autocmd FileType python setlocal foldmethod=marker
@@ -412,7 +396,12 @@ autocmd FileType python vmap aD <Plug>(PythonsenseOuterDocStringTextObject)
 autocmd FileType python vmap iD <Plug>(PythonsenseInnerDocStringTextObject)
 autocmd FileType python omap aD <Plug>(PythonsenseOuterDocStringTextObject)
 autocmd FileType python omap iD <Plug>(PythonsenseInnerDocStringTextObject)
-
-
-
+let g:jedi#goto_command = "gd"
+let g:jedi#goto_assignments_command = "gta"
+let g:jedi#goto_stubs_command = "gts"
+let g:jedi#goto_definitions_command = "gD"
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "gtu"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#rename_command = "<F2>"
 " }}}
