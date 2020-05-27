@@ -1,44 +1,43 @@
-set clipboard=unnamedplus
-set number relativenumber
-set tabstop=4 softtabstop=4 shiftwidth=4 shiftround expandtab smarttab
-set undodir=~/.vim/undodir undofile undolevels=10000 undoreload=100000
-set splitbelow splitright
-set autoindent smartindent
-set hid noswapfile nowritebackup
-set sidescroll=1 sidescrolloff=3 scrolloff=2
-set wildmode=list:longest
-set incsearch nowrapscan ignorecase smartcase
-set notimeout ttimeout timeoutlen=100 ttimeoutlen=0 updatetime=100
-set backspace=indent,eol,start
-set formatoptions=q shortmess=atIAcFW
-set list listchars=tab:>\ ,trail:·,extends:>,precedes:<,nbsp:+
-set lazyredraw
-set textwidth=79 nowrap
-set spellfile=~/.vim/spell/en.utf-8.add spelllang=en_gb
-set foldmethod=marker
-set laststatus=2 showtabline=0 ruler noshowmatch showcmd nocursorline
-set fillchars=stl:\ ,stlnc:\ ,vert:\|
-set termguicolors
-runtime macros/matchit.vim
-set synmaxcol=200
-set wildcharm=<C-z> path=$PWD/**
-set wildignore+=**/.git/**,**/__pycache__/**,**/venv/**,**/node_modules/**,**/dist/**,**/build/**,*.o,*.pyc,*.swp
+set cb=unnamedplus
+set nu rnu
+set ts=4 sts=4 sw=4 cr et sta
+set udir=~/.vim/undodir udf ul=10000 ur=100000
+set sb spr
+set ai si
+set hid noswf nowb
+set ss=1 siso=3 so=2
+set is nows ic scs
+set noto ttimeout tm=0 ttm=0 ut=100
+set bs=indent,eol,start
+set fo=q shm=atIAcFW
+set list lcs=tab:>\ ,trail:·,extends:>,precedes:<,nbsp:+
+set lz
+set tw=79 nowrap
+set spf=~/.vim/spell/en.utf-8.add spl=en_gb
+set fdm=indent fdls=999
+set ls=2 ru nosm sc nocul
+set fcs=stl:\ ,stlnc:\ ,vert:\|
+ru macros/matchit.vim
+set smc=200
+set cot=menu,menuone,longest,preview
+set wim=list:longest,full wic wcm=<C-z>
+set path=,
+set wig+=**/.git/**,**/__pycache__/**,**/venv/**,**/node_modules/**,*.pyc,tags
 set viminfo='15,<50,s10,h
+set go= mouse= gfn=consolas:h14
+set vb noeb t_vb=
 colo nord
-set background=dark
+set tgc background=dark
 syntax enable
 filetype plugin indent on
 
-let mapleader = " "
-nnoremap <leader>b :b <C-z>
-nnoremap <leader>o :bro oldf<CR>
-nnoremap <leader>l :vimg  %<Left><Left>
-nnoremap <leader>f :find *
-
 au CmdlineEnter [/\?] :set hlsearch
 au CmdlineLeave [/\?] :set nohlsearch
+au QuickFixCmdPost [^l]* cwindow
+au QuickFixCmdPost l* lwindow
+au VimEnter * cwindow
 
-" if filereadable(expand("~/.vim/extended-vimrc.vim")) &&
-"             \ filereadable(expand("~/.vim/autoload/plug.vim"))
-"     source ~/.vim/extended-vimrc.vim
-" endif
+let g:netrw_bufsettings = 'noma nomod rnu nu nowrap ro nobl'
+let &t_SI = '\e[6 q'
+let &t_EI = '\e[2 q'
+let &t_SR = '\e[4 q'

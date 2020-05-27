@@ -1,3 +1,8 @@
+" if filereadable(expand("~/.vim/extended-vimrc.vim")) &&
+"             \ filereadable(expand("~/.vim/autoload/plug.vim"))
+"     source ~/.vim/extended-vimrc.vim
+" endif
+
 " PLUGINS {{{
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf',  {'dir': '~/.fzf', 'do': './install --bin'} | Plug 'junegunn/fzf.vim'
@@ -377,11 +382,13 @@ autocmd FileType python setlocal foldmethod=marker
 let g:is_pythonsense_suppress_object_keymaps = 1
 let g:is_pythonsense_suppress_motion_keymaps = 1
 let g:is_pythonsense_suppress_location_keymaps = 1
+
 autocmd FileType python inoreabbr <buffer> ipdb import<space>pdb;<space>pdb.set_trace();<BS>
 autocmd FileType python nnoremap <buffer> <leader>rf :w !python3 %<CR>
 autocmd FileType python nnoremap <buffer> <leader>rt :w !pytest --doctest-modules %<CR>
 autocmd FileType python nnoremap <buffer> <leader>rl :w !pylint -f parseable -r n -s n -E %<CR>
 autocmd FileType python nnoremap <buffer> <leader>rs :w !mypy %<CR>
+
 autocmd FileType python nnoremap <buffer> zb zfl5l4i<CR><Esc>i#<Space><Esc>4k05l73a=<esc>4j05l73a-<esc>2k0i
 autocmd FileType python nnoremap <buffer> zB zfl5l4i<CR><Esc>i#<Space><Esc>4k05l73a=<esc>4j05l73a-<esc>4k06lR
 autocmd FileType python omap ac <Plug>(PythonsenseOuterClassTextObject)
