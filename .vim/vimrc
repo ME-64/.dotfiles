@@ -1,6 +1,6 @@
 set cb=unnamedplus
 set nu rnu
-set ts=4 sts=4 sw=4 cr et sta
+set ts=4 sts=4 sw=4 sr et sta
 set udir=~/.vim/undodir udf ul=10000 ur=100000
 set sb spr
 set ai si
@@ -19,7 +19,7 @@ set ls=2 ru nosm sc nocul
 set fcs=stl:\ ,stlnc:\ ,vert:\|
 ru macros/matchit.vim
 set smc=200
-set cot=menu,menuone,longest,preview
+set cot=menu,menuone,longest,preview,noinsert,noselect
 set wim=list:longest,full wic wcm=<C-z>
 set path=,
 set wig+=**/.git/**,**/__pycache__/**,**/venv/**,**/node_modules/**,*.pyc,tags
@@ -31,13 +31,23 @@ set tgc background=dark
 syntax enable
 filetype plugin indent on
 
-au CmdlineEnter [/\?] :set hlsearch
-au CmdlineLeave [/\?] :set nohlsearch
+au CmdlineEnter    [/\?] :set hlsearch
+au CmdlineLeave    [/\?] :set nohlsearch
 au QuickFixCmdPost [^l]* cwindow
-au QuickFixCmdPost l* lwindow
-au VimEnter * cwindow
+au QuickFixCmdPost l*    lwindow
+au VimEnter         *    cwindow
 
-let g:netrw_bufsettings = 'noma nomod rnu nu nowrap ro nobl'
-let &t_SI = '\e[6 q'
-let &t_EI = '\e[2 q'
-let &t_SR = '\e[4 q'
+let &t_SI = "\e[6 q"
+let &t_EI = "\e[2 q"
+let &t_SR = "\e[4 q"
+
+nnoremap <Space>e :Ex <C-r>=getcwd()<CR><CR>
+nnoremap <Space>b :ls<CR>:b<Space>
+nnoremap <Space>o :oldf<CR>:e #<
+nnoremap <Space>t :term ++curwin ++close<CR>
+nnoremap <Space>g :vimgrep//g  **/*<S-Left><Left><Left><Left><Left>
+nnoremap <space>m :marks<CR>:norm `
+
+let g:netrw_bufsettings = 'nolist noma nomod rnu nu nowrap ro nobl'
+let g:netrw_banner=0
+autocmd FileType netrw nnoremap <buffer> ~ :edit ~/<CR>

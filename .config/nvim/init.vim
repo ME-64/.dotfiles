@@ -202,9 +202,9 @@ function! RemoveTrailingWhitespace()
     endfor
 endfunction
 
-command! -range RT  :<line1>,<line2>call RemoveTrailingWhitespace()
-command -range=% RDB :<line1>,<line2>g/^$/,/./-j
-command -range=% RB :<line1>,<line2>g/^\s*$/d
+command! -range    RT  :<line1>,<line2>call RemoveTrailingWhitespace()
+command! -range=%  RDB :<line1>,<line2>g/^$/,/./-j
+command! -range=%  RB  :<line1>,<line2>g/^\s*$/d
 
 map <silent> grdb <Plug>(operator-RDB)
 call operator#user#define_ex_command('RDB', 'RDB')
@@ -554,7 +554,6 @@ autocmd BufReadPost *
             \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
             \ |   exe "normal! g`\""
             \ | endif
-  augroup END
 " see difference between current buffer and the file opened initially
 if !exists(":DiffOrig")
     command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis

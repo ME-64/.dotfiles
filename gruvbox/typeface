@@ -1,5 +1,5 @@
 ! Typeface: Hack Nerd Font
-#define typeface_bar_glyph  Hack Nerd Font Mono 13
+#define typeface_bar_glyph  Hack Nerd Font Mono 12
 #define typeface_wm         pango:Hack Nerd Font Mono 13
 #define typeface_bar        pango:Hack Nerd Font Mono 13
 #define typeface_rofi       Hack Nerd Font Mono 16
